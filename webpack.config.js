@@ -8,7 +8,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 module.exports = {
   mode: 'development',
   entry: {
-    flappybird: './src/index.js'
+    game_physics: './src/index.js'
   },
   devServer: {
     contentBase: './dist'

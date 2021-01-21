@@ -36,4 +36,9 @@ export class Screen {
     this.context.closePath()
     this.context.fill()
   }
+
+  drawRect(rect, color) {
+    this.context.fillStyle = color
+    this.context.fillRect(rect.position.x, rect.position.y, rect.width, rect.height)
+  }
 }
