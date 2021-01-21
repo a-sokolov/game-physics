@@ -4,21 +4,22 @@ import { ShapeDrawer } from './shape-drawer'
 import { ShapeCollision } from './shape-collision'
 
 const CANVAS = {
-  width: 100,
-  height: 100
+  width: 1200,
+  height: 800
 }
-const SPEED = 2
-const SHAPE_LIMITS = 2
-const CREATE_SHAPE_TIME = 500
+const SPEED = 2.15
+const SHAPES_LIMITS = 50
+const CREATE_SHAPE_TIME = 20
+const DELTA = 1/100
 const COLORS = ['red', 'yellow', 'white', 'green', 'blue', 'brown', 'orange']
-const SIZES = [10]
+const SIZES = [5]
 
 export class Game {
   constructor() {
     this.screen = new Screen(CANVAS.width, CANVAS.height)
     this.shapeFactory = new ShapeFactory(SPEED)
     this.shapeDrawer = new ShapeDrawer(this.screen)
-    this.shapeCollision = new ShapeCollision(this.screen)
+    this.shapeCollision = new ShapeCollision(this.screen, DELTA)
     this.shapes = []
     this.lastTime = 0
 
@@ -30,7 +31,7 @@ export class Game {
   }
 
   moveShapes() {
-    this.shapes.forEach(shape => shape.mob.move())
+    this.shapes.forEach(shape => shape.mob.update())
   }
 
   drawShapes() {
@@ -40,19 +41,23 @@ export class Game {
   createCircle() {
     const color = COLORS[Math.floor(Math.random() * COLORS.length)]
 
-    const velocityX = Math.random() * SPEED
-    const velocityY = Math.random() * SPEED
+    const velocityX = Math.random() * SPEED * 1000
+    const velocityY = Math.random() * SPEED * 1000
     let radius = SIZES[Math.floor(Math.random() * SIZES.length)]
 
-    this.addShape(this.shapeFactory.createBall(
-      this.screen.width / 2, this.screen.height / 2, velocityX, velocityY, radius, color))
+    const coloredCircle = this.shapeFactory.createBall(
+        this.screen.width / 2,
+        this.screen.height / 2,
+        velocityX, velocityY,
+        radius, color)
+    this.addShape(coloredCircle)
   }
 
   frame(time) {
     if (this.lastTime === 0) {
       this.lastTime = time
     } else if (time - this.lastTime >= CREATE_SHAPE_TIME
-        && this.shapes.length <= SHAPE_LIMITS - 1) {
+        && this.shapes.length < SHAPES_LIMITS) {
       this.lastTime = time
       this.createCircle()
     }

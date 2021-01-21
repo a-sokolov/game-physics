@@ -1,58 +1,81 @@
 import { Vector } from './vector'
-import { Circle } from './circle'
-import { circleAndScreenCollision, circlesCollision } from './utils'
 
 export class ShapeCollision {
-  constructor(screen) {
+  constructor(screen, delta) {
     this.screen = screen
+    this.delta = delta
   }
 
   collision(shapes) {
-    shapes.forEach(shape => {
-      const { mob } = shape
-      if (mob instanceof Circle) {
-        this.circleCollision(mob, shapes)
-      }
-    })
-  }
-
-  circleCollision(circle, shapes) {
-    const { velocity } = circle
-    const collision = circleAndScreenCollision(circle, this.screen)
-    if (collision) {
-      switch (collision.type) {
-        case 'x':
-          circle.setVelocityX(-velocity.x)
-          break
-        case 'y':
-          circle.setVelocityY(-velocity.y)
-          break
-      }
-    }
-
-    this.calculatePositions(shapes)
-    this.calculatePositions(shapes)
-  }
-
-  calculatePositions(shapes) {
-    for (let i = 0; i < shapes.length - 1; i++) {
+    for (let i = 0; i < shapes.length; i++) {
       for (let j = i + 1; j < shapes.length; j++) {
         const circle1 = shapes[i].mob
         const circle2 = shapes[j].mob
 
-        if (circlesCollision(circle1, circle2)) {
-          // const v1 = circle1.position
-          // const v2 = circle2.position
-          //
-          // const diff = Vector.substrVectors(v1, v2)
-          // const penetrationDirection = Vector.normalize(diff)
-          // const penetrationDeep = circle1.radius + circle2.radius - Vector.distance(v1, v2)
-          //
-          // const delta = penetrationDirection.multiple(penetrationDeep).multiple(0.5)
-          // circle1.setPosition({ x: -delta.x, y: -delta.y })
-          // circle2.setPosition(delta)
+        // Считаем новую позицию с учетом вектора ускорения
+        const newPosition1 = circle1.position.add(circle1.velocity.multiply(this.delta))
+        const newPosition2 = circle2.position.add(circle2.velocity.multiply(this.delta))
+        // Вычисляем расстоянием между вектора
+        const distance = newPosition1.distanceFrom(newPosition2)
+        // Если расстояние меньше суммы радиусов, то мы получаем коллизию 2х кругов
+        if (distance <= circle1.radius + circle2.radius) {
+          let power = (Math.abs(circle1.velocity.x) + Math.abs(circle1.velocity.y)) +
+            (Math.abs(circle2.velocity.x) + Math.abs(circle2.velocity.y))
+          // power *= 0.00482
+          power = 1
+
+          const opposite = circle1.position.y - circle2.position.y
+          const adjacent = circle1.position.x - circle2.position.x
+          const rotation = Math.atan2(opposite, adjacent)
+
+          const velocity2 = new Vector(
+            90 * Math.cos(rotation + Math.PI) * power,
+            90 * Math.sin(rotation + Math.PI) * power)
+          circle2.velocity = circle2.velocity.addTo(velocity2)
+
+          const velocity1 = new Vector(
+            90 * Math.cos(rotation) * power,
+            90 * Math.sin(rotation) * power)
+          circle1.velocity = circle1.velocity.addTo(velocity1)
         }
       }
     }
+
+    this.update(shapes, this.delta)
+  }
+
+  update(shapes, delta) {
+    shapes.forEach(shape => {
+      const circle = shape.mob
+
+      const newPosition = circle.position.add(circle.velocity.multiply(delta))
+
+      let collision = false
+      if (newPosition.x - circle.radius <= 0) {
+        circle.velocity.x = -circle.velocity.x
+        circle.position.x = circle.radius
+        collision = true
+      } else if (newPosition.x + circle.radius >= this.screen.width ){
+        circle.velocity.x = -circle.velocity.x
+        circle.position.x = this.screen.width - circle.radius
+        collision = true
+      }
+
+      if (newPosition.y - circle.radius <= 0) {
+        circle.velocity.y = -circle.velocity.y
+        circle.position.y = circle.radius
+        collision = true
+      } else if(newPosition.y + circle.radius >= this.screen.height){
+        circle.velocity.y = -circle.velocity.y
+        circle.position.y = this.screen.height - circle.radius
+        collision = true
+      }
+
+      if (!collision) {
+        circle.nextPosition = newPosition
+      } else {
+        circle.nextPosition = Vector.zero()
+      }
+    })
   }
 }

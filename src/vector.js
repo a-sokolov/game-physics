@@ -26,10 +26,9 @@ export class Vector {
 
   normalize() {
     const length = this.length()
-    if (length === 0) {
-      return
+    if (length !== 0) {
+      this.divideBy(length)
     }
-    this.divideBy(length)
   }
 
   addTo(v) {
@@ -94,5 +93,9 @@ export class Vector {
 
   multiply(v) {
     return this.copy().multiplyWith(v)
+  }
+
+  distanceFrom(v) {
+    return Math.sqrt((this.x - v.x) ** 2 + (this.y - v.y) ** 2)
   }
 }
