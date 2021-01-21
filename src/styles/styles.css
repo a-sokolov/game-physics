@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+    user-select: none;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+}
