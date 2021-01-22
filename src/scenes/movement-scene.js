@@ -1,6 +1,6 @@
 import { Scene } from '../scene'
-import { ShapeFactory } from '../shape-factory'
-import { SpriteSheet } from '../sprite-sheet'
+import { Player } from './player'
+import { Vector } from '../vector'
 
 const GRAVITY = 0.85
 const JUMP = 12
@@ -11,102 +11,52 @@ const RICK_TILES = {
   imageWidth: 512,
   imageHeight: 660,
   spriteWidth: 128,
-  spriteHeight: 165
+  spriteHeight: 165,
+  width: 128 / 2,
+  height: 165 / 2
 }
+
+const MORTY_TILES = {
+  imageName: 'morty-tiles',
+  imageWidth: 512,
+  imageHeight: 660,
+  spriteWidth: 128,
+  spriteHeight: 165,
+  width: 128 / 2,
+  height: 165 / 2
+}
+
+const MORTY_KEYMAP = new Map([
+  [65, 'left'],
+  [68, 'right'],
+  [87, 'up'],
+  [83, 'down'],
+  [16, 'jump'],
+])
 
 export class MovementScene extends Scene {
   constructor(game) {
     super(game)
 
-    this.screen = game.screen
-    this.controller = game.controller
+    const props = { game: this.game, speed: SPEED, gravity: GRAVITY, jump: JUMP }
 
-    this.rickTiles = new SpriteSheet(RICK_TILES)
-
-    this.rickStop = this.rickTiles.getSprite(1)
-    this.rickJump = this.rickTiles.getSprite(9)
-
-    // this.rickMoveDown = this.rickTiles.getAnimation([1, 2, 3, 4], 200)
-    this.rickMoveLeft = this.rickTiles.getAnimation([5, 6, 7, 8], 200)
-    this.rickMoveRight = this.rickTiles.getAnimation([13, 14, 15, 16], 200)
-
-    this.rickCurrent = this.rickStop
-
-    this.shapeFactory = new ShapeFactory()
-  }
-
-  init() {
-    super.init()
-
-    this.speed = SPEED
-    this.movement = 0
-    this.isJumped = true
-
-    this.rect = this.shapeFactory.createRect(
-      this.screen.width / 2 - (RICK_TILES.spriteWidth / 2) / 2, 10,
-      RICK_TILES.spriteWidth / 2,
-      RICK_TILES.spriteHeight / 2,
-      'red')
-  }
-
-  update() {
-    const { mob } = this.rect
-
-    if (this.controller.left || this.controller.right) {
-      if (this.controller.left) {
-        this.speed = -SPEED
-        this.rickCurrent = this.rickMoveLeft
-      }
-      if (this.controller.right) {
-        this.speed = SPEED
-        this.rickCurrent = this.rickMoveRight
-      }
-
-      if (this.isJumped) {
-        this.speed *= 0.75
-      }
-      mob.position.x += this.speed
-    } else {
-      if (this.isJumped) {
-        this.rickCurrent = this.rickJump
-      } else {
-        this.rickCurrent = this.rickStop
-      }
-    }
-
-    if (this.controller.jump && !this.isJumped) {
-      this.isJumped = true
-      this.movement = 0
-      this.movement -= JUMP
-    }
-
-    this.movement += GRAVITY
-    mob.position.y += this.movement
-    if (mob.position.y + mob.height >= this.screen.height) {
-      this.isJumped = false
-      mob.position.y = this.screen.height - mob.height
-    }
-
-    if (mob.position.x <= 0) {
-      mob.position.x = 0
-      this.rickCurrent = this.rickStop
-    }
-    if (mob.position.x + mob.width >= this.screen.width) {
-      mob.position.x = this.screen.width - mob.width
-      this.rickCurrent = this.rickStop
-    }
-
-    this.rickCurrent.setXY(mob.position.x, mob.position.y)
+    this.rick = new Player({
+      ...props,
+      tileProps: RICK_TILES,
+      position: new Vector(30, 20)
+    })
+    this.morty = new Player({
+      ...props,
+      tileProps: MORTY_TILES,
+      keymap: MORTY_KEYMAP,
+      position: new Vector(this.game.screen.width - MORTY_TILES.width - 30, 20)
+    })
   }
 
   render(time) {
     super.render(time)
-    this.update()
 
-    this.rickCurrent.update?.(time)
-    this.screen.drawSprite(
-      this.rickCurrent,
-      this.rect.mob.width,
-      this.rect.mob.height)
+    this.rick.render(time)
+    this.morty.render(time)
   }
 }

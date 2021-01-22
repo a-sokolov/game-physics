@@ -1,18 +1,20 @@
+const DEFAULT_KEYMAP = new Map([
+  [37, 'left'],
+  [39, 'right'],
+  [38, 'up'],
+  [40, 'down'],
+  [32, 'jump'],
+])
+
 export class Controller {
-  constructor() {
+  constructor(keymap = DEFAULT_KEYMAP) {
     this.left = false
     this.right = false
     this.up = false
     this.down = false
     this.jump = false
 
-    this.keyMap = new Map([
-      [37, 'left'],
-      [39, 'right'],
-      [38, 'up'],
-      [40, 'down'],
-      [32, 'jump'],
-    ])
+    this.keyMap = keymap
 
     document.addEventListener('keydown', event => this.update(event, true))
     document.addEventListener('keyup', event => this.update(event, false))

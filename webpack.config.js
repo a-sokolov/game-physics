@@ -1,9 +1,9 @@
-const path = require('path');
+const path = require('path')
 const PACKAGE = require('./package.json')
 
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin")
 
 module.exports = {
   mode: 'development',
@@ -54,4 +54,4 @@ module.exports = {
       ]
     })
   ],
-};
+}

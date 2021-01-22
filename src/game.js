@@ -11,9 +11,10 @@ export class Game {
   constructor() {
     this.screen = new Screen(CANVAS.width, CANVAS.height)
     this.screen.loadSpriteSheet('rick-tiles', './assets/rick/rick_tiles.png').then(() => {
-      console.log('Bingo')
-      this.scene = new MovementScene(this)
-      this.scene.init()
+      this.screen.loadSpriteSheet('morty-tiles', './assets/morty/morty_tiles.png').then(() => {
+        this.scene = new MovementScene(this)
+        this.scene.init()
+      })
     })
     this.controller = new Controller()
   }
