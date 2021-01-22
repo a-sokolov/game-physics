@@ -1,10 +1,18 @@
 import { Scene } from '../scene'
 import { ShapeFactory } from '../shape-factory'
-import { ShapeDrawer } from '../shape-drawer'
+import { SpriteSheet } from '../sprite-sheet'
 
 const GRAVITY = 0.85
 const JUMP = 12
 const SPEED = 5.5
+
+const RICK_TILES = {
+  imageName: 'rick-tiles',
+  imageWidth: 512,
+  imageHeight: 660,
+  spriteWidth: 128,
+  spriteHeight: 165
+}
 
 export class MovementScene extends Scene {
   constructor(game) {
@@ -13,8 +21,18 @@ export class MovementScene extends Scene {
     this.screen = game.screen
     this.controller = game.controller
 
+    this.rickTiles = new SpriteSheet(RICK_TILES)
+
+    this.rickStop = this.rickTiles.getSprite(1)
+    this.rickJump = this.rickTiles.getSprite(9)
+
+    // this.rickMoveDown = this.rickTiles.getAnimation([1, 2, 3, 4], 200)
+    this.rickMoveLeft = this.rickTiles.getAnimation([5, 6, 7, 8], 200)
+    this.rickMoveRight = this.rickTiles.getAnimation([13, 14, 15, 16], 200)
+
+    this.rickCurrent = this.rickStop
+
     this.shapeFactory = new ShapeFactory()
-    this.shapeDrawer = new ShapeDrawer(this.screen)
   }
 
   init() {
@@ -23,7 +41,12 @@ export class MovementScene extends Scene {
     this.speed = SPEED
     this.movement = 0
     this.isJumped = true
-    this.rect = this.shapeFactory.createRect(10, 10, 25, 25, 'red')
+
+    this.rect = this.shapeFactory.createRect(
+      this.screen.width / 2 - (RICK_TILES.spriteWidth / 2) / 2, 10,
+      RICK_TILES.spriteWidth / 2,
+      RICK_TILES.spriteHeight / 2,
+      'red')
   }
 
   update() {
@@ -32,15 +55,23 @@ export class MovementScene extends Scene {
     if (this.controller.left || this.controller.right) {
       if (this.controller.left) {
         this.speed = -SPEED
+        this.rickCurrent = this.rickMoveLeft
       }
       if (this.controller.right) {
         this.speed = SPEED
+        this.rickCurrent = this.rickMoveRight
       }
 
       if (this.isJumped) {
         this.speed *= 0.75
       }
       mob.position.x += this.speed
+    } else {
+      if (this.isJumped) {
+        this.rickCurrent = this.rickJump
+      } else {
+        this.rickCurrent = this.rickStop
+      }
     }
 
     if (this.controller.jump && !this.isJumped) {
@@ -58,15 +89,24 @@ export class MovementScene extends Scene {
 
     if (mob.position.x <= 0) {
       mob.position.x = 0
+      this.rickCurrent = this.rickStop
     }
     if (mob.position.x + mob.width >= this.screen.width) {
       mob.position.x = this.screen.width - mob.width
+      this.rickCurrent = this.rickStop
     }
+
+    this.rickCurrent.setXY(mob.position.x, mob.position.y)
   }
 
   render(time) {
     super.render(time)
     this.update()
-    this.shapeDrawer.draw(this.rect)
+
+    this.rickCurrent.update?.(time)
+    this.screen.drawSprite(
+      this.rickCurrent,
+      this.rect.mob.width,
+      this.rect.mob.height)
   }
 }

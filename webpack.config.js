@@ -48,10 +48,10 @@ module.exports = {
       version: PACKAGE.version
     }),
     new CleanWebpackPlugin(),
-    // new CopyWebpackPlugin({
-    //   patterns: [
-    //     { from: "./src/assets", to: "assets" }
-    //   ]
-    // })
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: "./src/assets", to: "assets" }
+      ]
+    })
   ],
 };

@@ -1,30 +1,31 @@
 import { Screen } from './screen'
 import { Controller } from './controller'
-
-import { CirclesScene } from './scenes/circles-scene'
 import { MovementScene } from './scenes/movement-scene'
 
 const CANVAS = {
-  width: 300,
-  height: 180
+  width: 400,
+  height: 400
 }
 
 export class Game {
   constructor() {
     this.screen = new Screen(CANVAS.width, CANVAS.height)
+    this.screen.loadSpriteSheet('rick-tiles', './assets/rick/rick_tiles.png').then(() => {
+      console.log('Bingo')
+      this.scene = new MovementScene(this)
+      this.scene.init()
+    })
     this.controller = new Controller()
-    this.scene = new MovementScene(this)
   }
 
   frame(time) {
-    this.screen.fill('black')
-    this.scene.render(time)
+    this.screen.fill('orange')
+    this.scene?.render(time)
 
     requestAnimationFrame(time => this.frame(time))
   }
 
   run() {
-    this.scene.init()
     requestAnimationFrame(time => this.frame(time))
   }
 }

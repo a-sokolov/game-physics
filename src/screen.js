@@ -4,6 +4,7 @@ export class Screen {
     this.height = height
     this.canvas = this.createCanvas(width, height)
     this.context = this.canvas.getContext('2d')
+    this.images = []
   }
 
   createCanvas(width, height) {
@@ -22,6 +23,28 @@ export class Screen {
     canvas.height = height
 
     return canvas
+  }
+
+  loadSpriteSheet(name, src) {
+    return new Promise(resolve => {
+      const image = new Image()
+      this.images[name] = image
+      image.src = src
+      image.onload = () => resolve(name)
+    })
+  }
+
+  drawSprite(sprite, width, height) {
+    const image = this.images[sprite.imageName]
+    this.context.drawImage(image,
+      sprite.sourceX,
+      sprite.sourceY,
+      sprite.width,
+      sprite.height,
+      sprite.x,
+      sprite.y,
+      width || sprite.width,
+      height || sprite.height)
   }
 
   fill(color) {
