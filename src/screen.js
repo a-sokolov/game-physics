@@ -1,10 +1,16 @@
+import { ImageLoader } from './loaders/image-loader'
+
 export class Screen {
   constructor(width, height) {
     this.width = width
     this.height = height
     this.canvas = this.createCanvas(width, height)
     this.context = this.canvas.getContext('2d')
-    this.images = []
+    this.images = {}
+    this.isImagesLoaded = false
+
+    this.camera = null
+    this.isCameraSet = false
   }
 
   createCanvas(width, height) {
@@ -25,26 +31,51 @@ export class Screen {
     return canvas
   }
 
-  loadSpriteSheet(name, src) {
-    return new Promise(resolve => {
-      const image = new Image()
-      this.images[name] = image
-      image.src = src
-      image.onload = () => resolve(name)
+  setCamera(camera) {
+    this.camera = camera
+    this.isCameraSet = true
+  }
+
+  loadImages(imageFiles) {
+    const loader = new ImageLoader(imageFiles)
+    loader.load().then(names => {
+      this.images = Object.assign(this.images, loader.images)
+      this.isImagesLoaded = true
+      console.log(names)
     })
   }
 
   drawSprite(sprite, width, height) {
     const image = this.images[sprite.imageName]
+
+    let spriteX = sprite.x
+
+    if (this.isCameraSet) {
+      spriteX -= this.camera.x
+    }
+
     this.context.drawImage(image,
       sprite.sourceX,
       sprite.sourceY,
       sprite.width,
       sprite.height,
-      sprite.x,
+      spriteX,
       sprite.y,
       width || sprite.width,
       height || sprite.height)
+  }
+
+  drawParallaxImage(parallaxImage) {
+    parallaxImage.images.forEach(img => this.drawImg(img))
+  }
+
+  drawImg(img) {
+    const image = this.images[img.imageName]
+    this.context.drawImage(image,
+      img.x,
+      img.y,
+      img.width,
+      img.height)
   }
 
   fill(color) {
@@ -63,5 +94,10 @@ export class Screen {
   drawRect(rect, color) {
     this.context.fillStyle = color
     this.context.fillRect(rect.position.x, rect.position.y, rect.width, rect.height)
+  }
+
+  drawImage(name, x, y, width, height) {
+    const image = this.images[name]
+    this.context.drawImage(image, x, y, width, height)
   }
 }

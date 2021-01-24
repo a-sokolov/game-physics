@@ -27,6 +27,7 @@ export class Animation extends Sprite {
 
   run() {
     this.setFrame(0)
+    this.lastTime = 0
     this.running = true
   }
 
