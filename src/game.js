@@ -1,7 +1,6 @@
 import { Screen } from './screen'
 import { CameraByRect } from './cameras/camera-by-rect'
-import { CameraByCenter } from './cameras/camera-by-center'
-import { BackgroundCamera } from './cameras/background-camera'
+import { BackgroundController } from './controllers/background-controller'
 import { Player } from './player'
 
 import { SPEED, CANVAS, RICK_TILES, GRAVITY, JUMP, FLOOR_Y } from './constants'
@@ -34,7 +33,11 @@ export class Game {
       'brick': './assets/level01/brick.png'
     })
 
-    const edgeRect = new Rect(100, this.screen.height / 2, this.screen.width / 2 - 100, this.screen.height / 2)
+    const edgeRect = new Rect(
+      100,
+      this.screen.height / 2,
+      this.screen.width / 2 - 100,
+      this.screen.height / 2)
 
     this.camera = new CameraByRect({
       screen: this.screen,
@@ -56,8 +59,8 @@ export class Game {
     this.camera.watch(this.rick.rect)
 
     this.background = new Background(this.screen, SPEED)
-    this.backgroundCamera = new BackgroundCamera({ background: this.background })
-    this.backgroundCamera.watch(this.rick.rect)
+    this.backgroundController = new BackgroundController(this.background, this.camera, edgeRect)
+    this.backgroundController.watch(this.rick.rect)
     this.isGameStarted = false
   }
 
@@ -72,7 +75,7 @@ export class Game {
     } else if (this.screen.isImagesLoaded) {
       this.screen.fill('orange')
 
-      this.backgroundCamera.render(time)
+      this.backgroundController.render(time)
       this.background.render(time)
 
       this.scene?.render(time)

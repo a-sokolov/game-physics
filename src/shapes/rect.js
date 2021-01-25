@@ -79,12 +79,4 @@ export class Rect extends Mob {
             rect.position.y + rect.height >= this.position.y + this .height)
 
   }
-
-  getX2() {
-    return
-  }
-
-  getY2() {
-
-  }
 }
