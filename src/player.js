@@ -1,20 +1,22 @@
 import { SpriteSheet } from './sprite-sheet'
-import { ShapeFactory } from './shape-factory'
+import { Rect } from './shapes/rect'
 import { Controller } from './controller'
+import { FLOOR_Y, JUMP_SPEED_GAP } from './constants'
 
-const FLOOR_Y = 10
-const JUMP_SPEED_GAP = 0.85
-
+export const PlayerDirection = {
+  left: 'left',
+  right: 'right'
+}
 export class Player {
-  constructor({ game, screenWidth, speed, gravity, jump, tileProps, keymap, position }) {
+  constructor({ game, speed, gravity, jump, tileProps, keymap, position }) {
     this.game = game
     this.screen = this.game.screen
-    this.screenWidth = screenWidth
     this.controller = new Controller(keymap)
     this.gameSpeed = speed
     this.playerJump = jump
     this.gravity = gravity
 
+    this.direction = null
     this.movement = 0
     this.isJumped = true
 
@@ -31,37 +33,32 @@ export class Player {
 
     this.current = this.stop
 
-    this.shapeFactory = new ShapeFactory()
-    this.rect = this.shapeFactory.createRect(
-      position.x,
-      position.y,
-      tileProps.width,
-      tileProps.height,
-      'red')
+    this.rect = new Rect(position.x, position.y, tileProps.width, tileProps.height)
   }
 
   update() {
-    const { mob } = this.rect
-
     if (this.controller.left || this.controller.right) {
       if (this.controller.left) {
         this.speed = -this.gameSpeed
         this.current = this.isJumped ? this.jumpLeft : this.moveLeft
+        this.direction = PlayerDirection.left
       }
       if (this.controller.right) {
         this.speed = this.gameSpeed
         this.current = this.isJumped ? this.jumpRight : this.moveRight
+        this.direction = PlayerDirection.right
       }
 
       if (this.isJumped) {
         this.speed *= JUMP_SPEED_GAP
       }
-      mob.position.x += this.speed
+      this.rect.position.x += this.speed
     } else {
       if (this.isJumped) {
         this.current = this.jump
       } else {
         this.current = this.stop
+        this.direction = null
       }
     }
 
@@ -73,27 +70,24 @@ export class Player {
 
     if (this.isJumped) {
       this.movement += this.gravity
-      mob.position.y += this.movement
+      this.rect.position.y += this.movement
     }
 
-    if (mob.position.y + mob.height >= this.screen.height - FLOOR_Y) {
-      mob.position.y = this.screen.height - FLOOR_Y - mob.height
+    if (this.rect.position.y + this.rect.height >= this.screen.height - FLOOR_Y) {
+      this.rect.position.y = this.screen.height - FLOOR_Y - this.rect.height
       if (this.isJumped) {
         this.isJumped = false
         this.current.run?.()
       }
     }
 
-    if (mob.position.x <= 0) {
-      mob.position.x = 0
+    if (this.rect.position.x <= 0) {
+      this.rect.position.x = 0
       this.current = this.stop
+      this.direction = null
     }
-    // if (mob.position.x + mob.width >= this.screenWidth) {
-    //   mob.position.x = this.screenWidth - mob.width
-    //   this.current = this.stop
-    // }
 
-    this.current.setXY(mob.position.x, mob.position.y)
+    this.current.setXY(this.rect.position.x, this.rect.position.y)
   }
 
   render(time) {
@@ -101,7 +95,7 @@ export class Player {
     this.current.update?.(time)
     this.screen.drawSprite(
       this.current,
-      this.rect.mob.width,
-      this.rect.mob.height)
+      this.rect.width,
+      this.rect.height)
   }
 }

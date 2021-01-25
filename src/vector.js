@@ -24,6 +24,10 @@ export class Vector {
     return Math.sqrt(this.x ** 2 + this.y ** 2)
   }
 
+  equals(v) {
+    return this.x === v.x && this.y === v.y
+  }
+
   normalize() {
     const length = this.length()
     if (length !== 0) {
@@ -97,5 +101,18 @@ export class Vector {
 
   distanceFrom(v) {
     return Math.sqrt((this.x - v.x) ** 2 + (this.y - v.y) ** 2)
+  }
+
+  // linear interpolate the vector to another vector
+  lerp(x, y, amt) {
+    if (x instanceof Vector) {
+      return this.lerp(x.x, x.y, y)
+    }
+    if (amt > 1.0) {
+      amt = 1.0
+    }
+    this.x += (x - this.x) * amt
+    this.y += (y - this.y) * amt
+    return this
   }
 }

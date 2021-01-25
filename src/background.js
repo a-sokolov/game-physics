@@ -8,7 +8,7 @@ export class Background {
     this.sun = new Img({ imageName: 'sun', x: -60, y: -80, width: 276.5, height: 358.5 })
     this.cloud1 = new ParallaxImage({
       imageName: 'mid-cloud1',
-      y: 100,
+      y: 150,
       width: screen.width,
       height: screen.height / 2,
       step: 0.025,
@@ -18,9 +18,9 @@ export class Background {
 
     this.cloud2 = new ParallaxImage({
       imageName: 'mid-cloud2',
-      y: 180,
+      y: 300,
       width: screen.width,
-      height: screen.height / 2,
+      height: screen.height / 3,
       step: 0.020,
       autorun: true
     })
@@ -66,10 +66,10 @@ export class Background {
       image.update(time)
     })
 
+    this.screen.drawImg(this.sun)
+
     this.screen.drawParallaxImage(this.cloud1)
     this.screen.drawParallaxImage(this.cloud2)
-
-    this.screen.drawImg(this.sun)
 
     this.images.forEach(image => {
       this.screen.drawParallaxImage(image)

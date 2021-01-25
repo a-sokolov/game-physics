@@ -49,9 +49,11 @@ export class Screen {
     const image = this.images[sprite.imageName]
 
     let spriteX = sprite.x
+    let spriteY = sprite.y
 
     if (this.isCameraSet) {
-      spriteX -= this.camera.x
+      spriteX -= this.camera.position.x
+      spriteY -= this.camera.position.y
     }
 
     this.context.drawImage(image,
@@ -60,7 +62,7 @@ export class Screen {
       sprite.width,
       sprite.height,
       spriteX,
-      sprite.y,
+      spriteY,
       width || sprite.width,
       height || sprite.height)
   }
@@ -70,6 +72,11 @@ export class Screen {
   }
 
   drawImg(img) {
+    if (img.x + img.width < 0 ||
+        img.x > this.width) {
+      return
+    }
+
     const image = this.images[img.imageName]
     this.context.drawImage(image,
       img.x,
@@ -94,6 +101,11 @@ export class Screen {
   drawRect(rect, color) {
     this.context.fillStyle = color
     this.context.fillRect(rect.position.x, rect.position.y, rect.width, rect.height)
+  }
+
+  drawStroke(rect, color) {
+    this.context.fillStyle = color
+    this.context.strokeRect(rect.position.x, rect.position.y, rect.width, rect.height)
   }
 
   drawImage(name, x, y, width, height) {

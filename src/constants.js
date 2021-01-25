@@ -1,11 +1,12 @@
 export const CANVAS = {
   width: 1024,
-  height: 477
+  height: 640
 }
 
+export const FLOOR_Y = 10
+export const JUMP_SPEED_GAP = 0.85
 export const SPEED = 5.5
-
-export const GRAVITY = 0.85
+export const GRAVITY = 1.05
 export const JUMP = 15.5
 
 export const RICK_TILES = {
