@@ -21,15 +21,14 @@ export class BackgroundController  {
       if (this.isWatchObject) {
       const { position } = this.object
 
-      const rect = new Rect(
-        this.edgeRect.position.x + this.camera.position.x - 0.01,
-        this.edgeRect.position.y + this.camera.position.y - 0.01,
-        this.edgeRect.width,
-        this.edgeRect.height)
+      const x1 = this.edgeRect.position.x + this.camera.position.x + 0.01
+      const y1 = this.edgeRect.position.y + this.camera.position.y + 0.01
 
-      // console.log(`${position.x} ${this.edgeRect.position.x} ${this.camera.position.x}`)
+      const x2 = this.edgeRect.position.x + this.camera.position.x + this.edgeRect.width - 0.01
+      const y2 = this.edgeRect.position.y + this.camera.position.y + this.edgeRect.height - 0.01
 
-      if (this.object.in(rect) || this.camera.position.x < this.edgeRect.x) {
+      if ((position.x > x1 && position.x + this.object.width < x2)
+        || (position.x < this.edgeRect.position.x)) {
         this.background.stop()
       } else if (this.lastPosition) {
         if (this.lastPosition.x === position.x) {
