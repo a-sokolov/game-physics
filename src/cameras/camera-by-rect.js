@@ -39,7 +39,9 @@ export class CameraByRect extends Camera {
         }
       }
 
-      // console.log('Position x is', this.position.x)
+      this.position.y = Math.min(0, -(this.edgeRect.position.y - this.object.position.y))
+
+      // console.log('Position Y is', this.position.y, this.edgeRect.position.y, this.object.position.y)
 
       this.screen.drawStroke(this.startEdgeRect, 'green')
       this.screen.drawStroke(this.endEdgeRect, 'red')

@@ -11,6 +11,7 @@ export class ParallaxImage {
     this.imageName = imageName
     this.baseX = x
     this.baseY = y
+    this.y = y
     this.baseWidth = width
     this.baseHeight = height
     this.step = step
@@ -21,6 +22,11 @@ export class ParallaxImage {
     this.images.push(this.createImage(x))
     this.images.push(this.createImage(width))
     this.images.push(this.createImage(width * 2))
+  }
+
+  setY(y) {
+    this.y = y
+    this.images.forEach(image => image.y = y)
   }
 
   createImage(x) {
@@ -44,15 +50,15 @@ export class ParallaxImage {
 
   nextFrame() {
     this.images.forEach(image => {
-      image.setXY(image.x + (this.direction === Direction.forward ? -this.step : this.step), this.baseY)
+      image.setXY(image.x + (this.direction === Direction.forward ? -this.step : this.step), this.y)
     })
 
     const [first, second, third] = this.images
     if (this.direction === Direction.forward && (first.x + first.width <= 0)) {
-      first.setXY(third.x + third.width, this.baseY)
+      first.setXY(third.x + third.width, this.y)
       this.images = [second, third, first]
     } else if (this.direction === Direction.backward && (first.x >= 0)) {
-      third.setXY(-(third.width - first.x), this.baseY)
+      third.setXY(-(third.width - first.x), this.y)
       this.images = [third, first, second]
     }
   }

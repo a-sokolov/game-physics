@@ -30,6 +30,10 @@ export class BackgroundController  {
       const x2 = this.edgeRect.position.x + this.camera.position.x + this.edgeRect.width - 0.01
       const y2 = this.edgeRect.position.y + this.camera.position.y + this.edgeRect.height - 0.01
 
+      if (this.camera.position.y !== 0) {
+        this.background.extractImageY('foreground', this.camera.position.y)
+      }
+
       if ((position.x > x1 && position.x + this.object.width < x2)
         || (position.x < this.edgeRect.position.x)
         || (this.limitRect.width === this.screenRect.width)

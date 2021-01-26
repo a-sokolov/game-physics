@@ -58,6 +58,11 @@ export class Background {
     this.images.forEach(image => image.stop())
   }
 
+  extractImageY(name, y) {
+    const image = this[name]
+    image.setY(image.baseY - y)
+  }
+
   render(time) {
     this.cloud1.update(time)
     this.cloud2.update(time)
