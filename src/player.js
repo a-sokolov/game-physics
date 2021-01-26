@@ -81,12 +81,6 @@ export class Player {
       }
     }
 
-    if (this.rect.position.x <= 0) {
-      this.rect.position.x = 0
-      this.current = this.stop
-      this.direction = null
-    }
-
     this.current.setXY(this.rect.position.x, this.rect.position.y)
   }
 
@@ -97,5 +91,7 @@ export class Player {
       this.current,
       this.rect.width,
       this.rect.height)
+
+    this.screen.drawStroke(this.rect)
   }
 }

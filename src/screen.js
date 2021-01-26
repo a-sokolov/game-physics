@@ -1,4 +1,5 @@
 import { ImageLoader } from './loaders/image-loader'
+import { Rect } from './shapes/rect'
 
 export class Screen {
   constructor(width, height) {
@@ -45,7 +46,7 @@ export class Screen {
     })
   }
 
-  drawSprite(sprite, width, height) {
+  drawSprite(sprite, width, height, showRect = true) {
     const image = this.images[sprite.imageName]
 
     let spriteX = sprite.x
@@ -65,6 +66,10 @@ export class Screen {
       spriteY,
       width || sprite.width,
       height || sprite.height)
+
+    if (showRect) {
+      this.drawStroke(new Rect(sprite.x, sprite.y, width || sprite.width, height || sprite.height))
+    }
   }
 
   drawParallaxImage(parallaxImage) {
@@ -103,9 +108,18 @@ export class Screen {
     this.context.fillRect(rect.position.x, rect.position.y, rect.width, rect.height)
   }
 
-  drawStroke(rect, color) {
-    this.context.fillStyle = color
-    this.context.strokeRect(rect.position.x, rect.position.y, rect.width, rect.height)
+  drawStroke(rect, color, withCamera = true) {
+    this.context.strokeStyle = color
+
+    let x = rect.position.x
+    let y = rect.position.y
+
+    if (this.isCameraSet && withCamera) {
+      x -= this.camera.position.x
+      y -= this.camera.position.y
+    }
+
+    this.context.strokeRect(x, y, rect.width, rect.height)
   }
 
   drawImage(name, x, y, width, height) {

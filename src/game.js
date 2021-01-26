@@ -38,12 +38,12 @@ export class Game {
       this.screen.height / 2,
       this.screen.width / 2 - 100,
       this.screen.height / 2)
+    const screenRect = new Rect(0, 0, this.screen.width, this.screen.height)
+    const limitRect = new Rect(0, 0, this.screen.width * 2, this.screen.height)
 
     this.camera = new CameraByRect({
       screen: this.screen,
-      screenRect: new Rect(0, 0, this.screen.width, this.screen.height),
-      limitRect: new Rect(0, 0, this.screen.width * 2, this.screen.height),
-      edgeRect,
+      screenRect, limitRect, edgeRect,
       scrollEdge: this.screen.width / 2
     })
 
@@ -59,7 +59,11 @@ export class Game {
     this.camera.watch(this.rick.rect)
 
     this.background = new Background(this.screen, SPEED)
-    this.backgroundController = new BackgroundController(this.background, this.camera, edgeRect)
+    this.backgroundController = new BackgroundController({
+      background: this.background,
+      camera: this.camera,
+      screenRect, limitRect, edgeRect
+    })
     this.backgroundController.watch(this.rick.rect)
     this.isGameStarted = false
   }

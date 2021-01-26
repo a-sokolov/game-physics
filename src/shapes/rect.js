@@ -79,4 +79,8 @@ export class Rect extends Mob {
             rect.position.y + rect.height >= this.position.y + this .height)
 
   }
+
+  copy() {
+    return new Rect(this.position.x, this.position.y, this.width, this.height)
+  }
 }

@@ -1,12 +1,15 @@
 import { Direction } from '../parallax-image'
-import { Rect } from '../shapes/rect'
 
 export class BackgroundController  {
-  constructor(background, camera, edgeRect) {
+  constructor({ background, camera, screenRect, edgeRect, limitRect }) {
     this.background = background
     this.lastPosition = null
+    this.screenRect = screenRect
     this.edgeRect = edgeRect
+    this.limitRect = limitRect
     this.camera = camera
+
+    this.maxViewPortalX = this.limitRect.width - this.screenRect.width + this.edgeRect.position.x + this.edgeRect.width
 
     this.isWatchObject = false
     this.object = null
@@ -28,16 +31,22 @@ export class BackgroundController  {
       const y2 = this.edgeRect.position.y + this.camera.position.y + this.edgeRect.height - 0.01
 
       if ((position.x > x1 && position.x + this.object.width < x2)
-        || (position.x < this.edgeRect.position.x)) {
+        || (position.x < this.edgeRect.position.x)
+        || (this.limitRect.width === this.screenRect.width)
+        || (this.maxViewPortalX < (this.object.position.x + this.object.width))) {
+        // Когда объект выходит за рамки viewport'а, то останавливаем анимацию
         this.background.stop()
       } else if (this.lastPosition) {
         if (this.lastPosition.x === position.x) {
+          // Если нет движения, то останавливаем анимацию
           this.background.stop()
         }
         if (this.lastPosition.x > position.x) {
+          // Если объект дальше последней точки, то двигаем вперед
           this.background.run(Direction.backward)
         }
         if (this.lastPosition.x < position.x) {
+          // Если объект находится до последней точки, то двигаем назад
           this.background.run(Direction.forward)
         }
       }
