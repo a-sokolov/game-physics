@@ -5,7 +5,9 @@ import { FLOOR_Y, JUMP_SPEED_GAP } from './constants'
 
 export const PlayerDirection = {
   left: 'left',
-  right: 'right'
+  right: 'right',
+  up: 'up',
+  down: 'down'
 }
 export class Player {
   constructor({ game, speed, gravity, jump, tileProps, keymap, position }) {
@@ -14,10 +16,13 @@ export class Player {
     this.controller = new Controller(keymap)
     this.gameSpeed = speed
     this.playerJump = jump
+
+    this.originGravity = gravity
     this.gravity = gravity
 
     this.direction = null
     this.movement = 0
+    this.isCanJump = true
     this.isJumped = true
 
     this.tiles = new SpriteSheet(tileProps)
@@ -28,8 +33,12 @@ export class Player {
     this.jumpLeft = this.tiles.getSprite(6)
     this.jumpRight = this.tiles.getSprite(15)
 
-    this.moveLeft = this.tiles.getAnimation([5, 6, 7, 8], 150)
-    this.moveRight = this.tiles.getAnimation([13, 14, 15, 16], 150)
+    const animationSpeed = 150
+
+    this.moveUp = this.tiles.getAnimation([9, 10, 11, 12], animationSpeed)
+    this.moveDown = this.tiles.getAnimation([1, 2, 3, 4], animationSpeed)
+    this.moveLeft = this.tiles.getAnimation([5, 6, 7, 8], animationSpeed)
+    this.moveRight = this.tiles.getAnimation([13, 14, 15, 16], animationSpeed)
 
     this.current = this.stop
 
@@ -38,21 +47,23 @@ export class Player {
 
   update() {
     if (this.controller.left || this.controller.right) {
+      let speed = 0
+
       if (this.controller.left) {
-        this.speed = -this.gameSpeed
+        speed = -this.gameSpeed
         this.current = this.isJumped ? this.jumpLeft : this.moveLeft
         this.direction = PlayerDirection.left
       }
       if (this.controller.right) {
-        this.speed = this.gameSpeed
+        speed = this.gameSpeed
         this.current = this.isJumped ? this.jumpRight : this.moveRight
         this.direction = PlayerDirection.right
       }
 
       if (this.isJumped) {
-        this.speed *= JUMP_SPEED_GAP
+        speed *= JUMP_SPEED_GAP
       }
-      this.rect.position.x += this.speed
+      this.rect.position.x += speed
     } else {
       if (this.isJumped) {
         this.current = this.jump
@@ -62,7 +73,24 @@ export class Player {
       }
     }
 
-    if (this.controller.jump && !this.isJumped) {
+    if (this.controller.up || this.controller.down && !this.isJumped) {
+      this.isCanJump = false
+      this.gravity = 0
+
+      if (this.controller.up) {
+        this.current = this.moveUp
+        this.rect.position.y -= this.gameSpeed
+        this.direction = PlayerDirection.up
+      }
+
+      if (this.controller.down) {
+        this.current = this.moveDown
+        this.rect.position.y += this.gameSpeed
+        this.direction = PlayerDirection.down
+      }
+    }
+
+    if (this.controller.jump && !this.isJumped && this.isCanJump) {
       this.isJumped = true
       this.movement = 0
       this.movement -= this.playerJump

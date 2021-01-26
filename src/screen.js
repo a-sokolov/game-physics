@@ -12,6 +12,8 @@ export class Screen {
 
     this.camera = null
     this.isCameraSet = false
+
+    this.objects = []
   }
 
   createCanvas(width, height) {
@@ -57,6 +59,17 @@ export class Screen {
       spriteY -= this.camera.position.y
     }
 
+    if (!this.isNeedDraw({
+                  name: sprite.imageName,
+                  x: spriteX,
+                  y: spriteY,
+                  originX: sprite.x,
+                  originY: sprite.y,
+                  width: width || sprite.width,
+                  height: height || sprite.height })) {
+      return
+    }
+
     this.context.drawImage(image,
       sprite.sourceX,
       sprite.sourceY,
@@ -77,8 +90,7 @@ export class Screen {
   }
 
   drawImg(img) {
-    if (img.x + img.width < 0 ||
-        img.x > this.width) {
+    if (!this.isNeedDraw(img)) {
       return
     }
 
@@ -88,6 +100,10 @@ export class Screen {
       img.y,
       img.width,
       img.height)
+  }
+
+  clear() {
+    this.context.clearRect(0, 0, this.width, this.height)
   }
 
   fill(color) {
@@ -119,11 +135,38 @@ export class Screen {
       y -= this.camera.position.y
     }
 
+    if (!this.isNeedDraw({ ...rect, x, y })) {
+      return
+    }
+
     this.context.strokeRect(x, y, rect.width, rect.height)
   }
 
   drawImage(name, x, y, width, height) {
     const image = this.images[name]
     this.context.drawImage(image, x, y, width, height)
+  }
+
+  isNeedDraw({ name, x, y, width, height, originX, originY }) {
+    const visible = !((x >= this.width) ||
+      (y >= this.height) ||
+      ((x + width) <= 0) ||
+      ((y + height) <= 0))
+
+    if (name && name === 'brick') {
+      const rect = new Rect(originX, originY, width, height)
+      let img = this.objects.find(img => img.rect.equals(rect) && img.name === name)
+
+      if (!img) {
+        img = { name, rect, visible }
+        this.objects.push(img)
+      }
+      if (img.visible !== visible) {
+        // console.log(`${img.name} (${img.rect.position.x}:${img.rect.position.y})`, visible)
+      }
+      img.visible = visible
+    }
+
+    return visible
   }
 }

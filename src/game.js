@@ -39,7 +39,7 @@ export class Game {
       this.screen.width / 2 - 100,
       this.screen.height / 2)
     const screenRect = new Rect(0, 0, this.screen.width, this.screen.height)
-    const limitRect = new Rect(0, 0, this.screen.width * 2, this.screen.height)
+    const limitRect = new Rect(0, 0, this.screen.width * 3, this.screen.height)
 
     this.camera = new CameraByRect({
       screen: this.screen,
@@ -74,9 +74,21 @@ export class Game {
       this.scene = new MovementScene(this, this.rick)
       this.scene.init()
 
-      this.brick = new Sprite({ imageName: 'brick', x: 2000, y: 100, width: 64, height: 64 })
-      this.brick2 = new Sprite({ imageName: 'brick', x: 500, y: 100, width: 64, height: 64 })
+      this.bricks = []
+
+      let startX = 500
+      let startY = 400
+
+      Array.from({ length: 30 }).forEach((value, index) => {
+        this.bricks.push(new Sprite({ imageName: 'brick', x: startX, y: startY, width: 64, height: 64 }))
+
+        startX += 64
+        if (index > 0 && index % 10 === 0) {
+          startY -= 64
+        }
+      })
     } else if (this.screen.isImagesLoaded) {
+      this.screen.clear()
       this.screen.fill('orange')
 
       this.backgroundController.render(time)
@@ -85,8 +97,7 @@ export class Game {
       this.scene?.render(time)
       this.camera.render(time)
 
-      this.screen.drawSprite(this.brick)
-      this.screen.drawSprite(this.brick2)
+      this.bricks.forEach(brick => this.screen.drawSprite(brick))
     }
 
     requestAnimationFrame(time => this.frame(time))

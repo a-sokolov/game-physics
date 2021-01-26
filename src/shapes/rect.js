@@ -21,6 +21,12 @@ export class Rect extends Mob {
     this.height = height
   }
 
+  equals(rect) {
+    return rect.position.equals(this.position)
+        && rect.width === this.width
+        && rect.height === this.height
+  }
+
   setPosition(rect, position = Position.center) {
     const point = rect.getCenterPoint()
 

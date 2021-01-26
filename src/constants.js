@@ -7,7 +7,7 @@ export const FLOOR_Y = 10
 export const JUMP_SPEED_GAP = 0.85
 export const SPEED = 5.5
 export const GRAVITY = 1.05
-export const JUMP = 35.5
+export const JUMP = 25.5
 
 export const RICK_TILES = {
   imageName: 'rick-tiles',
