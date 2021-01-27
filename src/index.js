@@ -1,7 +1,9 @@
-import { Game } from './game'
+// import { Game } from './game'
+import { Main } from './mvc/01/main'
 import './styles/styles.css'
 
 window.onload = () => {
-  const game = new Game()
-  game.run()
+  new Main()
+  // const game = new Game()
+  // game.run()
 }
