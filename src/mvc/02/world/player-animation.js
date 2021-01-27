@@ -7,8 +7,8 @@ export class PlayerAnimation {
     this.speed = speed
     this.stop = tiles.getAnimation([1])
     this.jump = tiles.getAnimation([9])
-    this.left = tiles.getAnimation([8])
-    this.right = tiles.getAnimation([13])
+    this.left = tiles.getAnimation([5])
+    this.right = tiles.getAnimation([14])
 
     this.jumpLeft = tiles.getAnimation([6])
     this.jumpRight = tiles.getAnimation([15])

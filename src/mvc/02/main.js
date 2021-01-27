@@ -70,6 +70,8 @@ export class Main {
   render() {
     this.display.fill(this.game.world.backgroundColor)
 
+    this.display.drawMap(this.game.world.tileMap)
+
     this.game.world.playerAnimation.current.setXY(
       this.game.world.player.x,
       this.game.world.player.y)

@@ -1,3 +1,5 @@
+import { Sprite } from './graphic/sprite'
+
 export class Display {
   constructor(canvas) {
     this.buffer = document.createElement('canvas').getContext('2d')
@@ -11,6 +13,20 @@ export class Display {
 
   getImage(name) {
     return this.images[name]
+  }
+
+  drawMap(tileMap) {
+    const { imageName, size, columns, map } = tileMap
+
+    for (let index = map.length - 1; index > -1; --index) {
+      if (map[index] === 1) {
+        const destinationX = (index % columns) * size
+        const destinationY = Math.floor(index / columns) * size
+
+        const sprite = new Sprite({name: imageName, x: destinationX, y: destinationY, width: size, height: size})
+        this.drawSprite(sprite)
+      }
+    }
   }
 
   isNeedToDraw(x, y, width, height) {

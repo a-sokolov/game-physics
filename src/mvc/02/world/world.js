@@ -19,14 +19,31 @@ export class World {
     this.gravity = gravity
 
     this.player = new Player({
-      x: 100,
-      y: 50,
+      x: 10,
+      y: 500,
       width: PLAYER_TILES.spriteWidth / 2,
       height: PLAYER_TILES.spriteHeight / 2,
       jumpPower: 50,
       speed: 1.5 })
     this.playerAnimation = new PlayerAnimation(PLAYER_TILES, 150)
     this.playerAnimation.watch(this.player)
+
+    this.tileMap = {
+      imageName: 'brick',
+      rows: 10,
+      columns: 16,
+      size: 64,
+      map: [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0,
+            0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    }
   }
 
   collideObject(object) {
