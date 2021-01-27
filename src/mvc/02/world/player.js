@@ -1,6 +1,6 @@
-import { Obj } from './obj'
+import { Rect } from '../base/rect'
 
-export class Player extends Obj {
+export class Player extends Rect {
   constructor({ x, y, width, height, jumpPower = 20, speed = 0.5 }) {
     super(x, y, width, height)
 

@@ -1,4 +1,4 @@
-export class Obj {
+export class Rect {
   constructor(x, y, width, height) {
     this.x = x
     this.y = y

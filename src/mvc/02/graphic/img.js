@@ -1,10 +1,10 @@
-export class Img {
+import { Rect } from '../base/rect'
+
+export class Img extends Rect {
   constructor({ name, x = 0, y = 0, width, height }) {
+    super(x, y, width, height)
+
     this.name = name
-    this.x = x
-    this.y = y
-    this.width = width
-    this.height = height
   }
 
   setXY(x, y) {
