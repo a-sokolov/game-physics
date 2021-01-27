@@ -52,7 +52,7 @@ export class PlayerAnimation {
         if (distance < this.player.speed) {
           const slowDown = (this.speed * (( (this.player.speed - distance) / (this.player.speed / 100) ) / 100))
           speed = this.speed + slowDown
-          if (this.player.speed / 2 < slowDown) {
+          if (this.player.speed / 4 < slowDown) {
             this.current = this.current === this.moveLeft ? this.left : this.right
           }
         }
