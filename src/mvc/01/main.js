@@ -1,4 +1,4 @@
-import { Engine } from './engine'
+import { Engine } from '../engine'
 import { Display } from './display'
 import { Controller } from './controller'
 import { Game } from './game'

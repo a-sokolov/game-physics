@@ -7,14 +7,12 @@ export class Controller {
     this.right = new ButtonInput()
     this.up = new ButtonInput()
     this.jump = new ButtonInput()
-
-    this.handleKeyDownUp = this.handleKeyDownUp.bind(this)
   }
 
-  keyDownUp(event) {
-    const down = (event.type === "keydown")
+  keyDownUp(type, keyCode) {
+    const down = (type === "keydown")
 
-    switch(event.keyCode) {
+    switch(keyCode) {
       case 37:
         this.left.getInput(down)
         break
@@ -30,9 +28,5 @@ export class Controller {
       case 32:
         this.jump.getInput(down)
     }
-  }
-
-  handleKeyDownUp(event) {
-    this.keyDownUp(event)
   }
 }
