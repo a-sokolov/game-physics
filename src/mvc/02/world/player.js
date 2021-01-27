@@ -1,31 +1,31 @@
 export class Player {
-  constructor() {
-    this.color1 = "#404040"
-    this.color2 = "#f0f0f0"
+  constructor({ x, y, width, height, jumpPower = 20, speed = 0.5 }) {
+    this.jumpPower = jumpPower
+    this.speed = speed
 
     this.jumping = true
     this.velocityX = 0
     this.velocityY = 0
 
-    this.x = 100
-    this.y = 50
-    this.width = 12
-    this.height = 12
+    this.x = x
+    this.y = y
+    this.width = width
+    this.height = height
   }
 
   jump() {
     if (!this.jumping) {
       this.jumping = true
-      this.velocityY -= 20
+      this.velocityY -= this.jumpPower
     }
   }
 
   moveLeft() {
-    this.velocityX -= 0.5
+    this.velocityX -= this.speed
   }
 
   moveRight() {
-    this.velocityX += 0.5
+    this.velocityX += this.speed
   }
 
   update() {

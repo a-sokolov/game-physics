@@ -1,15 +1,32 @@
 import { Player } from './player'
+import { PlayerAnimation } from './player-animation'
+
+export const PLAYER_TILES = {
+  name: 'rick-tiles',
+  width: 512,
+  height: 660,
+  spriteWidth: 128,
+  spriteHeight: 165
+}
 
 export class World {
-  constructor(friction, gravity) {
+  constructor(friction = 0.9, gravity = 3) {
     this.backgroundColor = 'orange'
-    this.width = 1024 / 10
-    this.height = 640 / 10
+    this.width = 1024
+    this.height = 640
 
     this.friction = friction
     this.gravity = gravity
 
-    this.player = new Player()
+    this.player = new Player({
+      x: 100,
+      y: 50,
+      width: PLAYER_TILES.spriteWidth / 2,
+      height: PLAYER_TILES.spriteHeight / 2,
+      jumpPower: 50,
+      speed: 1.5 })
+    this.playerAnimation = new PlayerAnimation(PLAYER_TILES, 150)
+    this.playerAnimation.watch(this.player)
   }
 
   collideObject(object) {
@@ -29,9 +46,10 @@ export class World {
     }
   }
 
-  update() {
+  update(time) {
     this.player.velocityY += this.gravity
     this.player.update()
+    this.playerAnimation.update(time)
 
     this.player.velocityX *= this.friction
     this.player.velocityY *= this.friction

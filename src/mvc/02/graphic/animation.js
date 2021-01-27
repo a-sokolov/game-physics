@@ -19,6 +19,10 @@ export class Animation extends Sprite {
     this.totalFrames = this.frames.length
   }
 
+  setSpeed(speed) {
+    this.speed = speed
+  }
+
   setFrame(index) {
     this.currentFrame = index
     this.sourceX = this.frames[index].sx

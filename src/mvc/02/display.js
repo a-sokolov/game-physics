@@ -29,7 +29,7 @@ export class Display {
       this.context.canvas.width = height / heightWidthRatio
     }
 
-    this.context.imageSmoothingEnabled = false
+    this.context.imageSmoothingEnabled = true
   }
 
   drawPlayer(rect, color1, color2) {

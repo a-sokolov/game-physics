@@ -2,10 +2,10 @@ import { World } from './world/world'
 
 export class Game {
   constructor() {
-    this.world = new World(0.9, 3)
+    this.world = new World()
   }
 
-  update() {
-    this.world.update()
+  update(time) {
+    this.world.update(time)
   }
 }

@@ -49,7 +49,7 @@ export class Main {
     })
 
     imageLoader.load().then(images => {
-      this.display.setImages(images)
+      this.display.setImages(imageLoader.images)
       this.resize()
       this.engine.start()
     })
@@ -69,11 +69,20 @@ export class Main {
 
   render() {
     this.display.fill(this.game.world.backgroundColor)
-    this.display.drawPlayer(this.game.world.player, this.game.world.player.color1, this.game.world.player.color2)
+
+    this.game.world.playerAnimation.current.setXY(
+      this.game.world.player.x,
+      this.game.world.player.y)
+
+    this.display.drawSprite(
+      this.game.world.playerAnimation.current,
+      this.game.world.player.width,
+      this.game.world.player.height)
+
     this.display.render()
   }
 
-  update() {
+  update(time) {
     if (this.controller.left.active)  {
       this.game.world.player.moveLeft()
     }
@@ -85,6 +94,6 @@ export class Main {
       this.controller.jump.active = false
     }
 
-    this.game.update()
+    this.game.update(time)
   }
 }
