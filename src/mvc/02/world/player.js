@@ -1,16 +1,15 @@
-export class Player {
+import { Obj } from './obj'
+
+export class Player extends Obj {
   constructor({ x, y, width, height, jumpPower = 20, speed = 0.5 }) {
+    super(x, y, width, height)
+
     this.jumpPower = jumpPower
     this.speed = speed
 
     this.jumping = true
     this.velocityX = 0
     this.velocityY = 0
-
-    this.x = x
-    this.y = y
-    this.width = width
-    this.height = height
   }
 
   jump() {
@@ -29,6 +28,9 @@ export class Player {
   }
 
   update() {
+    this.oldX = this.x
+    this.oldY = this.y
+
     this.x += this.velocityX
     this.y += this.velocityY
   }
