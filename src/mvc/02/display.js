@@ -55,7 +55,7 @@ export class Display {
     this.buffer.fillRect(Math.floor(rect.x + 2), Math.floor(rect.y + 2), rect.width - 4, rect.height - 4)
   }
 
-  drawSprite(sprite, width, height) {
+  drawSprite(sprite, width, height, offsetX = 0, offsetY = 0) {
     let destinationX = sprite.x
     let destinationY = sprite.y
 
@@ -72,10 +72,10 @@ export class Display {
       sprite.sourceY,
       sprite.width,
       sprite.height,
-      destinationX,
-      destinationY,
-      width || sprite.width,
-      height || sprite.height)
+      destinationX + offsetX,
+      destinationY + offsetY,
+      (width || sprite.width) + (offsetX * 2),
+      (height || sprite.height) + (offsetY * 2))
   }
 
   fill(color) {

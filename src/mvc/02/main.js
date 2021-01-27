@@ -48,7 +48,7 @@ export class Main {
       'brick': './assets/level01/brick.png'
     })
 
-    imageLoader.load().then(images => {
+    imageLoader.load().then(() => {
       this.display.setImages(imageLoader.images)
       this.resize()
       this.engine.start()
@@ -59,7 +59,7 @@ export class Main {
     this.controller.keyDownUp(event.type, event.keyCode)
   }
 
-  resize(event) {
+  resize() {
     this.display.resize(
       document.documentElement.clientWidth - 32,
       document.documentElement.clientHeight - 32,
@@ -79,7 +79,8 @@ export class Main {
     this.display.drawSprite(
       this.game.world.playerAnimation.current,
       this.game.world.player.width,
-      this.game.world.player.height)
+      this.game.world.player.height,
+      1, 1)
 
     this.display.render()
   }

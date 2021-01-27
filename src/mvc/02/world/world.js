@@ -22,8 +22,8 @@ export class World {
     this.player = new Player({
       x: 10,
       y: 500,
-      width: PLAYER_TILES.spriteWidth / 2,
-      height: PLAYER_TILES.spriteHeight / 2,
+      width: 60, // PLAYER_TILES.spriteWidth / 2,
+      height: 60, // PLAYER_TILES.spriteHeight / 2,
       jumpPower: 50,
       speed: 1.5 })
     this.playerAnimation = new PlayerAnimation(PLAYER_TILES, 150)
@@ -148,5 +148,10 @@ export class World {
     this.player.velocityY *= this.friction
 
     this.collideObject(this.player)
+
+    if (this.player.oldY < this.player.y) {
+      // prevent jump if we are falling
+      this.player.jumping = true
+    }
   }
 }
