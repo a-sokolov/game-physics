@@ -5,6 +5,8 @@ import { Game } from './game'
 
 import { ImageLoader } from './loaders/image-loader'
 
+const DEBUG = true
+
 export class Main {
   constructor(timeStep) {
     const root = document.getElementById('container')
@@ -25,7 +27,7 @@ export class Main {
     this.update = this.update.bind(this)
 
     this.controller = new Controller()
-    this.display = new Display(canvas, true)
+    this.display = new Display(canvas, DEBUG)
     this.game = new Game()
     this.engine = new Engine(timeStep, this.render, this.update)
 
@@ -72,19 +74,21 @@ export class Main {
 
     this.display.drawMap(this.game.world.tileMap)
 
-    this.game.world.playerAnimation.current.setXY(
+    this.game.world.playerAnimation.animation.setXY(
       this.game.world.player.x,
       this.game.world.player.y)
 
     this.display.drawSprite(
-      this.game.world.playerAnimation.current,
+      this.game.world.playerAnimation.animation,
       this.game.world.player.width,
       this.game.world.player.height,
       1, 1)
 
-    this.game.world.collisionRects.forEach(rect => {
-      this.display.drawStroke(rect.x, rect.y, rect.width, rect.height, 'red')
-    })
+    if (DEBUG) {
+      this.game.world.collisionRects.forEach(rect => {
+        this.display.drawStroke(rect.x, rect.y, rect.width, rect.height, 'red')
+      })
+    }
 
     this.display.render()
   }

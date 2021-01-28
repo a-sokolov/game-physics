@@ -1,5 +1,5 @@
 import { Sprite } from './sprite'
-import { Animation } from './animation'
+import { AnimationFrames } from './animation-frames'
 
 export class SpriteSheet {
   constructor({ name, width, height, spriteWidth, spriteHeight }) {
@@ -10,13 +10,13 @@ export class SpriteSheet {
     this.spriteHeight = spriteHeight
   }
 
-  getAnimation(indexes, speed, repeat = true, autorun = true) {
-    return new Animation({
+  getAnimationFrames(...indexes) {
+    return new AnimationFrames({
       name: this.name,
-      frames: indexes.map(index => ({ sx: this.getSourceX(index), sy: this.getSourceY(index) })),
-      speed: speed,
-      repeat: repeat,
-      autorun: autorun,
+      frames: indexes.map(index => ({
+        sx: this.getSourceX(index),
+        sy: this.getSourceY(index)
+      })),
       width: this.spriteWidth,
       height: this.spriteHeight
     })

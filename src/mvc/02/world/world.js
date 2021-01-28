@@ -1,7 +1,9 @@
 import { Player } from './player'
 import { PlayerAnimation } from './player-animation'
 import { Collider } from './collider'
-import {Rect} from "../base/rect";
+import { Rect } from '../base/rect'
+
+import { MainCamera} from './main-camera'
 
 export const PLAYER_TILES = {
   name: 'rick-tiles',
@@ -29,8 +31,15 @@ export class World {
       jumpPower: 45,
       speed: 1.55,
     })
-    this.playerAnimation = new PlayerAnimation(PLAYER_TILES, 150)
+    this.playerAnimation = new PlayerAnimation(PLAYER_TILES)
     this.playerAnimation.watch(this.player)
+
+    this.camera = new MainCamera({
+      edgeRect: new Rect(100, this.height / 2, this.width / 2 - 100, this.height / 2),
+      limitRect: new Rect(0, 0, this.width, this.height),
+      screenRect: new Rect(0, 0, this.width, this.height)
+    })
+    this.camera.watch(this.player)
 
     this.tileMap = {
       imageName: 'brick',
@@ -118,11 +127,6 @@ export class World {
       object.jumping = false
     }
 
-    if (object.oldY < object.y) {
-      // prevent jump if we are falling
-      object.jumping = true
-    }
-
     const { size, columns } = this.tileMap
     let bottom, left, right, top, value
 
@@ -157,10 +161,11 @@ export class World {
     this.collisionRects.push(new Rect(right * size, bottom * size, size, size))
   }
 
-  update(time) {
+  update() {
     this.player.velocityY += this.gravity
     this.player.updatePosition(this.gravity, this.friction)
-    this.playerAnimation.update(time)
+    this.playerAnimation.update()
+    this.camera.update()
 
     this.collideObject(this.player)
   }

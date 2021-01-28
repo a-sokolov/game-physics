@@ -2,29 +2,25 @@ import { SpriteSheet } from '../graphic/sprite-sheet'
 import { Animator, AnimatorMode } from '../graphic/animator'
 
 export class PlayerAnimation extends Animator {
-  constructor(tileProps, speed) {
+  constructor(tileProps) {
     const tiles = new SpriteSheet(tileProps)
 
-    const defaultFrame = tiles.getAnimation([1])
+    const defaultFrame = tiles.getAnimationFrames(1)
     super(defaultFrame, 10)
 
-    this.speed = speed
-
     this.stop = defaultFrame
-    this.jump = tiles.getAnimation([9])
+    this.jump = tiles.getAnimationFrames(9)
 
-    this.left = tiles.getAnimation([5])
-    this.right = tiles.getAnimation([14])
+    this.left = tiles.getAnimationFrames(5)
+    this.right = tiles.getAnimationFrames(15)
 
-    this.jumpLeft = tiles.getAnimation([6])
-    this.jumpRight = tiles.getAnimation([15])
+    this.jumpLeft = tiles.getAnimationFrames(6)
+    this.jumpRight = tiles.getAnimationFrames(15)
 
-    // this.moveUp = tiles.getAnimation([9, 10, 11, 12], speed)
-    // this.moveDown = tiles.getAnimation([1, 2, 3, 4], speed)
-    this.moveLeft = tiles.getAnimation([5, 6, 7, 8], speed)
-    this.moveRight = tiles.getAnimation([13, 14, 15, 16], speed)
+    this.moveLeft = tiles.getAnimationFrames(5, 6, 7, 8)
+    this.moveRight = tiles.getAnimationFrames(13, 14, 15, 16)
 
-    this.current = defaultFrame
+    this.changeFrameSet(defaultFrame)
     this.player = null
   }
 
@@ -32,16 +28,21 @@ export class PlayerAnimation extends Animator {
     this.player = player
   }
 
-  update(time) {
+  update() {
     if (this.player) {
+      const roundedVelocityX = Math.trunc(Math.abs(this.player.velocityX))
+
       if (this.player.velocityY < 0) {
-        if (this.player.directionX < 0) {
+        if (roundedVelocityX === 0) {
+          this.changeFrameSet(this.jump, AnimatorMode.pause)
+        } else if (this.player.directionX < 0) {
           this.changeFrameSet(this.jumpLeft, AnimatorMode.pause);
         } else {
           this.changeFrameSet(this.jumpRight, AnimatorMode.pause);
         }
+      } else if (roundedVelocityX === 0) {
+        this.changeFrameSet(this.stop, AnimatorMode.pause)
       } else if (this.player.directionX < 0) {
-
         if (this.player.velocityX < -0.1) {
           this.changeFrameSet(this.moveLeft, AnimatorMode.loop, 5);
         } else {
@@ -56,41 +57,6 @@ export class PlayerAnimation extends Animator {
       }
 
       this.animate()
-      this.current = this.animation
     }
-
-    // if (this.player) {
-    //   const playerX = this.player.x
-    //   const currentX = this.player.oldX
-    //
-    //   let speed = this.speed
-    //   if (playerX !== currentX) {
-    //     if (playerX - currentX > 0) {
-    //       // move right
-    //       this.current = this.player.jumping ? this.jumpRight : this.moveRight
-    //     } else {
-    //       // move left
-    //       this.current = this.player.jumping ? this.jumpLeft : this.moveLeft
-    //     }
-    //   }
-    //
-    //   if (playerX === 0 || playerX === currentX) {
-    //     // stop
-    //     this.current = this.stop
-    //   } else {
-    //     const distance = Math.abs(playerX - currentX)
-    //     if (distance < this.player.speed) {
-    //       const slowDown = (this.speed * (( (this.player.speed - distance) / (this.player.speed / 100) ) / 100))
-    //       speed = this.speed + slowDown
-    //       if (this.player.speed / 4 < slowDown) {
-    //         // slow down
-    //         this.current = this.current === this.moveLeft || this.current === this.jumpLeft ? this.left : this.right
-    //       }
-    //     }
-    //   }
-    //
-    //   this.current.setSpeed(speed)
-    //   this.current.update(time)
-    // }
   }
 }

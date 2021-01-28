@@ -5,6 +5,7 @@ export class Display {
     this.buffer = document.createElement('canvas').getContext('2d')
     this.context = canvas.getContext('2d')
     this.images = []
+    this.camera = null
 
     this.isDebug = debug
   }
@@ -15,6 +16,10 @@ export class Display {
 
   getImage(name) {
     return this.images[name]
+  }
+
+  setCamera(camera) {
+    this.camera = camera
   }
 
   isNeedToDraw(x, y, width, height) {
@@ -51,16 +56,10 @@ export class Display {
           width: size,
           height: size
         })
+
         this.drawSprite(sprite)
       }
     }
-  }
-
-  drawPlayer(rect, color1, color2) {
-    this.buffer.fillStyle = color1
-    this.buffer.fillRect(Math.floor(rect.x), Math.floor(rect.y), rect.width, rect.height)
-    this.buffer.fillStyle = color2
-    this.buffer.fillRect(Math.floor(rect.x + 2), Math.floor(rect.y + 2), rect.width - 4, rect.height - 4)
   }
 
   drawSprite(sprite, width, height, offsetX = 0, offsetY = 0) {
@@ -82,6 +81,11 @@ export class Display {
     destinationY += offsetY
     destinationWidth += (offsetX * 2)
     destinationHeight += (offsetY * 2)
+
+    if (this.camera) {
+      destinationX -= this.camera.x
+      destinationY -= this.camera.y
+    }
 
     this.buffer.drawImage(
       this.getImage(sprite.name),
