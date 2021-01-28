@@ -1,66 +1,49 @@
-import { Rect } from '../base/rect'
+import { MovingObject } from '../base/moving-object'
 
-export class Player extends Rect {
-  constructor({ x, y, width, height, jumpPower = 20, speed = 0.5, collisionOffsets }) {
-    super(x, y, width, height)
+export class Player extends MovingObject {
+  constructor({ x, y, width, height, velocityMax, jumpPower = 20, speed = 0.55 }) {
+    super(x, y, width, height, velocityMax)
 
     this.jumpPower = jumpPower
     this.speed = speed
-
+    this.directionX = -1
     this.jumping = true
-    this.velocityX = 0
-    this.velocityY = 0
-    this.collisionOffsets = collisionOffsets
   }
 
   jump() {
-    if (!this.jumping) {
+    if (!this.jumping && this.velocityY < 10) {
       this.jumping = true
       this.velocityY -= this.jumpPower
     }
   }
 
   moveLeft() {
+    this.directionX = -1
     this.velocityX -= this.speed
   }
 
   moveRight() {
+    this.directionX = 1
     this.velocityX += this.speed
   }
 
-  update() {
+  updatePosition(gravity, friction) {
     this.oldX = this.x
     this.oldY = this.y
+
+    this.velocityY += gravity
+    this.velocityX *= friction
+
+    /* Made it so that velocity cannot exceed velocity_max */
+    if (Math.abs(this.velocityX) > this.velocityMax) {
+      this.velocityX = this.velocityMax * Math.sign(this.velocityX)
+    }
+
+    if (Math.abs(this.velocityY) > this.velocityMax) {
+      this.velocityY = this.velocityMax * Math.sign(this.velocityY)
+    }
 
     this.x += this.velocityX
     this.y += this.velocityY
   }
-
-  // getLeft() {
-  //   if (this.collisionOffsets?.bottom) {
-  //     return this.x + this.collisionOffsets.bottom.start
-  //   }
-  //   return super.getLeft()
-  // }
-  //
-  // getRight() {
-  //   if (this.collisionOffsets?.bottom) {
-  //     return super.getRight() - this.collisionOffsets.bottom.end
-  //   }
-  //   return super.getRight()
-  // }
-  //
-  // getOldLeft() {
-  //   if (this.collisionOffsets?.bottom) {
-  //     return this.oldX + this.collisionOffsets.bottom.start
-  //   }
-  //   return super.getOldLeft()
-  // }
-  //
-  // getOldRight() {
-  //   if (this.collisionOffsets?.bottom) {
-  //     return super.getOldRight() - this.collisionOffsets.bottom.end
-  //   }
-  //   return super.getOldRight()
-  // }
 }

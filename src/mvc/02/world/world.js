@@ -12,7 +12,7 @@ export const PLAYER_TILES = {
 }
 
 export class World {
-  constructor(friction = 0.9, gravity = 3) {
+  constructor(friction = 0.85, gravity = 2) {
     this.backgroundColor = 'orange'
     this.width = 1024
     this.height = 640
@@ -25,14 +25,9 @@ export class World {
       y: 500,
       width: 60, // PLAYER_TILES.spriteWidth / 2,
       height: 60, // PLAYER_TILES.spriteHeight / 2,
-      jumpPower: 50,
-      speed: 1.5,
-      collisionOffsets: {
-        bottom: {
-          start: 20,
-          end: 40
-        }
-      }
+      velocityMax: 50,
+      jumpPower: 45,
+      speed: 1.55,
     })
     this.playerAnimation = new PlayerAnimation(PLAYER_TILES, 150)
     this.playerAnimation.watch(this.player)
@@ -164,11 +159,8 @@ export class World {
 
   update(time) {
     this.player.velocityY += this.gravity
-    this.player.update()
+    this.player.updatePosition(this.gravity, this.friction)
     this.playerAnimation.update(time)
-
-    this.player.velocityX *= this.friction
-    this.player.velocityY *= this.friction
 
     this.collideObject(this.player)
   }
