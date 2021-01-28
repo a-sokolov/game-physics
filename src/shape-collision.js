@@ -7,8 +7,8 @@ export class ShapeCollision {
   }
 
   collision(shapes) {
-    for (let i = 0; i < shapes.length; i++) {
-      for (let j = i + 1; j < shapes.length; j++) {
+    for (let i = 0; i < shapes.length; i ++) {
+      for (let j = i + 1; j < shapes.length; j ++) {
         const circle1 = shapes[i].mob
         const circle2 = shapes[j].mob
 

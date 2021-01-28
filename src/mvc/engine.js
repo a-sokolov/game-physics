@@ -13,6 +13,8 @@ export class Engine {
   }
 
   run(time) {
+    this.animationFrameRequest = requestAnimationFrame(this.handleRun)
+
     this.accumulatedTime += time - this.time
     this.time = time
 
@@ -30,8 +32,6 @@ export class Engine {
       this.updated = false
       this.render(time)
     }
-
-    this.animationFrameRequest = requestAnimationFrame(this.handleRun)
   }
 
   handleRun(time) {

@@ -25,7 +25,7 @@ export class Main {
     this.update = this.update.bind(this)
 
     this.controller = new Controller()
-    this.display = new Display(canvas)
+    this.display = new Display(canvas, true)
     this.game = new Game()
     this.engine = new Engine(timeStep, this.render, this.update)
 
@@ -81,6 +81,10 @@ export class Main {
       this.game.world.player.width,
       this.game.world.player.height,
       1, 1)
+
+    this.game.world.collisionRects.forEach(rect => {
+      this.display.drawStroke(rect.x, rect.y, rect.width, rect.height, 'red')
+    })
 
     this.display.render()
   }

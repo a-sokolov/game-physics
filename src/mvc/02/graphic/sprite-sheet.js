@@ -33,11 +33,11 @@ export class SpriteSheet {
   }
 
   getSourceX(index) {
-    return (--index * this.spriteWidth) % this.width
+    return (-- index * this.spriteWidth) % this.width
   }
 
   getSourceY(index) {
-    return Math.trunc((--index * this.spriteWidth) / this.width) * this.spriteHeight
+    return Math.trunc((-- index * this.spriteWidth) / this.width) * this.spriteHeight
   }
 }
 

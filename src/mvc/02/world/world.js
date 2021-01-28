@@ -1,6 +1,7 @@
 import { Player } from './player'
 import { PlayerAnimation } from './player-animation'
 import { Collider } from './collider'
+import {Rect} from "../base/rect";
 
 export const PLAYER_TILES = {
   name: 'rick-tiles',
@@ -25,7 +26,14 @@ export class World {
       width: 60, // PLAYER_TILES.spriteWidth / 2,
       height: 60, // PLAYER_TILES.spriteHeight / 2,
       jumpPower: 50,
-      speed: 1.5 })
+      speed: 1.5,
+      collisionOffsets: {
+        bottom: {
+          start: 20,
+          end: 40
+        }
+      }
+    })
     this.playerAnimation = new PlayerAnimation(PLAYER_TILES, 150)
     this.playerAnimation.watch(this.player)
 
@@ -45,7 +53,6 @@ export class World {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }
-
 
     /**
      * These collision values correspond to collision functions in the Collider class.
@@ -94,6 +101,7 @@ export class World {
        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+    this.collisionRects = []
     this.collider = new Collider()
   }
 
@@ -115,28 +123,43 @@ export class World {
       object.jumping = false
     }
 
+    if (object.oldY < object.y) {
+      // prevent jump if we are falling
+      object.jumping = true
+    }
+
     const { size, columns } = this.tileMap
     let bottom, left, right, top, value
+
+    this.collisionRects = []
 
     top = Math.floor(object.getTop() / size)
     left = Math.floor(object.getLeft() / size)
     value = this.collisionMap[top * columns + left]
     this.collider.collide(value, object, left * size, top * size, size)
 
+    this.collisionRects.push(new Rect(left * size, top * size, size, size))
+
     top = Math.floor(object.getTop() / size)
     right = Math.floor(object.getRight() / size)
     value = this.collisionMap[top * columns + right]
     this.collider.collide(value, object, right * size, top * size, size)
+
+    this.collisionRects.push(new Rect(right * size, top * size, size, size))
 
     bottom = Math.floor(object.getBottom() / size)
     left = Math.floor(object.getLeft() / size)
     value = this.collisionMap[bottom * columns + left]
     this.collider.collide(value, object, left * size, bottom * size, size)
 
+    this.collisionRects.push(new Rect(left * size, bottom * size, size, size))
+
     bottom = Math.floor(object.getBottom() / size)
     right = Math.floor(object.getRight() / size)
     value = this.collisionMap[bottom * columns + right]
     this.collider.collide(value, object, right * size, bottom * size, size)
+
+    this.collisionRects.push(new Rect(right * size, bottom * size, size, size))
   }
 
   update(time) {
@@ -148,10 +171,5 @@ export class World {
     this.player.velocityY *= this.friction
 
     this.collideObject(this.player)
-
-    if (this.player.oldY < this.player.y) {
-      // prevent jump if we are falling
-      this.player.jumping = true
-    }
   }
 }
