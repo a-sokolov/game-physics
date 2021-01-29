@@ -62,7 +62,34 @@ export class Display {
     }
   }
 
-  drawSprite(sprite, width, height, offsetX = 0, offsetY = 0) {
+  drawParallaxImage(parallaxImage, sticky = true) {
+    parallaxImage.images.forEach(img => {
+      let destinationY = Math.round(img.y)
+
+      if (!sticky && this.camera) {
+        destinationY -= this.camera.y
+      }
+
+      this.drawImg({ ...img, y: destinationY })
+    })
+  }
+
+  drawImg(img) {
+    if (!this.isNeedToDraw(img)) {
+      return
+    }
+
+    this.buffer.drawImage(
+      this.getImage(img.name),
+      img.x,
+      img.y,
+      img.width,
+      img.height)
+  }
+
+  drawSprite(sprite, props = null) {
+    const { width, height, offsetX = 0, offsetY = 0 } = props ?? {}
+
     let destinationX = Math.round(sprite.x)
     let destinationY = Math.round(sprite.y)
     let destinationWidth = width || sprite.width
@@ -77,10 +104,10 @@ export class Display {
       return
     }
 
-    destinationX += offsetX
-    destinationY += offsetY
-    destinationWidth += (offsetX * 2)
-    destinationHeight += (offsetY * 2)
+    // destinationX += offsetX
+    // destinationY += offsetY
+    // destinationWidth += (Math.abs(offsetX) * 2)
+    // destinationHeight += (Math.abs(offsetY) * 2)
 
     if (this.camera) {
       destinationX -= this.camera.x
@@ -99,13 +126,24 @@ export class Display {
       destinationHeight)
 
     if (this.isDebug) {
-      this.drawStroke(destinationX, destinationY, destinationWidth, destinationHeight)
+      this.buffer.strokeStyle = 'black'
+      this.buffer.strokeRect(destinationX, destinationY, destinationWidth, destinationHeight)
     }
   }
 
-  drawStroke(x, y, width, height, color = 'black') {
+  drawStroke({ x, y, width, height, color = 'black', sticky = false }) {
+    let destinationX = Math.round(x)
+    let destinationY = Math.round(y)
+    let destinationWidth = width
+    let destinationHeight = height
+
+    if (!sticky && this.camera) {
+      destinationX -= this.camera.x
+      destinationY -= this.camera.y
+    }
+
     this.buffer.strokeStyle = color
-    this.buffer.strokeRect(x, y, width, height)
+    this.buffer.strokeRect(destinationX, destinationY, destinationWidth, destinationHeight)
   }
 
   fill(color) {

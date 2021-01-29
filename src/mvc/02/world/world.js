@@ -1,9 +1,11 @@
 import { Player } from './player'
 import { PlayerAnimation } from './player-animation'
+import { Background } from './background'
 import { Collider } from './collider'
 import { Rect } from '../base/rect'
 
 import { MainCamera} from './main-camera'
+import { BackgroundController } from './background-controller'
 
 export const PLAYER_TILES = {
   name: 'rick-tiles',
@@ -32,30 +34,46 @@ export class World {
       speed: 1.55,
     })
     this.playerAnimation = new PlayerAnimation(PLAYER_TILES)
-    this.playerAnimation.watch(this.player)
+
+    this.edgeRect = new Rect(300, this.height / 2, this.width / 2 - 300, this.height / 2)
+    this.screenRect = new Rect(0, 0, this.width, this.height)
+    this.limitRect = new Rect(0, 0, this.width * 2, this.height * 2)
+
+    this.background = new Background(this.screenRect, this.player.speed)
 
     this.camera = new MainCamera({
-      edgeRect: new Rect(100, this.height / 2, this.width / 2 - 100, this.height / 2),
-      limitRect: new Rect(0, 0, this.width, this.height),
-      screenRect: new Rect(0, 0, this.width, this.height)
+      edgeRect: this.edgeRect,
+      limitRect: this.limitRect,
+      screenRect: this.screenRect
     })
+
+    this.backgroundController = new BackgroundController({
+      background: this.background,
+      camera: this.camera,
+      edgeRect: this.edgeRect,
+      screenRect: this.screenRect,
+      limitRect: this.limitRect
+    })
+
+    this.playerAnimation.watch(this.player)
     this.camera.watch(this.player)
+    this.backgroundController.watch(this.player)
 
     this.tileMap = {
       imageName: 'brick',
       rows: 10,
-      columns: 16,
+      columns: 32,
       size: 64,
-      map: [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0,
-            0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      map: [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     }
 
     /**
@@ -94,38 +112,38 @@ export class World {
      * 1111 15 - all walls
      * */
     this.collisionMap =
-      [0, 0, 0, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       0, 0, 15, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       0, 0, 0, 0, 0, 0, 0, 0, 15, 15, 15, 0, 0, 0, 0, 0,
-       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       0, 0, 0, 0, 0, 15, 15, 15, 0, 0, 0, 15, 15, 15, 0, 0,
-       0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 15,
-       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      [0, 0, 0, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 15, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 15, 15, 15, 0, 0, 0, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
     this.collisionRects = []
     this.collider = new Collider()
   }
 
-  collideObject(object) {
+  collideObject(object, limitRect) {
     if (object.getLeft() < 0) {
       object.setLeft(0)
       object.velocityX = 0
-    } else if (object.getRight() > this.width) {
-      object.setRight(this.width)
+    } else if (object.getRight() > limitRect.width) {
+      object.setRight(limitRect.width)
       object.velocityX = 0
     }
 
-    if (object.getTop() < 0) {
-      object.setTop(0)
-      object.velocityY = 0
-    } else if (object.getBottom() > this.height) {
-      object.setBottom(this.height)
-      object.velocityY = 0
-      object.jumping = false
-    }
+    // if (object.getTop() < 0) {
+    //   object.setTop(0)
+    //   object.velocityY = 0
+    // } else if (object.getBottom() > limitRect.height) {
+    //   object.setBottom(limitRect.height)
+    //   object.velocityY = 0
+    //   object.jumping = false
+    // }
 
     const { size, columns } = this.tileMap
     let bottom, left, right, top, value
@@ -164,9 +182,10 @@ export class World {
   update() {
     this.player.velocityY += this.gravity
     this.player.updatePosition(this.gravity, this.friction)
+    this.collideObject(this.player, this.limitRect)
+
     this.playerAnimation.update()
     this.camera.update()
-
-    this.collideObject(this.player)
+    this.backgroundController.update()
   }
 }

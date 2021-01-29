@@ -1,6 +1,6 @@
 import { Direction } from '../parallax-image'
 
-export class BackgroundController  {
+export class BackgroundController {
   constructor({ background, camera, screenRect, edgeRect, limitRect }) {
     this.background = background
     this.lastPosition = null

@@ -57,6 +57,7 @@ export class PlayerAnimation extends Animator {
       }
 
       this.animate()
+      this.animation.setXY(this.player.x, this.player.y)
     }
   }
 }

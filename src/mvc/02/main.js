@@ -31,6 +31,8 @@ export class Main {
     this.game = new Game()
     this.engine = new Engine(timeStep, this.render, this.update)
 
+    this.display.setCamera(this.game.world.camera)
+
     window.addEventListener('resize', this.resize)
     window.addEventListener('keydown', this.keyDownUp)
     window.addEventListener('keyup', this.keyDownUp)
@@ -72,22 +74,39 @@ export class Main {
   render() {
     this.display.fill(this.game.world.backgroundColor)
 
+    this.display.drawImg(this.game.world.background.sun)
+
+    this.display.drawParallaxImage(this.game.world.background.cloud1)
+    this.display.drawParallaxImage(this.game.world.background.cloud2)
+
+    this.game.world.background.images.forEach(image => {
+      this.display.drawParallaxImage(image, image.sticky)
+    })
+
     this.display.drawMap(this.game.world.tileMap)
 
-    this.game.world.playerAnimation.animation.setXY(
-      this.game.world.player.x,
-      this.game.world.player.y)
+    // this.game.world.playerAnimation.animation.setXY(
+    //   this.game.world.player.x,
+    //   this.game.world.player.y)
 
     this.display.drawSprite(
       this.game.world.playerAnimation.animation,
-      this.game.world.player.width,
-      this.game.world.player.height,
-      1, 1)
+      {
+        width: this.game.world.player.width,
+        height: this.game.world.player.height,
+        // offsetX: 1,
+        // offsetY: 1
+      }
+    )
 
     if (DEBUG) {
       this.game.world.collisionRects.forEach(rect => {
-        this.display.drawStroke(rect.x, rect.y, rect.width, rect.height, 'red')
+        this.display.drawStroke({ ...rect, color: 'red' })
       })
+
+      this.game.world.camera.rects.forEach((({ rect, color, sticky }) => {
+        this.display.drawStroke({ ...rect, color, sticky })
+      }))
     }
 
     this.display.render()
