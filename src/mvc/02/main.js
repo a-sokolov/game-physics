@@ -5,7 +5,7 @@ import { Game } from './game'
 
 import { ImageLoader } from './loaders/image-loader'
 
-const DEBUG = true
+const DEBUG = false
 
 export class Main {
   constructor(timeStep) {
@@ -94,8 +94,8 @@ export class Main {
       {
         width: this.game.world.player.width,
         height: this.game.world.player.height,
-        // offsetX: 1,
-        // offsetY: 1
+        offsetX: 1,
+        offsetY: 1
       }
     )
 

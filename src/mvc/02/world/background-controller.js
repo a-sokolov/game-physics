@@ -83,6 +83,10 @@ export class BackgroundController {
         }
       }
 
+      this.background.foreground.step = Math.abs(Math.round(this.player.x - this.player.oldX))
+      if (roundedVelocityX > 0) {
+        // console.log('Velocity X is', this.background.foreground.step)
+      }
       this.background.update()
     }
   }

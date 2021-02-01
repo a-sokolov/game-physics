@@ -104,10 +104,10 @@ export class Display {
       return
     }
 
-    // destinationX += offsetX
-    // destinationY += offsetY
-    // destinationWidth += (Math.abs(offsetX) * 2)
-    // destinationHeight += (Math.abs(offsetY) * 2)
+    destinationX += offsetX
+    destinationY += offsetY
+    destinationWidth += (Math.abs(offsetX) * 2)
+    destinationHeight += (Math.abs(offsetY) * 2)
 
     if (this.camera) {
       destinationX -= this.camera.x

@@ -182,10 +182,11 @@ export class World {
   update() {
     this.player.velocityY += this.gravity
     this.player.updatePosition(this.gravity, this.friction)
+
     this.collideObject(this.player, this.limitRect)
 
-    this.playerAnimation.update()
     this.camera.update()
+    this.playerAnimation.update()
     this.backgroundController.update()
   }
 }

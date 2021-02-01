@@ -46,7 +46,7 @@ export class Background {
       y: screenRect.height - 128,
       width: screenRect.width,
       height: 64,
-      step: speed * 5,
+      step: speed,
       sticky: false
     })
 
@@ -61,10 +61,10 @@ export class Background {
     this.images.forEach(image => image.stop())
   }
 
-  extractImageY(name, y) {
-    const image = this[name]
-    image.setY(image.baseY - y)
-  }
+  // extractImageY(name, y) {
+  //   const image = this[name]
+  //   image.setY(image.baseY - y)
+  // }
 
   update(time) {
     this.cloud1.update(time)

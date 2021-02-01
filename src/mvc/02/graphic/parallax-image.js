@@ -6,7 +6,7 @@ export const Direction = {
 }
 
 export class ParallaxImage {
-  constructor({ name, x = 0, y = 0, width, height, step, direction = Direction.forward, autorun = false, sticky = true }) {
+  constructor({ name, x = 0, y = 0, width, height, step = 0, direction = Direction.forward, autorun = false, sticky = true }) {
 
     this.name = name
     this.baseX = x
@@ -26,10 +26,10 @@ export class ParallaxImage {
     this.images.push(this.createImage(width * 2))
   }
 
-  setY(y) {
-    this.y = y
-    this.images.forEach(image => image.y = y)
-  }
+  // setY(y) {
+  //   this.y = y
+  //   this.images.forEach(image => image.y = y)
+  // }
 
   createImage(x) {
     return new Img({
