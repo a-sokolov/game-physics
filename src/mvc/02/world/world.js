@@ -111,7 +111,7 @@ export class World {
     this.backgroundAnimation.update()
 
     this.fireBallsAnimation = this.fireBallsAnimation.filter(({ fireBall }) => {
-      return fireBall.getLeft() >= 0 && fireBall.getRight() <= this.limitRect.width
+      return fireBall.getRight() >= 0 && fireBall.getRight() <= this.limitRect.width
     })
   }
 }
