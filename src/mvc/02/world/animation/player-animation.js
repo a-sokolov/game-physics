@@ -1,5 +1,5 @@
-import { SpriteSheet } from '../graphic/sprite-sheet'
-import { Animator, AnimatorMode } from '../graphic/animator'
+import { SpriteSheet } from '../../graphic/sprite-sheet'
+import { Animator, AnimatorMode } from '../../graphic/animator'
 
 export class PlayerAnimation extends Animator {
   constructor(tileProps) {
@@ -56,8 +56,8 @@ export class PlayerAnimation extends Animator {
         }
       }
 
-      this.animate()
       this.animation.setXY(this.player.x, this.player.y)
+      this.animate()
     }
   }
 }

@@ -7,6 +7,7 @@ export class Controller {
     this.right = new ButtonInput()
     this.up = new ButtonInput()
     this.jump = new ButtonInput()
+    this.fire = new ButtonInput()
   }
 
   keyDownUp(type, keyCode) {
@@ -27,6 +28,10 @@ export class Controller {
         break
       case 32:
         this.jump.getInput(down)
+        break
+      case 70:
+        this.fire.getInput(down)
+        break
     }
   }
 }

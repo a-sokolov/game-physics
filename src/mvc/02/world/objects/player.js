@@ -1,4 +1,4 @@
-import { MovingObject } from '../base/moving-object'
+import { MovingObject } from '../../base/moving-object'
 
 export class Player extends MovingObject {
   constructor({ x, y, width, height, velocityMax, jumpPower = 20, speed = 0.55 }) {
@@ -6,8 +6,9 @@ export class Player extends MovingObject {
 
     this.jumpPower = jumpPower
     this.speed = speed
-    this.directionX = -1
+    this.directionX = 1
     this.jumping = true
+    this.firing = false
   }
 
   jump() {

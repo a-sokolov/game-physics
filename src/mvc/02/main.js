@@ -5,7 +5,7 @@ import { Game } from './game'
 
 import { ImageLoader } from './loaders/image-loader'
 
-const DEBUG = false
+const DEBUG = true
 
 export class Main {
   constructor(timeStep) {
@@ -49,7 +49,8 @@ export class Main {
       'sun': './assets/background/sky-background/parallax_parts/sun.png',
       'mid-cloud1': './assets/background/sky-background/parallax_parts/mid_ground_cloud_1.png',
       'mid-cloud2': './assets/background/sky-background/parallax_parts/mid_ground_cloud_2.png',
-      'brick': './assets/level01/brick.png'
+      'brick': './assets/level01/brick.png',
+      'red-fire-ball-tiles': './assets/fireball/red_fire_balls.png'
     })
 
     imageLoader.load().then(() => {
@@ -83,11 +84,7 @@ export class Main {
       this.display.drawParallaxImage(image, image.sticky)
     })
 
-    this.display.drawMap(this.game.world.tileMap)
-
-    // this.game.world.playerAnimation.animation.setXY(
-    //   this.game.world.player.x,
-    //   this.game.world.player.y)
+    this.display.drawMap(this.game.world.level.tileMap)
 
     this.display.drawSprite(
       this.game.world.playerAnimation.animation,
@@ -99,8 +96,14 @@ export class Main {
       }
     )
 
+    this.game.world.fireBallsAnimation.forEach(fireBallAnimation => {
+      const width = fireBallAnimation.fireBall.width
+      const height = fireBallAnimation.fireBall.height
+      this.display.drawSprite(fireBallAnimation.animation, { width, height })
+    })
+
     if (DEBUG) {
-      this.game.world.collisionRects.forEach(rect => {
+      this.game.world.level.collisionRects.forEach(rect => {
         this.display.drawStroke({ ...rect, color: 'red' })
       })
 
@@ -122,6 +125,10 @@ export class Main {
     if (this.controller.jump.active) {
       this.game.world.player.jump()
       this.controller.jump.active = false
+    }
+    if (this.controller.fire.active) {
+      this.game.world.fire()
+      this.controller.fire.active = false
     }
 
     this.game.update(time)

@@ -1,5 +1,5 @@
-import { Direction, ParallaxImage } from '../graphic/parallax-image'
-import { Img } from '../graphic/img'
+import { Direction, ParallaxImage } from '../../graphic/parallax-image'
+import { Img } from '../../graphic/img'
 
 export class Background {
   constructor(screenRect, speed) {
@@ -60,11 +60,6 @@ export class Background {
   stop() {
     this.images.forEach(image => image.stop())
   }
-
-  // extractImageY(name, y) {
-  //   const image = this[name]
-  //   image.setY(image.baseY - y)
-  // }
 
   update(time) {
     this.cloud1.update(time)

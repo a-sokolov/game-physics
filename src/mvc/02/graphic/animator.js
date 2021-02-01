@@ -4,12 +4,12 @@ export const AnimatorMode = {
 }
 
 export class Animator {
-  constructor(animation, delay) {
+  constructor(animation, delay, mode = AnimatorMode.pause) {
     this.count = 0
     this.delay = (delay >= 1) ? delay : 1
     this.animation = animation
     this.frameIndex = 0
-    this.mode = AnimatorMode.pause
+    this.mode = mode
   }
 
   animate() {
