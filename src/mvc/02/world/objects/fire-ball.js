@@ -12,9 +12,6 @@ export class FireBall extends MovingObject {
   update() {
     this.oldX = this.x
     this.oldY = this.y
-    //
-    // this.velocityX += (this.speed * this.directionX)
-    // this.x += this.velocityX
 
     this.x += (this.speed * this.directionX)
   }
