@@ -5,7 +5,7 @@ import { Game } from './game'
 
 import { ImageLoader } from './loaders/image-loader'
 
-const DEBUG = true
+const DEBUG = false
 
 export class Main {
   constructor(timeStep) {
@@ -50,7 +50,8 @@ export class Main {
       'mid-cloud1': './assets/background/sky-background/parallax_parts/mid_ground_cloud_1.png',
       'mid-cloud2': './assets/background/sky-background/parallax_parts/mid_ground_cloud_2.png',
       'brick': './assets/level01/brick.png',
-      'red-fire-ball-tiles': './assets/fireball/red_fire_balls.png'
+      'red-fire-ball-tiles': './assets/fireball/red_fire_balls.png',
+      'coin-tiles': './assets/coin-tiles.png'
     })
 
     imageLoader.load().then(() => {
@@ -85,6 +86,7 @@ export class Main {
     })
 
     this.display.drawMap(this.game.world.level.tileMap)
+    this.game.world.level.staticAnimations.forEach(staticAnimation => this.display.drawStaticAnimation(staticAnimation))
 
     this.display.drawSprite(
       this.game.world.playerAnimation.animation,

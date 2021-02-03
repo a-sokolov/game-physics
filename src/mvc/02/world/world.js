@@ -102,6 +102,7 @@ export class World {
     this.player.velocityY += this.gravity
     this.player.updatePosition(this.gravity, this.friction)
     this.fireBallsAnimation.forEach(({ fireBall }) => fireBall.update())
+    this.level.staticAnimations.forEach(staticAnimation => staticAnimation.update())
 
     this.collideObject(this.player, this.limitRect)
     this.camera.update()

@@ -1,4 +1,5 @@
 import { Sprite } from './graphic/sprite'
+import { getTileMapPoints } from './utils'
 
 export class Display {
   constructor(canvas, debug = false) {
@@ -42,24 +43,17 @@ export class Display {
   }
 
   drawMap(tileMap) {
-    const { imageName, size, columns, map } = tileMap
+    getTileMapPoints(tileMap, (point) => {
+      const sprite = new Sprite(point)
+      this.drawSprite(sprite)
+    })
+  }
 
-    for (let index = map.length - 1; index > -1; -- index) {
-      if (map[index] === 1) {
-        const destinationX = (index % columns) * size
-        const destinationY = Math.floor(index / columns) * size
-
-        const sprite = new Sprite({
-          name: imageName,
-          x: destinationX,
-          y: destinationY,
-          width: size,
-          height: size
-        })
-
-        this.drawSprite(sprite)
-      }
-    }
+  drawStaticAnimation(staticAnimation) {
+    const { width, height } = staticAnimation
+    staticAnimation.objects.forEach(object => {
+      this.drawSprite(object.animation, { width, height })
+    })
   }
 
   drawParallaxImage(parallaxImage, sticky = true) {
