@@ -34,12 +34,6 @@ export class Level01 extends Level {
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     }
 
-    const coins = getTileMapPoints({ ...sharedMap, tileIndex:2 }, COIN_ANIMATION_PROPS)
-    const coinsStaticAnimation = new StaticMapAnimation(
-      coins,
-      COIN_TILES,
-      { frames: [1, 2, 3, 4, 5, 6, 7, 8], delay: 2, })
-
     /**
      * These collision values correspond to collision functions in the Collider class.
      * 0 is nothing. everything else is run through a switch statement and routed to the
@@ -88,7 +82,13 @@ export class Level01 extends Level {
         1, 1, 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
     super({ ...sharedMap, imageName: 'brick', tileIndex: 1 }, collisionMap)
-    this.coins = coins
-    this.addStaticAnimation(coinsStaticAnimation)
+
+    const coins = getTileMapPoints({ ...sharedMap, tileIndex:2 }, COIN_ANIMATION_PROPS)
+    this.coinsStaticAnimation = new StaticMapAnimation(
+      coins,
+      COIN_TILES,
+      { frames: [1, 2, 3, 4, 5, 6, 7, 8], delay: 2, })
+
+    this.addStaticAnimation(this.coinsStaticAnimation)
   }
 }

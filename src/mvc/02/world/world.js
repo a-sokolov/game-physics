@@ -11,6 +11,7 @@ import { Rect } from '../base/rect'
 import { MainCamera} from './main-camera'
 
 import { Level01 } from './levels/level-01'
+import { checkRectCollision } from '../utils'
 
 export const PLAYER_TILES = {
   name: 'rick-tiles',
@@ -33,6 +34,7 @@ export class World {
     this.friction = friction
     this.gravity = gravity
 
+    this.playerCollisionRects = []
     this.player = ObjectsFactory.createRick()
     this.playerAnimation = new PlayerAnimation(PLAYER_TILES)
 
@@ -85,7 +87,8 @@ export class World {
     //   object.jumping = false
     // }
 
-    this.level.collisionRects = this.collider.collideObject(object).concat(
+    this.playerCollisionRects = this.collider.collideObject(object)
+    this.level.collisionRects = this.playerCollisionRects.concat(
       this.fireBallsAnimation.map(({ fireBall }) => {
         return this.collider.getCollisionRects(fireBall)
       }).flat())
@@ -99,6 +102,21 @@ export class World {
       this.fireBallsAnimation.push(new FireBallAnimation(fireBall))
 
       setTimeout(() => this.player.firing = false, 200)
+    }
+  }
+
+  checkCoins() {
+    if (this.level.coinsStaticAnimation.objects.length) {
+      const coinsNearPlayer = this.level.coinsStaticAnimation.points.filter(coin => {
+        return this.playerCollisionRects.some(rect => {
+          return checkRectCollision(coin, rect)
+        })
+      })
+
+      if (coinsNearPlayer.length) {
+        this.level.coinsStaticAnimation.removePoints(coinsNearPlayer)
+        console.log('Coins left', this.level.coinsStaticAnimation.objects.length)
+      }
     }
   }
 
@@ -118,5 +136,7 @@ export class World {
     this.fireBallsAnimation = this.fireBallsAnimation.filter(({ fireBall }) => {
       return fireBall.getRight() >= 0 && fireBall.getRight() <= this.limitRect.width
     })
+
+    this.checkCoins()
   }
 }

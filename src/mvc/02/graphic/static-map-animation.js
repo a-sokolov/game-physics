@@ -1,9 +1,11 @@
 import { SpriteSheet } from './sprite-sheet'
 import { Animator, AnimatorMode } from './animator'
+import { Rect } from '../base/rect'
 
 export class StaticMapAnimation {
   constructor(points, tileProps, { frames, delay }) {
     const tiles = new SpriteSheet(tileProps)
+    this.points = points
     this.objects = []
 
     points.forEach(point => {
@@ -18,6 +20,19 @@ export class StaticMapAnimation {
       object.frameIndex = index
 
       this.objects.push(object)
+    })
+  }
+
+  removePoints(pointsToRemove) {
+    this.points = this.points.filter(point => {
+      return !pointsToRemove.find(toRemove => toRemove === point)
+    })
+
+    this.objects = this.objects.filter(object => {
+      return !pointsToRemove.some(toRemove => {
+        const { x, y, imageWidth, imageHeight } = object.animation
+        return Rect.equals(toRemove, { x, y, width: imageWidth, height: imageHeight })
+      })
     })
   }
 
