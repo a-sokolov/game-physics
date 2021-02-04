@@ -12,6 +12,7 @@ import { MainCamera} from './main-camera'
 
 import { Level01 } from './levels/level-01'
 import { checkRectCollision } from '../utils'
+import { Vector } from '../base/vector'
 
 export const PLAYER_TILES = {
   name: 'rick-tiles',
@@ -67,6 +68,17 @@ export class World {
     this.level = new Level01(this.spriteSize)
     this.collider = new CollideObject()
     this.collider.setLevel(this.level)
+
+    const moveTo = (player) => (coin, callback) => {
+      const [playerCenterX, playerCenterY] = Rect.getCenter(player)
+      const [coinCenterX, coinCenterY] = Rect.getCenter(coin)
+
+      const coinVector = new Vector(coinCenterX, coinCenterY)
+      coinVector.lerp(playerCenterX, playerCenterY, 0.3)
+      Rect.setCenter(coin, coinVector.x, coinVector.y)
+    }
+
+    this.moveToPlayer = moveTo(this.player)
   }
 
   collideObject(object, limitRect) {
@@ -114,8 +126,15 @@ export class World {
       })
 
       if (coinsNearPlayer.length) {
-        this.level.coinsStaticAnimation.removePoints(coinsNearPlayer)
-        console.log('Coins left', this.level.coinsStaticAnimation.objects.length)
+        const coinsToRemove = []
+        coinsNearPlayer.forEach(coin => this.moveToPlayer(coin, () => {
+          coinsToRemove.push(coin)
+        }))
+
+        if (coinsToRemove.length) {
+          this.level.coinsStaticAnimation.removePoints(coinsToRemove)
+          console.log('Coins left', this.level.coinsStaticAnimation.objects.length)
+        }
       }
     }
   }

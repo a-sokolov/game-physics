@@ -2,10 +2,25 @@ import { SpriteSheet } from './sprite-sheet'
 import { Animator, AnimatorMode } from './animator'
 import { Rect } from '../base/rect'
 
+const proxyHandler = {
+  set(target, prop, val) {
+    switch (prop) {
+      case 'x':
+        target.ref.animation.x = val
+        break
+      case 'y':
+        target.ref.animation.y = val
+        break
+    }
+
+    return true
+  }
+}
+
 export class StaticMapAnimation {
   constructor(points, tileProps, { frames, delay }) {
     const tiles = new SpriteSheet(tileProps)
-    this.points = points
+    this.points = []
     this.objects = []
 
     points.forEach(point => {
@@ -19,6 +34,10 @@ export class StaticMapAnimation {
       const object = new Animator(animationFrames, delay, AnimatorMode.loop)
       object.frameIndex = index
 
+      const pointWithRef = { ...point, ref: object }
+      const proxy = new Proxy(pointWithRef, proxyHandler)
+
+      this.points.push(proxy)
       this.objects.push(object)
     })
   }
