@@ -1,18 +1,54 @@
-export const getTileMapPoints = (tileMap, callback) => {
+import { Rect } from './base/rect'
+
+export const RectPosition = {
+  default: 'default',
+  center: 'center',
+  left: 'left',
+  top: 'top',
+  bottom: 'bottom',
+  right: 'right'
+}
+
+export const getRectPosition = (rect, position, spriteSize) => {
+  const { x, y, width, height } = rect
+  const { width: baseWidth, height: baseHeight } = spriteSize
+
+  let newX = x
+  let newY = y
+
+  switch (position) {
+    case RectPosition.center:
+      newX = x + (baseWidth / 2) - (width / 2)
+      newY = y + (baseHeight / 2) - (height / 2)
+      break
+  }
+
+  return { x: newX, y: newY }
+}
+
+export const getTileMapPoints = (tileMap, props) => {
   const { imageName, tileIndex, size, columns, map } = tileMap
+  const { width, height, position } = props ?? {}
+
+  const points = []
 
   for (let index = map.length - 1; index > -1; -- index) {
     if (map[index] === tileIndex) {
-      const destinationX = (index % columns) * size
-      const destinationY = Math.floor(index / columns) * size
+      const destinationX = (index % columns) * size.width
+      const destinationY = Math.floor(index / columns) * size.height
 
-      callback({
+      const pointRect = new Rect(destinationX, destinationY, width || size.width, height || size.height)
+      const newPosition = getRectPosition(pointRect, position, size)
+
+      points.push({
         name: imageName,
-        x: destinationX,
-        y: destinationY,
-        width: size,
-        height: size
+        x: newPosition.x,
+        y: newPosition.y,
+        width: pointRect.width,
+        height: pointRect.height,
       })
     }
   }
+
+  return points
 }

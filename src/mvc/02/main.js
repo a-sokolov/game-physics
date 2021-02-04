@@ -5,7 +5,7 @@ import { Game } from './game'
 
 import { ImageLoader } from './loaders/image-loader'
 
-const DEBUG = false
+const DEBUG = true
 
 export class Main {
   constructor(timeStep) {
@@ -85,7 +85,7 @@ export class Main {
       this.display.drawParallaxImage(image, image.sticky)
     })
 
-    this.display.drawMap(this.game.world.level.tileMap)
+    this.display.drawMapSprites(this.game.world.level.mapSprites)
     this.game.world.level.staticAnimations.forEach(staticAnimation => this.display.drawStaticAnimation(staticAnimation))
 
     this.display.drawSprite(

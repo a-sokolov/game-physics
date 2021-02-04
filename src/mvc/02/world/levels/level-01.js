@@ -1,7 +1,8 @@
 import { Level } from '../objects/level'
-import { StaticMapAnimation } from "../../graphic/static-map-animation"
+import { StaticMapAnimation } from '../../graphic/static-map-animation'
+import { getTileMapPoints, RectPosition } from '../../utils'
 
-export const COIN_TILES = {
+const COIN_TILES = {
   name: 'coin-tiles',
   width: 512,
   height: 256,
@@ -9,12 +10,18 @@ export const COIN_TILES = {
   spriteHeight: 128
 }
 
+const COIN_ANIMATION_PROPS = {
+  width: 40,
+  height: 40,
+  position: RectPosition.center
+}
+
 export class Level01 extends Level {
-  constructor() {
+  constructor(spriteSize) {
     const sharedMap = {
       rows: 10,
       columns: 32,
-      size: 64,
+      size: spriteSize,
       map: [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -27,17 +34,11 @@ export class Level01 extends Level {
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     }
 
+    const coins = getTileMapPoints({ ...sharedMap, tileIndex:2 }, COIN_ANIMATION_PROPS)
     const coinsStaticAnimation = new StaticMapAnimation(
-      { ...sharedMap, tileIndex:2 },
+      coins,
       COIN_TILES,
-      [1, 2, 3, 4, 5, 6, 7, 8],
-      2)
-
-    const tileMap = {
-      ...sharedMap,
-      imageName: 'brick',
-      tileIndex: 1
-    }
+      { frames: [1, 2, 3, 4, 5, 6, 7, 8], delay: 2, })
 
     /**
      * These collision values correspond to collision functions in the Collider class.
@@ -86,8 +87,8 @@ export class Level01 extends Level {
         0, 0, 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         1, 1, 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
-    super(tileMap, collisionMap)
-
+    super({ ...sharedMap, imageName: 'brick', tileIndex: 1 }, collisionMap)
+    this.coins = coins
     this.addStaticAnimation(coinsStaticAnimation)
   }
 }

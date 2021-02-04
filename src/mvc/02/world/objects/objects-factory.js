@@ -10,8 +10,8 @@ export class ObjectsFactory {
     return new Player({
       x: 10,
       y: 500,
-      width: 60, // PLAYER_TILES.spriteWidth / 2,
-      height: 60, // PLAYER_TILES.spriteHeight / 2,
+      width: 60,
+      height: 60,
       velocityMax: 50,
       jumpPower: 45,
       speed: 1.55,

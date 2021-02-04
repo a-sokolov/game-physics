@@ -49,7 +49,9 @@ export class Collider {
     return false
   }
 
-  collide(value, object, tileX, tileY, tileSize) {
+  collide(value, object, tileX, tileY, size) {
+    const { width, height } = size
+
     /**
      * All 15 tile types can be described with only 4 collision methods. These
      * methods are mixed and matched for each unique tile.
@@ -59,27 +61,27 @@ export class Collider {
         this.collidePlatformTop(object, tileY)
         break
       case 2:
-        this.collidePlatformRight(object, tileX + tileSize)
+        this.collidePlatformRight(object, tileX + width)
         break
       case 3:
         // If there's a collision, we don't need to check for anything else.
         if (this.collidePlatformTop(object, tileY)) return
-        this.collidePlatformRight(object,tileX + tileSize)
+        this.collidePlatformRight(object,tileX + width)
         break
-      case 4: this.collidePlatformBottom(object, tileY + tileSize)
+      case 4: this.collidePlatformBottom(object, tileY + height)
         break
       case 5: 
         if (this.collidePlatformTop(object, tileY)) return
-        this.collidePlatformBottom(object, tileY + tileSize)
+        this.collidePlatformBottom(object, tileY + height)
         break
       case 6:
-        if (this.collidePlatformRight(object, tileX + tileSize)) return
-        this.collidePlatformBottom(object, tileY + tileSize)
+        if (this.collidePlatformRight(object, tileX + width)) return
+        this.collidePlatformBottom(object, tileY + height)
         break
       case 7:
         if (this.collidePlatformTop(object, tileY)) return
-        if (this.collidePlatformBottom(object, tileY + tileSize)) return
-        this.collidePlatformRight(object, tileX + tileSize)
+        if (this.collidePlatformBottom(object, tileY + height)) return
+        this.collidePlatformRight(object, tileX + width)
         break
       case 8:
         this.collidePlatformLeft(object, tileX)
@@ -90,32 +92,32 @@ export class Collider {
         break
       case 10:
         if (this.collidePlatformLeft(object, tileX)) return
-        this.collidePlatformRight(object, tileX + tileSize)
+        this.collidePlatformRight(object, tileX + width)
         break
       case 11:
         if (this.collidePlatformTop(object, tileY)) return
         if (this.collidePlatformLeft(object, tileX)) return
-        this.collidePlatformRight(object, tileX + tileSize)
+        this.collidePlatformRight(object, tileX + width)
         break
       case 12:
-        if (this.collidePlatformBottom(object, tileY + tileSize)) return
+        if (this.collidePlatformBottom(object, tileY + height)) return
         this.collidePlatformLeft (object, tileX)
         break
       case 13:
         if (this.collidePlatformTop (object, tileY)) return
-        if (this.collidePlatformBottom(object, tileY + tileSize)) return
+        if (this.collidePlatformBottom(object, tileY + height)) return
         this.collidePlatformLeft(object, tileX)
         break
       case 14:
-        if (this.collidePlatformBottom(object, tileY + tileSize)) return
+        if (this.collidePlatformBottom(object, tileY + height)) return
         if (this.collidePlatformLeft (object, tileX)) return
         this.collidePlatformRight(object, tileX)
         break
       case 15:
         if (this.collidePlatformTop(object, tileY)) return
-        if (this.collidePlatformBottom(object, tileY + tileSize)) return
+        if (this.collidePlatformBottom(object, tileY + height)) return
         if (this.collidePlatformLeft (object, tileX)) return
-        this.collidePlatformRight(object, tileX + tileSize)
+        this.collidePlatformRight(object, tileX + width)
         break
     }
   }

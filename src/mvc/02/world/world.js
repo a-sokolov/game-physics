@@ -25,6 +25,10 @@ export class World {
     this.backgroundColor = 'orange'
     this.width = 1024
     this.height = 640
+    this.spriteSize = {
+      width: 64,
+      height: 64
+    }
 
     this.friction = friction
     this.gravity = gravity
@@ -58,7 +62,7 @@ export class World {
 
     this.fireBallsAnimation = []
 
-    this.level = new Level01()
+    this.level = new Level01(this.spriteSize)
     this.collider = new CollideObject()
     this.collider.setLevel(this.level)
   }

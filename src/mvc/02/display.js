@@ -42,17 +42,16 @@ export class Display {
     this.context.imageSmoothingEnabled = true
   }
 
-  drawMap(tileMap) {
-    getTileMapPoints(tileMap, (point) => {
+  drawMapSprites(points) {
+    points.forEach(point => {
       const sprite = new Sprite(point)
       this.drawSprite(sprite)
     })
   }
 
   drawStaticAnimation(staticAnimation) {
-    const { width, height } = staticAnimation
     staticAnimation.objects.forEach(object => {
-      this.drawSprite(object.animation, { width, height })
+      this.drawSprite(object.animation)
     })
   }
 
@@ -81,13 +80,13 @@ export class Display {
       img.height)
   }
 
-  drawSprite(sprite, props = null) {
+  drawSprite(sprite, props) {
     const { width, height, offsetX = 0, offsetY = 0 } = props ?? {}
 
     let destinationX = Math.round(sprite.x)
     let destinationY = Math.round(sprite.y)
-    let destinationWidth = width || sprite.width
-    let destinationHeight = height || sprite.height
+    let destinationWidth = width || sprite.imageWidth || sprite.width
+    let destinationHeight = height || sprite.imageHeight || sprite.height
 
     if (!this.isNeedToDraw({
       x: destinationX,

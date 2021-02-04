@@ -5,5 +5,8 @@ export class Sprite extends Img {
     super({ name, x, y, width, height })
     this.sourceX = sourceX
     this.sourceY = sourceY
+
+    this.imageWidth = width
+    this.imageHeight = height
   }
 }
