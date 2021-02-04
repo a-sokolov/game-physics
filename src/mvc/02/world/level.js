@@ -1,4 +1,4 @@
-import { getTileMapPoints } from '../../utils'
+import { getTileMapPoints } from '../utils'
 
 export class Level {
   constructor(tileMap, collisionMap) {

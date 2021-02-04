@@ -1,4 +1,4 @@
-import { Level } from '../objects/level'
+import { Level } from '../level'
 import { StaticMapAnimation } from '../../graphic/static-map-animation'
 import { getTileMapPoints, RectPosition } from '../../utils'
 
@@ -87,7 +87,7 @@ export class Level01 extends Level {
     this.coinsStaticAnimation = new StaticMapAnimation(
       coins,
       COIN_TILES,
-      { frames: [1, 2, 3, 4, 5, 6, 7, 8], delay: 2, })
+      { frames: [1, 2, 3, 4, 5, 6, 7, 8], delay: 2 })
 
     this.addStaticAnimation(this.coinsStaticAnimation)
   }
