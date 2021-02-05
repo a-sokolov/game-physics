@@ -43,15 +43,14 @@ export class StaticMapAnimation {
   }
 
   removePoints(pointsToRemove) {
-    this.points = this.points.filter(point => {
-      return !pointsToRemove.find(toRemove => toRemove === point)
-    })
+    const objectsToRemove = pointsToRemove.map(point => point.ref)
 
     this.objects = this.objects.filter(object => {
-      return !pointsToRemove.some(toRemove => {
-        const { x, y, imageWidth, imageHeight } = object.animation
-        return Rect.equals(toRemove, { x, y, width: imageWidth, height: imageHeight })
-      })
+      return !objectsToRemove.find(toRemove => toRemove === object)
+    })
+
+    this.points = this.points.filter(point => {
+      return !pointsToRemove.find(toRemove => toRemove === point)
     })
   }
 

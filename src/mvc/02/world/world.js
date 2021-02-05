@@ -13,6 +13,7 @@ import { MainCamera} from './main-camera'
 import { Level01 } from './levels/level-01'
 import { checkRectCollision } from '../utils'
 import { Vector } from '../base/vector'
+import {CheckCoins} from "./checks/check-coins";
 
 export const PLAYER_TILES = {
   name: 'rick-tiles',
@@ -69,16 +70,7 @@ export class World {
     this.collider = new CollideObject()
     this.collider.setLevel(this.level)
 
-    const moveTo = (player) => (coin, callback) => {
-      const [playerCenterX, playerCenterY] = Rect.getCenter(player)
-      const [coinCenterX, coinCenterY] = Rect.getCenter(coin)
-
-      const coinVector = new Vector(coinCenterX, coinCenterY)
-      coinVector.lerp(playerCenterX, playerCenterY, 0.3)
-      Rect.setCenter(coin, coinVector.x, coinVector.y)
-    }
-
-    this.moveToPlayer = moveTo(this.player)
+    this.checkCoins = new CheckCoins(this.player, this.level.coinsStaticAnimation)
   }
 
   collideObject(object, limitRect) {
@@ -117,28 +109,6 @@ export class World {
     }
   }
 
-  checkCoins() {
-    if (this.level.coinsStaticAnimation.objects.length) {
-      const coinsNearPlayer = this.level.coinsStaticAnimation.points.filter(coin => {
-        return this.playerCollisionRects.some(rect => {
-          return checkRectCollision(coin, rect)
-        })
-      })
-
-      if (coinsNearPlayer.length) {
-        const coinsToRemove = []
-        coinsNearPlayer.forEach(coin => this.moveToPlayer(coin, () => {
-          coinsToRemove.push(coin)
-        }))
-
-        if (coinsToRemove.length) {
-          this.level.coinsStaticAnimation.removePoints(coinsToRemove)
-          console.log('Coins left', this.level.coinsStaticAnimation.objects.length)
-        }
-      }
-    }
-  }
-
   update() {
     this.player.velocityY += this.gravity
     this.player.updatePosition(this.gravity, this.friction)
@@ -156,6 +126,6 @@ export class World {
       return fireBall.getRight() >= 0 && fireBall.getRight() <= this.limitRect.width
     })
 
-    this.checkCoins()
+    this.checkCoins.update(this.playerCollisionRects)
   }
 }

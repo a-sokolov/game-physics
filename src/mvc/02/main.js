@@ -5,7 +5,7 @@ import { Game } from './game'
 
 import { ImageLoader } from './loaders/image-loader'
 
-const DEBUG = true
+const DEBUG = false
 
 export class Main {
   constructor(timeStep) {
