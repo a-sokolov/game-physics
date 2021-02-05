@@ -19,8 +19,12 @@ export class MoveCoinToPlayer extends Job {
     const startPos = new Vector(coinCenterX, coinCenterY)
     const targetPos = new Vector(playerCenterX, playerCenterY)
 
-    this.steps += 0.02
+    this.steps += 0.08
     startPos.lerp(targetPos.x, targetPos.y, this.steps)
+    if (startPos.equals(targetPos)) {
+      this.jobComplete()
+      this.callback(this)
+    }
 
     Rect.setCenter(this.coin, startPos.x, startPos.y)
   }

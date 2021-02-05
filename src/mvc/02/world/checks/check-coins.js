@@ -9,14 +9,18 @@ export class CheckCoins {
     this.coinsStaticAnimation = coinsStaticAnimation
 
     this.moveToPlayersJobs = new JobList()
+
+    this.hitCoin = this.hitCoin.bind(this)
   }
 
-  hitCoin(coin) {
-    // const coinsToRemove = []
-    // if (coinsToRemove.length) {
-    //   this.coinsStaticAnimation.removePoints(coinsToRemove)
-    //   console.log('Coins left', this.coinsStaticAnimation.objects.length)
-    // }
+  hitCoin(job) {
+    this.moveToPlayersJobs.removeJob(job)
+    this.coinsStaticAnimation.removePoints([job.coin])
+    console.log('Coins left', {
+      objects: this.coinsStaticAnimation.objects.length,
+      jobs: this.moveToPlayersJobs.jobs.length,
+      coins: this.coinsStaticAnimation.points.length
+    })
   }
 
   update(playerCollisionRects) {
