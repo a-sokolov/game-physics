@@ -3,7 +3,8 @@ export class JobList {
     this.jobs = []
   }
 
-  addJob(job) {
+  addJob(job, callback) {
+    job.setCallback(callback)
     this.jobs.push(job)
   }
 
@@ -16,6 +17,10 @@ export class JobList {
   }
 
   update() {
-    this.jobs.forEach(job => job.run())
+    this.jobs.forEach(job => {
+      if (!job.completed) {
+        job.run()
+      }
+    })
   }
 }

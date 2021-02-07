@@ -5,7 +5,7 @@ import { Game } from './game'
 
 import { ImageLoader } from './loaders/image-loader'
 
-const DEBUG = false
+const DEBUG = true
 
 export class Main {
   constructor(timeStep) {
@@ -43,6 +43,7 @@ export class Main {
     const imageLoader = new ImageLoader({
       'rick-tiles': './assets/rick/rick_tiles.png',
       'morty-tiles': './assets/morty/morty_tiles.png',
+      'jerry-tiles': './assets/jerry/jerry-tiles.png',
       'far-ground': './assets/background/sky-background/parallax_parts/mountains/farground_mountains.png',
       'mid-ground': './assets/background/sky-background/parallax_parts/mountains/midground_mountains.png',
       'foreground': './assets/background/sky-background/parallax_parts/mountain_with_hills/foreground_mountains.png',
@@ -98,7 +99,17 @@ export class Main {
       }
     )
 
-    this.game.world.fireBallsAnimation.forEach(fireBallAnimation => {
+    this.display.drawSprite(
+      this.game.world.jerryAnimation.animation,
+      {
+        width: this.game.world.jerry.width,
+        height: this.game.world.jerry.height,
+        offsetX: 1,
+        offsetY: 1
+      }
+    )
+
+    this.game.world.checkFireballs.fireBallsAnimation.forEach(fireBallAnimation => {
       const width = fireBallAnimation.fireBall.width
       const height = fireBallAnimation.fireBall.height
       this.display.drawSprite(fireBallAnimation.animation, { width, height })

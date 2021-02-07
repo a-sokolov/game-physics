@@ -15,7 +15,7 @@ export class CheckCoins {
 
   hitCoin(job) {
     this.moveToPlayersJobs.removeJob(job)
-    this.coinsStaticAnimation.removePoints([job.coin])
+    this.coinsStaticAnimation.removePoints(job.coin)
     console.log('Coins left', {
       objects: this.coinsStaticAnimation.objects.length,
       jobs: this.moveToPlayersJobs.jobs.length,
@@ -34,7 +34,7 @@ export class CheckCoins {
       if (coinsNearPlayer.length) {
         coinsNearPlayer.forEach(coin => {
           if (!this.moveToPlayersJobs.findJob((job) => job.coin === coin)) {
-            this.moveToPlayersJobs.addJob(new MoveCoinToPlayer(this.player, coin, this.hitCoin))
+            this.moveToPlayersJobs.addJob(new MoveCoinToPlayer(this.player, coin), this.hitCoin)
           }
         })
       }

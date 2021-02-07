@@ -1,20 +1,32 @@
-import { Player } from './player'
 import { FireBall } from './fire-ball'
+import { Mob } from '../../base/mob'
 
 export class ObjectsFactory {
   constructor() {
     //
   }
 
-  static createRick() {
-    return new Player({
-      x: 10,
-      y: 500,
+  static createRick(x, y) {
+    return new Mob({
+      x,
+      y,
       width: 60,
       height: 60,
       velocityMax: 50,
       jumpPower: 45,
       speed: 1.55,
+    })
+  }
+
+  static createJerry(x, y) {
+    return new Mob({
+      x,
+      y,
+      width: 60,
+      height: 60,
+      velocityMax: 30,
+      jumpPower: 35,
+      speed: 1.2,
     })
   }
 

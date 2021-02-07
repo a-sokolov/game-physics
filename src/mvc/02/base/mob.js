@@ -1,6 +1,6 @@
-import { MovingObject } from '../../base/moving-object'
+import { MovingObject } from './moving-object'
 
-export class Player extends MovingObject {
+export class Mob extends MovingObject {
   constructor({ x, y, width, height, velocityMax, jumpPower = 20, speed = 0.55 }) {
     super(x, y, width, height, velocityMax)
 

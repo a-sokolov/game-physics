@@ -1,6 +1,5 @@
 import { SpriteSheet } from './sprite-sheet'
 import { Animator, AnimatorMode } from './animator'
-import { Rect } from '../base/rect'
 
 const proxyHandler = {
   set(target, prop, val) {
@@ -42,7 +41,7 @@ export class StaticMapAnimation {
     })
   }
 
-  removePoints(pointsToRemove) {
+  removePoints(...pointsToRemove) {
     const objectsToRemove = pointsToRemove.map(point => point.ref)
 
     this.objects = this.objects.filter(object => {
