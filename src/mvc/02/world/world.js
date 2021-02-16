@@ -40,8 +40,7 @@ export class World {
     this.jerry = ObjectsFactory.createJerry(this.limitRect.width - 100, 500)
     this.jerryAnimation = new MobAnimation(JERRY_TILES)
 
-    this.jerryBehavior = new DummyBehavior(this.jerry, this.screenRect, this.limitRect)
-    this.jerryBehavior.watch(this.player)
+    this.jerryBehavior = new DummyBehavior(this.jerry, this.player, this.screenRect, this.limitRect)
 
     this.env.addMob(this.player, this.jerry)
 

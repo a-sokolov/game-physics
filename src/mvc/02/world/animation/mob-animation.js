@@ -9,6 +9,7 @@ export class MobAnimation extends Animator {
     super(defaultFrame, 10)
 
     this.stop = defaultFrame
+    this.idling = tiles.getAnimationFrames(1, 2, 3, 4)
     this.jump = tiles.getAnimationFrames(9)
 
     this.left = tiles.getAnimationFrames(5)
@@ -32,7 +33,9 @@ export class MobAnimation extends Animator {
     if (this.mob) {
       const roundedVelocityX = Math.trunc(Math.abs(this.mob.velocityX))
 
-      if (this.mob.velocityY < 0) {
+      if (this.mob.idling) {
+        this.changeFrameSet(this.idling, AnimatorMode.loop)
+      } else if (this.mob.velocityY < 0) {
         if (roundedVelocityX === 0) {
           this.changeFrameSet(this.jump, AnimatorMode.pause)
         } else if (this.mob.directionX < 0) {

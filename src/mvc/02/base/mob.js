@@ -9,6 +9,7 @@ export class Mob extends MovingObject {
     this.directionX = 1
     this.jumping = true
     this.firing = false
+    this.idling = false
   }
 
   jump() {
