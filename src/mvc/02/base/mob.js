@@ -9,23 +9,33 @@ export class Mob extends MovingObject {
     this.directionX = 1
     this.jumping = true
     this.firing = false
+    this.crouching = false
   }
 
   jump() {
     if (!this.jumping && this.velocityY < 10) {
+      this.crouching = false
       this.jumping = true
       this.velocityY -= this.jumpPower
     }
   }
 
   moveLeft() {
+    this.crouching = false
     this.directionX = -1
     this.velocityX -= this.speed
   }
 
   moveRight() {
+    this.crouching = false
     this.directionX = 1
     this.velocityX += this.speed
+  }
+
+  crouch(crouching) {
+    if (!this.jumping && !this.firing) {
+      this.crouching = crouching
+    }
   }
 
   updatePosition(gravity, friction) {

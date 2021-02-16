@@ -5,7 +5,7 @@ import { Game } from './game'
 
 import { ImageLoader } from './loaders/image-loader'
 
-const DEBUG = true
+const DEBUG = false
 
 export class Main {
   constructor(timeStep) {
@@ -43,7 +43,7 @@ export class Main {
     const imageLoader = new ImageLoader({
       'rick-tiles': './assets/rick/rick_tiles.png',
       'morty-tiles': './assets/morty/morty_tiles.png',
-      'jerry-tiles': './assets/jerry/jerry-tiles.png',
+      'jerry-tiles': './assets/morty/morty_tiles.png',
       'far-ground': './assets/background/sky-background/parallax_parts/mountains/farground_mountains.png',
       'mid-ground': './assets/background/sky-background/parallax_parts/mountains/midground_mountains.png',
       'foreground': './assets/background/sky-background/parallax_parts/mountain_with_hills/foreground_mountains.png',
@@ -52,7 +52,8 @@ export class Main {
       'mid-cloud2': './assets/background/sky-background/parallax_parts/mid_ground_cloud_2.png',
       'brick': './assets/level01/brick.png',
       'red-fire-ball-tiles': './assets/fireball/red_fire_balls.png',
-      'coin-tiles': './assets/coin-tiles.png'
+      'coin-tiles': './assets/coin-tiles.png',
+      'ninja-tiles': './assets/ninja-tiles.png'
     })
 
     imageLoader.load().then(() => {
@@ -104,8 +105,6 @@ export class Main {
       {
         width: this.game.world.jerry.width,
         height: this.game.world.jerry.height,
-        offsetX: 1,
-        offsetY: 1
       }
     )
 
@@ -129,6 +128,8 @@ export class Main {
   }
 
   update(time) {
+    this.game.world.player.crouch(this.controller.down.active)
+
     if (this.controller.left.active)  {
       this.game.world.player.moveLeft()
     }

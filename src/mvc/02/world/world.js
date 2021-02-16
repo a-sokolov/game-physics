@@ -15,7 +15,8 @@ import { CheckFireballs } from './checks/check-fireballs'
 
 import { Environment } from './environment'
 import { DummyBehavior } from './npc/dummy-behavior'
-import { PLAYER_TILES, JERRY_TILES } from './constants'
+import { NINJA_TILES, JERRY_TILES } from './constants'
+import {NinjaAnimation} from "./animation/ninja-animation";
 
 export class World {
   constructor(friction = 0.85, gravity = 2) {
@@ -33,7 +34,7 @@ export class World {
 
     this.env = new Environment(friction, gravity, this.limitRect)
     this.player = ObjectsFactory.createRick(10, 500)
-    this.playerAnimation = new MobAnimation(PLAYER_TILES)
+    this.playerAnimation = new NinjaAnimation(NINJA_TILES)
 
     this.checkFireballs = new CheckFireballs(this.player, this.limitRect)
 
