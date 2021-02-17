@@ -2,13 +2,13 @@ import { Sprite } from './graphic/sprite'
 import { getTileMapPoints } from './utils'
 
 export class Display {
-  constructor(canvas, debug = false) {
+  constructor(canvas, isDebug = false) {
     this.buffer = document.createElement('canvas').getContext('2d')
     this.context = canvas.getContext('2d')
     this.images = []
     this.camera = null
 
-    this.isDebug = debug
+    this.isDebug = isDebug
   }
 
   setImages(images) {

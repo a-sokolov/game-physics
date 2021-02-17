@@ -11,3 +11,11 @@ body {
     text-align: center;
     min-height: 100vh;
 }
+
+#config {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    justify-content: start;
+}

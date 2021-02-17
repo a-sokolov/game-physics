@@ -2,10 +2,9 @@ import { Engine } from '../engine'
 import { Display } from './display'
 import { Controller } from './controller'
 import { Game } from './game'
+import { Tools } from './tools';
 
 import { ImageLoader } from './loaders/image-loader'
-
-const DEBUG = true
 
 export class Main {
   constructor(timeStep) {
@@ -26,8 +25,10 @@ export class Main {
     this.render = this.render.bind(this)
     this.update = this.update.bind(this)
 
+    this.tools = new Tools(this)
+
     this.controller = new Controller()
-    this.display = new Display(canvas, DEBUG)
+    this.display = new Display(canvas, this.tools.isDebug)
     this.game = new Game()
     this.engine = new Engine(timeStep, this.render, this.update)
 
@@ -115,7 +116,7 @@ export class Main {
       this.display.drawSprite(fireBallAnimation.animation, { width, height })
     })
 
-    if (DEBUG) {
+    if (this.tools.isDebug) {
       this.game.world.level.collisionRects.forEach(rect => {
         this.display.drawStroke({ ...rect, color: 'red' })
       })
