@@ -1,8 +1,9 @@
-import { Background } from './objects/background'
+// import { Background } from './objects/background'
 import { ObjectsFactory } from './objects/objects-factory'
 
 import { MobAnimation } from './animation/mob-animation'
-import { BackgroundAnimation } from './animation/background-animation'
+import { NinjaAnimation } from './animation/ninja-animation'
+// import { BackgroundAnimation } from './animation/background-animation'
 
 import { CollideObject } from './collide-object'
 
@@ -16,16 +17,15 @@ import { CheckFireballs } from './checks/check-fireballs'
 import { Environment } from './environment'
 import { DummyBehavior } from './npc/dummy-behavior'
 import { NINJA_TILES, JERRY_TILES } from './constants'
-import {NinjaAnimation} from './animation/ninja-animation'
 
 export class World {
   constructor(friction = 0.85, gravity = 2) {
     this.backgroundColor = 'grey'
-    this.width = 1024
-    this.height = 640
+    this.width = 992
+    this.height = 400
     this.spriteSize = {
-      width: 64,
-      height: 64
+      width: 16,
+      height: 16
     }
 
     this.edgeRect = new Rect(300, this.height / 2, this.width / 2 - 300, this.height / 2)
@@ -33,12 +33,12 @@ export class World {
     this.limitRect = new Rect(0, 0, this.width * 2, this.height * 2)
 
     this.env = new Environment(friction, gravity, this.limitRect)
-    this.player = ObjectsFactory.createRick(10, 500)
+    this.player = ObjectsFactory.createPlayer(10, 300)
     this.playerAnimation = new NinjaAnimation(NINJA_TILES)
 
     this.checkFireballs = new CheckFireballs(this.player, this.limitRect)
 
-    this.jerry = ObjectsFactory.createJerry(this.limitRect.width - 100, 500)
+    this.jerry = ObjectsFactory.createJerry(50, 300)
     this.jerryAnimation = new MobAnimation(JERRY_TILES)
 
     this.jerryBehavior = new DummyBehavior(this.jerry, this.player, this.screenRect, this.limitRect)

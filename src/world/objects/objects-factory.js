@@ -6,12 +6,12 @@ export class ObjectsFactory {
     //
   }
 
-  static createRick(x, y) {
+  static createPlayer(x, y) {
     return new Mob({
       x,
       y,
-      width: 100,
-      height: 74,
+      width: 22,
+      height: 31,
       velocityMax: 50,
       jumpPower: 45,
       speed: 1.55,
@@ -22,8 +22,8 @@ export class ObjectsFactory {
     return new Mob({
       x,
       y,
-      width: 60,
-      height: 60,
+      width: 32,
+      height: 32,
       velocityMax: 30,
       jumpPower: 35,
       speed: 1.2,
@@ -32,13 +32,13 @@ export class ObjectsFactory {
 
   static createFireBall(player) {
     const fireBallSize = {
-      width: 16 * 4,
-      height: 6 * 4
+      width: 32,
+      height: 12
     }
 
     const x = player.directionX === 1
-                ? player.getRight() - 30
-                : player.getLeft() - 25
+                ? player.getRight()
+                : player.getLeft()
 
     return new FireBall({
       ...fireBallSize,

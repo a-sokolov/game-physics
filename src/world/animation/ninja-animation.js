@@ -87,7 +87,16 @@ export class NinjaAnimation extends Animator {
         }
       }
 
-      this.animation.setXY(this.mob.x, this.mob.y)
+      // Размещаем изображение по центру хитбокса игрока
+      const { x, y, width, height } = this.mob
+      const { width: spriteWidth, height: spriteHeight } = this.animation
+
+      const newPosition = {
+        x: x + (width / 2) - (spriteWidth / 2),
+        y: y + height - spriteHeight
+      }
+
+      this.animation.setXY(newPosition.x, newPosition.y)
       this.animate()
     }
   }
