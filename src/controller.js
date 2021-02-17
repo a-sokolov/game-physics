@@ -1,32 +1,42 @@
-const DEFAULT_KEYMAP = new Map([
-  [37, 'left'],
-  [39, 'right'],
-  [38, 'up'],
-  [40, 'down'],
-  [32, 'jump'],
-])
+import { ButtonInput } from './button-input'
 
+/** Контроллер, который слушает ввод */
 export class Controller {
-  constructor(keymap = DEFAULT_KEYMAP) {
-    this.left = false
-    this.right = false
-    this.up = false
-    this.down = false
-    this.jump = false
-
-    this.keyMap = keymap
-
-    document.addEventListener('keydown', event => this.update(event, true))
-    document.addEventListener('keyup', event => this.update(event, false))
+  constructor() {
+    this.down = new ButtonInput()
+    this.left = new ButtonInput()
+    this.right = new ButtonInput()
+    this.up = new ButtonInput()
+    this.jump = new ButtonInput()
+    this.fire = new ButtonInput()
+    this.altFire = new ButtonInput()
   }
 
-  update(event, pressed) {
-    if (this.keyMap.has(event.keyCode)) {
-      event.preventDefault()
-      event.stopPropagation()
+  keyDownUp(type, keyCode) {
+    const down = (type === "keydown")
 
-      const key = this.keyMap.get(event.keyCode)
-      this[key] = pressed
+    switch(keyCode) {
+      case 37: // Стрелка влево
+        this.left.getInput(down)
+        break
+      case 38: // Стрелка вверх
+        this.up.getInput(down)
+        break
+      case 39: // Стрелка вправо
+        this.right.getInput(down)
+        break
+      case 40: // Стрелка вниз
+        this.down.getInput(down)
+        break
+      case 32: // Пробел
+        this.jump.getInput(down)
+        break
+      case 70: // Клавиша F
+        this.fire.getInput(down)
+        break
+      case 82: // Клавиша R
+        this.altFire.getInput(down)
+        break
     }
   }
 }

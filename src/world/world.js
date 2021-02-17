@@ -16,11 +16,11 @@ import { CheckFireballs } from './checks/check-fireballs'
 import { Environment } from './environment'
 import { DummyBehavior } from './npc/dummy-behavior'
 import { NINJA_TILES, JERRY_TILES } from './constants'
-import {NinjaAnimation} from "./animation/ninja-animation";
+import {NinjaAnimation} from './animation/ninja-animation'
 
 export class World {
   constructor(friction = 0.85, gravity = 2) {
-    this.backgroundColor = 'orange'
+    this.backgroundColor = 'grey'
     this.width = 1024
     this.height = 640
     this.spriteSize = {
@@ -45,7 +45,7 @@ export class World {
 
     this.env.addMob(this.player, this.jerry)
 
-    this.background = new Background(this.screenRect, this.player.speed)
+    // this.background = new Background(this.screenRect, this.player.speed)
 
     this.camera = new MainCamera({
       edgeRect: this.edgeRect,
@@ -53,18 +53,18 @@ export class World {
       screenRect: this.screenRect
     })
 
-    this.backgroundAnimation = new BackgroundAnimation({
-      background: this.background,
-      camera: this.camera,
-      edgeRect: this.edgeRect,
-      screenRect: this.screenRect,
-      limitRect: this.limitRect
-    })
+    // this.backgroundAnimation = new BackgroundAnimation({
+    //   background: this.background,
+    //   camera: this.camera,
+    //   edgeRect: this.edgeRect,
+    //   screenRect: this.screenRect,
+    //   limitRect: this.limitRect
+    // })
 
     this.playerAnimation.watch(this.player)
     this.jerryAnimation.watch(this.jerry)
     this.camera.watch(this.player)
-    this.backgroundAnimation.watch(this.player)
+    // this.backgroundAnimation.watch(this.player)
 
     this.level = new Level01(this.spriteSize)
     this.collider = new CollideObject()
@@ -88,7 +88,7 @@ export class World {
 
     this.playerAnimation.update()
     this.jerryAnimation.update()
-    this.backgroundAnimation.update()
+    // this.backgroundAnimation.update()
 
     this.level.collisionRects = this.env.getAllCollisionRects().concat(
         this.checkFireballs.fireBallsAnimation.map(({ fireBall }) => {

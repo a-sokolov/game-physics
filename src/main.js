@@ -1,4 +1,4 @@
-import { Engine } from '../engine'
+import { Engine } from './engine'
 import { Display } from './display'
 import { Controller } from './controller'
 import { Game } from './game'
@@ -56,17 +56,9 @@ export class Main {
 
     // Грузим все ресурсы
     const imageLoader = new ImageLoader({
-      'rick-tiles': './assets/rick/rick_tiles.png',
-      'morty-tiles': './assets/morty/morty_tiles.png',
-      'jerry-tiles': './assets/morty/morty_tiles.png',
-      'far-ground': './assets/background/sky-background/parallax_parts/mountains/farground_mountains.png',
-      'mid-ground': './assets/background/sky-background/parallax_parts/mountains/midground_mountains.png',
-      'foreground': './assets/background/sky-background/parallax_parts/mountain_with_hills/foreground_mountains.png',
-      'sun': './assets/background/sky-background/parallax_parts/sun.png',
-      'mid-cloud1': './assets/background/sky-background/parallax_parts/mid_ground_cloud_1.png',
-      'mid-cloud2': './assets/background/sky-background/parallax_parts/mid_ground_cloud_2.png',
-      'brick': './assets/level01/brick.png',
-      'red-fire-ball-tiles': './assets/fireball/red_fire_balls.png',
+      'jerry-tiles': './assets/jerry-tiles.png',
+      'brick': './assets/brick.png',
+      'red-fire-ball-tiles': './assets/red-fireball-tiles.png',
       'coin-tiles': './assets/coin-tiles.png',
       'ninja-tiles': './assets/ninja-tiles.png'
     })
@@ -98,17 +90,16 @@ export class Main {
   render() {
     // Цвет фона
     this.display.fill(this.game.world.backgroundColor)
-    // Рисуем солнце
-    this.display.drawImg(this.game.world.background.sun)
+
     // Рисуем параллакс для облаков дальних
-    this.display.drawParallaxImage(this.game.world.background.cloud1)
+    // this.display.drawParallaxImage(this.game.world.background.cloud1)
     // Рисуем параллакс для облаков передних
-    this.display.drawParallaxImage(this.game.world.background.cloud2)
+    // this.display.drawParallaxImage(this.game.world.background.cloud2)
 
     // Рисуем параллакс для бэкграунда
-    this.game.world.background.images.forEach(image => {
-      this.display.drawParallaxImage(image, image.sticky)
-    })
+    // this.game.world.background.images.forEach(image => {
+    //   this.display.drawParallaxImage(image, image.sticky)
+    // })
 
     // Рисуем карту уровня
     this.display.drawMapSprites(this.game.world.level.mapSprites)
