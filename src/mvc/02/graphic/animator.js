@@ -13,13 +13,15 @@ export class Animator {
   }
 
   animate() {
-    switch(this.mode) {
-      case AnimatorMode.loop:
-        this.loop()
-        break
-      case AnimatorMode.pause:
-        break
-    }
+    this.loop()
+
+    // switch(this.mode) {
+    //   case AnimatorMode.loop:
+    //     this.loop()
+    //     break
+    //   case AnimatorMode.pause:
+    //     break
+    // }
   }
 
   changeFrameSet(animation, mode, delay = 10, frameIndex = 0) {
@@ -39,7 +41,21 @@ export class Animator {
 
     while(this.count > this.delay) {
       this.count -= this.delay
-      this.frameIndex = (this.frameIndex < this.animation.frames.length - 1) ? this.frameIndex + 1 : 0
+
+      switch(this.mode) {
+        case AnimatorMode.loop:
+          this.frameIndex = (this.frameIndex < this.animation.frames.length - 1)
+                              ? this.frameIndex + 1
+                              : 0
+          break
+        case AnimatorMode.pause:
+          this.frameIndex = (this.frameIndex < this.animation.frames.length - 1)
+                              ? this.frameIndex + 1
+                              : this.frameIndex
+          break
+      }
+
+
       this.animation.setFrame(this.frameIndex)
     }
   }
