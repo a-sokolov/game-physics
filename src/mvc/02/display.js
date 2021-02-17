@@ -1,5 +1,4 @@
 import { Sprite } from './graphic/sprite'
-import { getTileMapPoints } from './utils'
 
 export class Display {
   constructor(canvas, isDebug = false) {
@@ -107,16 +106,36 @@ export class Display {
       destinationY -= this.camera.y
     }
 
-    this.buffer.drawImage(
-      this.getImage(sprite.name),
-      sprite.sourceX,
-      sprite.sourceY,
-      sprite.width,
-      sprite.height,
-      destinationX,
-      destinationY,
-      destinationWidth,
-      destinationHeight)
+    if (sprite.flipped) {
+      this.buffer.save()
+
+      this.buffer.translate(destinationX + destinationWidth, 0)
+      this.buffer.scale(-1, 1)
+
+      this.buffer.drawImage(
+        this.getImage(sprite.name),
+        sprite.sourceX,
+        sprite.sourceY,
+        sprite.width,
+        sprite.height,
+        0,
+        destinationY,
+        destinationWidth,
+        destinationHeight)
+
+      this.buffer.restore()
+    } else {
+      this.buffer.drawImage(
+        this.getImage(sprite.name),
+        sprite.sourceX,
+        sprite.sourceY,
+        sprite.width,
+        sprite.height,
+        destinationX,
+        destinationY,
+        destinationWidth,
+        destinationHeight)
+    }
 
     if (this.isDebug) {
       this.buffer.strokeStyle = 'black'

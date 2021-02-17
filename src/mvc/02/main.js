@@ -96,8 +96,8 @@ export class Main {
       {
         width: this.game.world.player.width,
         height: this.game.world.player.height,
-        offsetX: 1,
-        offsetY: 1
+        offsetX: 0.5,
+        offsetY: 0.5
       }
     )
 
@@ -106,6 +106,8 @@ export class Main {
       {
         width: this.game.world.jerry.width,
         height: this.game.world.jerry.height,
+        offsetX: 0.5,
+        offsetY: 0.5
       }
     )
 
@@ -144,6 +146,10 @@ export class Main {
     if (this.controller.fire.active) {
       this.game.world.fire()
       this.controller.fire.active = false
+    }
+    if (this.controller.altFire.active) {
+      this.game.world.player.fire()
+      this.controller.altFire.active = false
     }
 
     this.game.update(time)

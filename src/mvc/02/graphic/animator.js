@@ -36,6 +36,10 @@ export class Animator {
     this.mode = mode
   }
 
+  isPlaying() {
+    return this.frameIndex < this.animation.frames.length - 1
+  }
+
   loop() {
     this.count ++
 

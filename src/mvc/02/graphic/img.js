@@ -5,6 +5,7 @@ export class Img extends Rect {
     super(x, y, width, height)
 
     this.name = name
+    this.flipped = false
   }
 
   setXY(x, y) {

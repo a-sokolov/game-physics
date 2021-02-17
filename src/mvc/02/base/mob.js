@@ -11,6 +11,7 @@ export class Mob extends MovingObject {
     this.firing = false
     this.crouching = false
     this.idling = false
+    this.swordAttack = false
   }
 
   jump() {
@@ -25,6 +26,11 @@ export class Mob extends MovingObject {
     this.crouching = false
     this.directionX = -1
     this.velocityX -= this.speed
+  }
+
+  fire() {
+    this.swordAttack = true
+    setTimeout(() => this.swordAttack = false, 400)
   }
 
   moveRight() {
