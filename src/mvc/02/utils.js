@@ -9,6 +9,12 @@ export const RectPosition = {
   right: 'right'
 }
 
+/**
+ * Функция для чтения позиции прямоугольника относительно размера спрайта
+ * @param rect прямоугольник
+ * @param position позиция (сейчас реализовано только center)
+ * @param spriteSize размеры спрайта
+ * */
 export const getRectPosition = (rect, position, spriteSize) => {
   const { x, y, width, height } = rect
   const { width: baseWidth, height: baseHeight } = spriteSize
@@ -53,6 +59,10 @@ export const getTileMapPoints = (tileMap, props) => {
   return points
 }
 
+/**
+ * Функция для чтения коллизии между 2мя прямоугольниками
+ * @return boolean true - если коллизия есть
+ * */
 export const checkRectCollision = (rect1, rect2) => {
   return (rect1.x < rect2.x + rect2.width &&
     rect1.x + rect1.width > rect2.x &&

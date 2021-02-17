@@ -1,3 +1,4 @@
+/** Класс, где храним флаги нажатия/отжатия, активности клавиши */
 export class ButtonInput {
   constructor() {
     this.down = false

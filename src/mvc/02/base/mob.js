@@ -29,8 +29,10 @@ export class Mob extends MovingObject {
   }
 
   fire() {
-    this.swordAttack = true
-    setTimeout(() => this.swordAttack = false, 400)
+    if (!this.swordAttack) {
+      this.swordAttack = true
+      setTimeout(() => this.swordAttack = false, 300)
+    }
   }
 
   moveRight() {

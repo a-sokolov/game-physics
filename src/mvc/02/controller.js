@@ -1,5 +1,6 @@
 import { ButtonInput } from './button-input'
 
+/** Контроллер, который слушает ввод */
 export class Controller {
   constructor() {
     this.down = new ButtonInput()
@@ -15,25 +16,25 @@ export class Controller {
     const down = (type === "keydown")
 
     switch(keyCode) {
-      case 37:
+      case 37: // Стрелка влево
         this.left.getInput(down)
         break
-      case 38:
+      case 38: // Стрелка вверх
         this.up.getInput(down)
         break
-      case 39:
+      case 39: // Стрелка вправо
         this.right.getInput(down)
         break
-      case 40:
+      case 40: // Стрелка вниз
         this.down.getInput(down)
         break
-      case 32:
+      case 32: // Пробел
         this.jump.getInput(down)
         break
-      case 70:
+      case 70: // Клавиша F
         this.fire.getInput(down)
         break
-      case 82:
+      case 82: // Клавиша R
         this.altFire.getInput(down)
         break
     }
