@@ -78,35 +78,3 @@ export const getIntersectingRectsSquare = (rect1, rect2) => {
     Math.min(rect1.y + rect1.height, rect2.y + rect2.height) - Math.max(rect1.y, rect2.y))
   return Math.floor(x_overlap * y_overlap)
 }
-
-export const getAllCollisionRects = (rect, width, height, filter) => {
-  const columns = Math.floor(rect.width / width)
-  const rows = Math.floor( rect.height / height)
-
-  let x = rect.x
-  let y = rect.y
-
-  const rects = []
-
-  let row = 1
-  let column = 1
-
-  // Инициализируем все прямоугольники, которые входя в площадь коллизий
-  for (let index = 1; index <= rows * columns; index ++) {
-    if (!filter || filter?.(row, column, rows, columns) ) {
-      rects.push(new Rect(x, y, width, height))
-    }
-
-    column ++
-    x += width
-
-    if (index % columns === 0) {
-      row ++
-      column = 1
-      x = rect.x
-      y += height
-    }
-  }
-
-  return rects
-}
