@@ -52,6 +52,10 @@ export class Collider {
   collide(value, object, tileX, tileY, size) {
     const { width, height } = size
 
+    if (value === undefined) {
+      debugger
+    }
+
     /**
      * All 15 tile types can be described with only 4 collision methods. These
      * methods are mixed and matched for each unique tile.

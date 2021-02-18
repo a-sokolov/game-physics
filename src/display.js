@@ -194,12 +194,23 @@ export class Display {
   /**
    * Отрисовка рамки по заданным координатам и цветом.
    * @param sticky если true, то будет не учитываться позиция камеры
+   * @param lineWidth ширина линии
    * */
-  drawStroke({ x, y, width, height, color = 'black', sticky = false }) {
+  drawStroke({ x, y, width, height, color = 'black', lineWidth = 1, sticky = false }) {
     let destinationX = Math.round(x)
     let destinationY = Math.round(y)
     let destinationWidth = width
     let destinationHeight = height
+
+    if (!this.isNeedToDraw({
+      x: destinationX,
+      y: destinationY,
+      width: destinationWidth,
+      height: destinationHeight
+    })) {
+      // Если объект не в зоне видимости, то выходим
+      return
+    }
 
     if (!sticky && this.camera) {
       destinationX -= this.camera.x
@@ -207,7 +218,22 @@ export class Display {
     }
 
     this.buffer.strokeStyle = color
+    this.buffer.lineWidth = lineWidth
     this.buffer.strokeRect(destinationX, destinationY, destinationWidth, destinationHeight)
+  }
+
+  drawText({ text, x, y, sticky = false }) {
+    let destinationX = Math.round(x)
+    let destinationY = Math.round(y)
+
+    if (!sticky && this.camera) {
+      destinationX -= this.camera.x
+      destinationY -= this.camera.y
+    }
+
+    this.buffer.font = "8px serif"
+    this.buffer.fillStyle = 'black'
+    this.buffer.fillText(text, destinationX, destinationY)
   }
 
   /** Заполнение канвы указанным цветом */
@@ -222,5 +248,24 @@ export class Display {
       this.buffer.canvas,
       0, 0, this.buffer.canvas.width, this.buffer.canvas.height,
       0, 0, this.context.canvas.width, this.context.canvas.height)
+  }
+
+  /** Рисуем сетку уровня */
+  drawMapGrid(tileMap) {
+    const { columns, size, map } = tileMap
+    const { width, height } = size
+
+    let x = 0
+    let y = 0
+
+    map.forEach((value, index) => {
+      this.drawStroke({ x, y, width, height, color: 'yellow', lineWidth: 0.05 })
+      this.drawText({ text: `${index + 1}`, x: x + 2, y: y + 8 })
+      x += width
+      if ((index + 1) % columns === 0) {
+        x = 0
+        y += height
+      }
+    })
   }
 }

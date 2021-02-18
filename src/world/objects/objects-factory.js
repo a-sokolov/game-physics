@@ -10,10 +10,10 @@ export class ObjectsFactory {
     return new Mob({
       x,
       y,
-      width: 22,
-      height: 31,
+      width: 22, // 22
+      height: 31, // 31
       velocityMax: 50,
-      jumpPower: 45,
+      jumpPower: 30,
       speed: 1.55,
     })
   }
@@ -25,7 +25,7 @@ export class ObjectsFactory {
       width: 32,
       height: 32,
       velocityMax: 30,
-      jumpPower: 35,
+      jumpPower: 30,
       speed: 1.2,
     })
   }
@@ -37,7 +37,7 @@ export class ObjectsFactory {
     }
 
     const x = player.directionX === 1
-                ? player.getRight()
+                ? player.getRight() - fireBallSize.width
                 : player.getLeft()
 
     return new FireBall({

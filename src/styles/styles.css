@@ -18,4 +18,9 @@ body {
     left: 10px;
     display: flex;
     justify-content: start;
+    gap: 8px;
+}
+
+#debug-info {
+    width: 500px;
 }

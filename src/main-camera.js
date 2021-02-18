@@ -1,4 +1,4 @@
-import { Camera } from '../base/camera'
+import { Camera } from './base/camera'
 
 export class MainCamera extends Camera {
   constructor({ edgeRect, screenRect, limitRect }) {

@@ -2,6 +2,7 @@ import { Engine } from './engine'
 import { Display } from './display'
 import { Controller } from './controller'
 import { Game } from './game'
+import { MainCamera } from './main-camera'
 import { Tools } from './tools';
 
 import { ImageLoader } from './loaders/image-loader'
@@ -41,10 +42,18 @@ export class Main {
     this.controller = new Controller()
     this.display = new Display(canvas)
     this.game = new Game()
-    this.engine = new Engine(timeStep, this.render, this.update)
+    this.engine = new Engine(timeStep, this.update, this.render)
+
+    this.camera = new MainCamera({
+      edgeRect: this.game.world.edgeRect,
+      limitRect: this.game.world.level.limitRect,
+      screenRect: this.game.world.screenRect
+    })
+    this.camera.watch(this.game.world.player)
+    this.tools.watch(this.game.world.player)
 
     // Устанавливаем камеру (сейчас это прямоугольник, который игрок двигает вперед/назад)
-    this.display.setCamera(this.game.world.camera)
+    this.display.setCamera(this.camera)
 
     window.addEventListener('resize', this.resize)
     window.addEventListener('keydown', this.keyDownUp)
@@ -123,15 +132,15 @@ export class Main {
     )
 
     // Рисуем единственного противника, Jerry из Rick&Morty (попытка написания простого AI)
-    this.display.drawSprite(
-      this.game.world.jerryAnimation.animation,
-      {
-        width: this.game.world.jerry.width,
-        height: this.game.world.jerry.height,
-        offsetX: 0.5,
-        offsetY: 0.5
-      }
-    )
+    // this.display.drawSprite(
+    //   this.game.world.jerryAnimation.animation,
+    //   {
+    //     width: this.game.world.jerry.width,
+    //     height: this.game.world.jerry.height,
+    //     offsetX: 0.5,
+    //     offsetY: 0.5
+    //   }
+    // )
 
     // Рисуем все файеры, которые находятся на экране
     this.game.world.checkFireballs.fireBallsAnimation.forEach(fireBallAnimation => {
@@ -141,13 +150,18 @@ export class Main {
 
     // Если в режиме "Debug"
     if (this.tools.isDebug) {
+      if (this.tools.isShowGrid) {
+        // Рисуем сетку уровня
+        this.display.drawMapGrid(this.game.world.level.tileMap)
+      }
+
       // Рисуем все коллизии красным цветом
       this.game.world.level.collisionRects.forEach(rect => {
         this.display.drawStroke({ ...rect, color: 'red' })
       })
 
       // Рисуем границы камеры игрока, заданным цветом
-      this.game.world.camera.rects.forEach((({ rect, color, sticky }) => {
+      this.camera.rects.forEach((({ rect, color, sticky }) => {
         this.display.drawStroke({ ...rect, color, sticky })
       }))
     }
@@ -187,5 +201,9 @@ export class Main {
 
     // Обновляем объекты самой игры
     this.game.update(time)
+    // Обновляем координаты камеры
+    this.camera.update()
+    // Обновляем отладочные инструменты
+    this.tools.update()
   }
 }
