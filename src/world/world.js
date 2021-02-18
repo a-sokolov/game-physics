@@ -31,7 +31,7 @@ export class World {
     }
 
     // Прямоугольник, который определяет границы когда нужно двигать камеру
-    this.edgeRect = new Rect(100, this.height / 2, this.width / 2 - 100, this.height / 2)
+    this.edgeRect = new Rect(100, 0, this.width / 2 - 100, this.height)
     // Размер экрана
     this.screenRect = new Rect(0, 0, this.width, this.height)
 

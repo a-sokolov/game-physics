@@ -42,6 +42,15 @@ export class Environment {
       mob.velocityX = 0
     }
 
+    // Как только ушли за границу пола, то перемещаем игрока на стартовую позицию
+    if (mob.getTop() > limitRect.height) {
+      mob.velocityX = 0
+      mob.velocityY = 0
+      mob.jumping = false
+      mob.x = mob.originX
+      mob.y = mob.originY
+    }
+
     // if (mob.getTop() < 0) {
     //   mob.setTop(0)
     //   mob.velocityY = 0

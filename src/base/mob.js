@@ -4,6 +4,9 @@ export class Mob extends MovingObject {
   constructor({ x, y, width, height, velocityMax, jumpPower = 20, speed = 0.55 }) {
     super(x, y, width, height, velocityMax)
 
+    this.originX = x
+    this.originY = y
+
     this.jumpPower = jumpPower
     this.speed = speed
     this.directionX = 1
