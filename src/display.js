@@ -260,7 +260,7 @@ export class Display {
 
     map.forEach((value, index) => {
       this.drawStroke({ x, y, width, height, color: 'yellow', lineWidth: 0.05 })
-      this.drawText({ text: `${index + 1}`, x: x + 2, y: y + 8 })
+      this.drawText({ text: `${index}`, x: x + 2, y: y + 8 })
       x += width
       if ((index + 1) % columns === 0) {
         x = 0

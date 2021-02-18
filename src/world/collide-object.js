@@ -1,6 +1,7 @@
 import { Collider } from './collider'
 import { Rect } from '../base/rect'
 import { Vector } from '../base/vector'
+import { getIntersectingRectsSquare, getAllCollisionRects } from '../utils'
 
 /** Клас для вычисления коллизий объекта */
 export class CollideObject {
@@ -23,26 +24,39 @@ export class CollideObject {
     const topRightV = new Vector(right * width, top * height)
     const bottomLeftV = new Vector(left * width, bottom * height)
 
-    // Вычисляем общую площадь коллизий
-    const columns = Math.floor(((topRightV.x + width) - topLeftV.x) / width)
-    const rows = Math.floor( ((bottomLeftV.y + height) - topLeftV.y) / height)
+    const rects = getAllCollisionRects(
+                      new Rect(topLeftV.x, topLeftV.y,
+                            (topRightV.x + width) - topLeftV.x,
+                            (bottomLeftV.y + height) - topLeftV.y),
+                      width,
+                      height).filter(rect => {
+      const square = getIntersectingRectsSquare(object, rect)
+      return (square >= (width * height) / 2)
+    })
 
-    let x = topLeftV.x
-    let y = topLeftV.y
+    // Ищем координаты хитбокса игрока
+    let x1, y1
+    let x2 = 0
+    let y2 = 0
 
-    const rects = []
+    rects.forEach(rect => {
+      x1 = Math.min(x1 ?? rect.x, rect.x)
+      y1 = Math.min(y1 ?? rect.y, rect.y)
+      x2 = Math.max(x2, rect.x + rect.width)
+      y2 = Math.max(y2, rect.y + rect.height)
+    })
 
-    // Инициализируем все прямоугольники, которые входя в площадь коллизий
-    for (let index = 1; index <= rows * columns; index ++) {
-      rects.push(new Rect(x, y, width, height))
-      x += width
-      if (index % columns === 0) {
-        x = topLeftV.x
-        y += height
-      }
-    }
+    // Увеличиваем хитбокс на спрайт во все стороны
+    x1 -= width
+    y1 -= height
+    x2 += width
+    y2 += height
 
-    return rects
+    return getAllCollisionRects(new Rect(x1, y1, x2 - x1, y2 - y1), width, height,
+              (row, column, rows, columns) => {
+                return  !((row === 1 || row === rows) && (column === 1 || column === columns)
+                          || row > 1 && row < rows && (column > 1 && column < columns))
+              })
   }
 
   getSizes(object) {
@@ -60,27 +74,31 @@ export class CollideObject {
     const { size, columns } = this.level.tileMap
     const { width, height } = size
 
-    let bottom, left, right, top, value
+    let bottom, left, right, top, value, index
 
     top = this.getSizes(object).top
     left = this.getSizes(object).left
-    value = this.level.collisionMap[top * columns + left]
-    this.collider.collide(value, object, left * width, top * height, size)
+    index = top * columns + left
+    value = this.level.collisionMap[index]
+    this.collider.collide(value, index, object, left * width, top * height, size)
 
     top = this.getSizes(object).top
     right = this.getSizes(object).right
-    value = this.level.collisionMap[top * columns + right]
-    this.collider.collide(value, object, right * width, top * height, size)
+    index = top * columns + right
+    value = this.level.collisionMap[index]
+    this.collider.collide(value, index, object, right * width, top * height, size)
 
     bottom = this.getSizes(object).bottom
     left = this.getSizes(object).left
-    value = this.level.collisionMap[bottom * columns + left]
-    this.collider.collide(value, object, left * width, bottom * height, size)
+    index = bottom * columns + left
+    value = this.level.collisionMap[index]
+    this.collider.collide(value, index, object, left * width, bottom * height, size)
 
     bottom = this.getSizes(object).bottom
     right = this.getSizes(object).right
-    value = this.level.collisionMap[bottom * columns + right]
-    this.collider.collide(value, object, right * width, bottom * height, size)
+    index = bottom * columns + right
+    value = this.level.collisionMap[index]
+    this.collider.collide(value, index, object, right * width, bottom * height, size)
 
     return this.getCollisionRects(object)
   }

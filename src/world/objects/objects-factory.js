@@ -11,7 +11,7 @@ export class ObjectsFactory {
       x,
       y,
       width: 16, // 22
-      height: 16, // 31
+      height: 32, // 31
       velocityMax: 50,
       jumpPower: 32,
       speed: 1.55,

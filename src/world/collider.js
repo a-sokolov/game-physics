@@ -1,6 +1,6 @@
 export class Collider {
   constructor() {
-    //
+    this.limit = 0
   }
 
   collidePlatformBottom(object, tileBottom) {
@@ -49,11 +49,12 @@ export class Collider {
     return false
   }
 
-  collide(value, object, tileX, tileY, size) {
+  collide(value, index, object, tileX, tileY, size) {
     const { width, height } = size
 
-    // if (value === undefined) {
-    //   debugger
+    this.limit ++
+    // if (this.limit < 1000) {
+    //   console.log('Index is', index)
     // }
 
     /**

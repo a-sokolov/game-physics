@@ -123,13 +123,7 @@ export class Main {
     })
 
     // Рисуем анимацию игрока со смещение в 0.5 пикселя, чтобы визуально он стоял на плитке, а не нависал над ней
-    this.display.drawSprite(
-      this.game.world.playerAnimation.animation,
-      {
-        offsetX: 0.5,
-        offsetY: 0.5
-      }
-    )
+    this.display.drawSprite(this.game.world.playerAnimation.animation)
 
     // Рисуем единственного противника, Jerry из Rick&Morty (попытка написания простого AI)
     // this.display.drawSprite(
