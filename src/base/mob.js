@@ -1,8 +1,11 @@
 import { MovingObject } from './moving-object'
 
 export class Mob extends MovingObject {
-  constructor({ x, y, width, height, velocityMax, jumpPower = 20, speed = 0.55 }) {
+  constructor({ x, y, width, height, velocityMax, jumpPower = 20, speed = 0.55, hitBox }) {
     super(x, y, width, height, velocityMax)
+
+    this.hitBox = hitBox
+    this.originHitBox = hitBox
 
     this.originX = x
     this.originY = y
@@ -15,6 +18,11 @@ export class Mob extends MovingObject {
     this.crouching = false
     this.idling = false
     this.swordAttack = false
+  }
+
+  setHitBox(hitBox) {
+    this.hitBox = hitBox
+    return this
   }
 
   jump() {
@@ -47,6 +55,11 @@ export class Mob extends MovingObject {
   crouch(crouching) {
     if (!this.jumping && !this.firing) {
       this.crouching = crouching
+      if (!this.crouching) {
+        this.hitBox = this.originHitBox
+      } else {
+        this.hitBox = {...this.originHitBox, height: this.originHitBox.height / 2}
+      }
     }
   }
 

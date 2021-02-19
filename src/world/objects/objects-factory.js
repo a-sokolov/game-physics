@@ -15,6 +15,7 @@ export class ObjectsFactory {
       velocityMax: 50,
       jumpPower: 32,
       speed: 1.55,
+      hitBox: { width: 16, height: 32 }
     })
   }
 
@@ -40,13 +41,15 @@ export class ObjectsFactory {
                 ? player.getRight() - fireBallSize.width
                 : player.getLeft()
 
+    const y = player.y + player.height - player.hitBox.height
+
     return new FireBall({
       ...fireBallSize,
       x,
-      y: player.getTop() + player.height / 3,
+      y: y + (player.hitBox.height / 2) - 9,
       directionX: player.directionX,
       index: window.performance.now(),
-      speed: 25.5
+      speed: 15.5
     })
   }
 }

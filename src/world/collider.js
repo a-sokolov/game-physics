@@ -1,14 +1,18 @@
+/**
+ * Здесь происходит вся магия вычисления коллизий в зависимости на какой тип ячейки врезался игрок.
+ * Внимание! Сейчас необходимо, чтобы размеры игрока соотв. одному спрайту карты.
+ * */
 export class Collider {
   constructor() {
     //
   }
 
+  /**
+   * If the top of the object is above the bottom of the tile and on the previous
+   * frame the top of the object was below the bottom of the tile, we have entered into
+   * this tile. Pretty simple stuff.
+   * */
   collidePlatformBottom(object, tileBottom) {
-    /**
-     * If the top of the object is above the bottom of the tile and on the previous
-     * frame the top of the object was below the bottom of the tile, we have entered into
-     * this tile. Pretty simple stuff.
-     * */
     if (object.getTop() < tileBottom && object.getOldTop() >= tileBottom) {
       object.setTop(tileBottom)  // Move the top of the object to the bottom of the tile.
       object.velocityY = 0       // Stop moving in that direction.
@@ -49,6 +53,10 @@ export class Collider {
     return false
   }
 
+  /**
+   * Конвертация кода коллизий в 2 формат с лидирующими нулями.
+   * На выходе всегда должно быть 4 символа.
+   * */
   dec2Bin(dec) {
     const bin = (dec >>> 0).toString(2)
     return `${'0'.repeat(4 - bin.length)}${bin}`
@@ -73,6 +81,13 @@ export class Collider {
    * 1101 13 - left-bottom-top wall
    * 1110 14 - left-bottom-right wall
    * 1111 15 - all walls
+   *
+   * @param value код коллизии (см. описание выше)
+   * @param index номер ячейки в сетке уровня
+   * @param object игрок
+   * @param tileX x координата ячейки
+   * @param tileY y координата ячвейки
+   * @param size размер спрайта
    * */
   collide(value, index, object, tileX, tileY, size) {
     const { width, height } = size
