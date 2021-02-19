@@ -4,7 +4,8 @@ export class Ninja extends Mob {
   constructor(props) {
     super(props)
 
-    this.firing = false
+    this.casting = false
+    this.arrowAttack = false
     this.swordAttack = false
   }
 

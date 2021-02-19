@@ -36,12 +36,15 @@ export class NinjaAnimation extends Animator {
       const velocityX = Math.abs(this.mob.velocityX)
 
       if (this.mob.crouching) {
+        // Приседания
         this.crouch.flipped = (this.mob.directionX < 0)
-        this.changeFrameSet(this.crouch, AnimatorMode.loop, 5)
-      } else if (this.mob.firing) {
+        this.changeFrameSet(this.crouch, AnimatorMode.loop, 4)
+      } else if (this.mob.casting) {
+        // Кастуем файер
         this.cast.flipped = (this.mob.directionX < 0)
         this.changeFrameSet(this.cast, AnimatorMode.pause, 1)
       } else if (this.mob.swordAttack) {
+        // Атакуем мечом
         if (!this.attacks.find(animation => animation === this.animation)) {
           const attackAnimation = this.attacks[this.attackIndex]
           attackAnimation.flipped = (this.mob.directionX < 0)
@@ -54,35 +57,27 @@ export class NinjaAnimation extends Animator {
       } else {
         if (this.mob.velocityY < 0) {
           if (this.mob.velocityY > -17) {
+            // Переворот в верхней точке прыжка
             this.flip.flipped = (this.mob.directionX < 0)
             this.changeFrameSet(this.flip, AnimatorMode.pause, 2)
           } else {
+            // Прыжок
             this.jump.flipped = (this.mob.directionX < 0)
             this.changeFrameSet(this.jump, AnimatorMode.pause, 1)
           }
         } else if (this.mob.velocityY > 11) {
+          // Падение вниз
           this.fall.flipped = (this.mob.directionX < 0)
           this.changeFrameSet(this.fall, AnimatorMode.pause, 2)
         } else if (!this.mob.jumping) {
           if (velocityX < 0.08) {
+            // Ожидание
             this.idle.flipped = (this.mob.directionX < 0)
-            this.changeFrameSet(this.idle, AnimatorMode.loop, 5)
-          } else if (this.mob.directionX < 0) {
-            if (velocityX < 1) {
-              this.stay.flipped = true
-              this.changeFrameSet(this.stay, AnimatorMode.pause)
-            } else {
-              this.move.flipped = true
-              this.changeFrameSet(this.move, AnimatorMode.loop, 5)
-            }
-          } else if (this.mob.directionX > 0) {
-            if (velocityX < 1) {
-              this.stay.flipped = false
-              this.changeFrameSet(this.stay, AnimatorMode.pause)
-            } else {
-              this.move.flipped = false
-              this.changeFrameSet(this.move, AnimatorMode.loop, 5)
-            }
+            this.changeFrameSet(this.idle, AnimatorMode.loop, 4)
+          } else if (!(velocityX < 1)) {
+            // Двигаемся
+            this.move.flipped = (this.mob.directionX < 0)
+            this.changeFrameSet(this.move, AnimatorMode.loop, 3)
           }
         }
       }
@@ -97,7 +92,13 @@ export class NinjaAnimation extends Animator {
       }
 
       this.animation.setXY(newPosition.x, newPosition.y)
-      this.animate()
+      if (velocityX < 1 && velocityX > 0.09) {
+        // Если ускорение по X координате маленькое, то останавливаем анимацию
+        this.stop()
+      } else {
+        // Проигрываем анимацию
+        this.animate()
+      }
     }
   }
 }

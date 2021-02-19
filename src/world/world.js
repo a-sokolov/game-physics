@@ -78,10 +78,6 @@ export class World {
     return new NinjaController(this, this.player, controller)
   }
 
-  fire() {
-    this.checkFireballs.fire()
-  }
-
   update() {
     this.env.update()
     // this.jerryBehavior.update()

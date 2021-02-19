@@ -36,7 +36,7 @@ export class MainCamera extends Camera {
 
       if (this.object.x + this.object.width  > (this.limitRect.width - this.widthBetweenViewPortAndLimit)) {
         /**
-         * Объект достиг границы лимита оп X координате с учетом viewport'а.
+         * Объект достиг границы лимита по X координате с учетом viewport'а.
          * В этом случае мы должны дать ему пройти до конца (за границу) уровня, не двигая рамку порта.
          * */
         if (this.screenRect.width === this.limitRect.width) {
@@ -47,6 +47,10 @@ export class MainCamera extends Camera {
       }
 
       this.y = Math.min(0, -(this.edgeRect.y - this.object.y))
+
+      // Округляем для более плавного движения камеры
+      this.y = Math.round(this.y)
+      this.x = Math.round(this.x)
     }
   }
 }

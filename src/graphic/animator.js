@@ -10,6 +10,8 @@ export class Animator {
     this.animation = animation
     this.frameIndex = 0
     this.mode = mode
+
+    this.stopAnimation = false
   }
 
   animate() {
@@ -40,6 +42,10 @@ export class Animator {
     return this.frameIndex < this.animation.frames.length - 1
   }
 
+  stop() {
+    this.stopAnimation = true
+  }
+
   loop() {
     this.count ++
 
@@ -59,8 +65,13 @@ export class Animator {
           break
       }
 
-
       this.animation.setFrame(this.frameIndex)
+      if (this.stopAnimation
+        || this.mode === AnimatorMode.pause
+        && this.frameIndex === this.animation.frames.length - 1) {
+        this.stopAnimation = false
+        break
+      }
     }
   }
 }

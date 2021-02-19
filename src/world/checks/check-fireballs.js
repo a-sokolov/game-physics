@@ -9,13 +9,13 @@ export class CheckFireballs {
   }
 
   fire() {
-    if (!this.player.firing) {
-      this.player.firing = true
+    if (!this.player.casting) {
+      this.player.casting = true
 
       const fireBall = ObjectsFactory.createFireBall(this.player)
       this.fireBallsAnimation.push(new FireBallAnimation(fireBall))
 
-      setTimeout(() => this.player.firing = false, 200)
+      setTimeout(() => this.player.casting = false, 200)
     }
   }
 

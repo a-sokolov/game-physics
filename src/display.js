@@ -56,7 +56,7 @@ export class Display {
     }
 
     // Флаг сглаживания отрисовки
-    this.context.imageSmoothingEnabled = true
+    this.context.imageSmoothingEnabled = false
   }
 
   /** Отрисовка массива спрайтов карты уровня */
