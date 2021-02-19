@@ -1,6 +1,6 @@
 export class Collider {
   constructor() {
-    this.limit = 0
+    //
   }
 
   collidePlatformBottom(object, tileBottom) {
@@ -49,81 +49,52 @@ export class Collider {
     return false
   }
 
+  dec2Bin(dec) {
+    const bin = (dec >>> 0).toString(2)
+    return `${'0'.repeat(4 - bin.length)}${bin}`
+  }
+
+  /**
+   * 0 0 0 0 = l b r t
+   *
+   * 0000 00 - no walls
+   * 0001 01 - top wall
+   * 0010 02 - right wall
+   * 0011 03 - right-top wall
+   * 0100 04 - bottom wall
+   * 0101 05 - bottom-top wall
+   * 0110 06 - bottom-right wall
+   * 0111 07 - bottom-right-top wall
+   * 1000 08 - left wall
+   * 1001 09 - left-top wall
+   * 1010 10 - left-right wall
+   * 1011 11 - left-right-top wall
+   * 1100 12 - left-bottom wall
+   * 1101 13 - left-bottom-top wall
+   * 1110 14 - left-bottom-right wall
+   * 1111 15 - all walls
+   * */
   collide(value, index, object, tileX, tileY, size) {
     const { width, height } = size
 
-    this.limit ++
-    // if (this.limit < 1000) {
-    //   console.log('Index is', index)
-    // }
-
-    /**
-     * All 15 tile types can be described with only 4 collision methods. These
-     * methods are mixed and matched for each unique tile.
-     * */
-    switch(value) {
-      case 1:
-        this.collidePlatformTop(object, tileY)
-        break
-      case 2:
-        this.collidePlatformRight(object, tileX + width)
-        break
-      case 3:
-        // If there's a collision, we don't need to check for anything else.
-        if (this.collidePlatformTop(object, tileY)) return
-        this.collidePlatformRight(object,tileX + width)
-        break
-      case 4: this.collidePlatformBottom(object, tileY + height)
-        break
-      case 5: 
-        if (this.collidePlatformTop(object, tileY)) return
-        this.collidePlatformBottom(object, tileY + height)
-        break
-      case 6:
-        if (this.collidePlatformRight(object, tileX + width)) return
-        this.collidePlatformBottom(object, tileY + height)
-        break
-      case 7:
-        if (this.collidePlatformTop(object, tileY)) return
-        if (this.collidePlatformBottom(object, tileY + height)) return
-        this.collidePlatformRight(object, tileX + width)
-        break
-      case 8:
-        this.collidePlatformLeft(object, tileX)
-        break
-      case 9:
-        if (this.collidePlatformTop(object, tileY)) return
-        this.collidePlatformLeft(object, tileX)
-        break
-      case 10:
-        if (this.collidePlatformLeft(object, tileX)) return
-        this.collidePlatformRight(object, tileX + width)
-        break
-      case 11:
-        if (this.collidePlatformTop(object, tileY)) return
-        if (this.collidePlatformLeft(object, tileX)) return
-        this.collidePlatformRight(object, tileX + width)
-        break
-      case 12:
-        if (this.collidePlatformBottom(object, tileY + height)) return
-        this.collidePlatformLeft (object, tileX)
-        break
-      case 13:
-        if (this.collidePlatformTop (object, tileY)) return
-        if (this.collidePlatformBottom(object, tileY + height)) return
-        this.collidePlatformLeft(object, tileX)
-        break
-      case 14:
-        if (this.collidePlatformBottom(object, tileY + height)) return
-        if (this.collidePlatformLeft (object, tileX)) return
-        this.collidePlatformRight(object, tileX)
-        break
-      case 15:
-        if (this.collidePlatformTop(object, tileY)) return
-        if (this.collidePlatformBottom(object, tileY + height)) return
-        if (this.collidePlatformLeft (object, tileX)) return
-        this.collidePlatformRight(object, tileX + width)
-        break
+    const bin = this.dec2Bin(value)
+    if ((bin & '0001') !== 0) {
+      // top
+      if (this.collidePlatformTop(object, tileY)) return true
     }
+    if ((bin & '0010') !== 0) {
+      // right
+      if (this.collidePlatformRight(object, tileX + width)) return true
+    }
+    if ((bin & '0100') !== 0) {
+      // bottom
+      if (this.collidePlatformBottom(object, tileY + height)) return true
+    }
+    if ((bin & '1000') !== 0) {
+      // left
+      if (this.collidePlatformLeft(object, tileX)) return true
+    }
+
+    return false
   }
 }

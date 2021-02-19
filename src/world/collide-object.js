@@ -3,13 +3,6 @@ import { Rect } from '../base/rect'
 import { Vector } from '../base/vector'
 import { getIntersectingRectsSquare } from '../utils'
 
-export const CollideType = {
-  top: 'top',
-  left: 'left',
-  right: 'right',
-  bottom: 'bottom'
-}
-
 /** Клас для вычисления коллизий объекта */
 export class CollideObject {
   constructor() {
@@ -36,21 +29,8 @@ export class CollideObject {
 
     // Инициализируем все прямоугольники, которые входят в площадь коллизий
     for (let index = 1; index <= rows * columns; index ++) {
-      let type
-      if (row === 1) {
-        type = CollideType.top
-      } else if (row === rows) {
-        type = CollideType.bottom
-      } else {
-        if (column === 1) {
-          type = CollideType.left
-        } else if (column === columns) {
-          type = CollideType.right
-        }
-      }
-
       if (!filter || filter?.(row, column, rows, columns) ) {
-        rects.push({ x, y, width, height, type })
+        rects.push(new Rect( x, y, width, height))
       }
 
       column ++
@@ -68,7 +48,7 @@ export class CollideObject {
   }
 
   /** Функция для инициализации прямоугольников коллизий объекта */
-  getCollisionRects(object) {
+  getCollisionRectsOld(object) {
     const { width, height } = this.level.tileMap.size
     const { bottom, left, right, top } = this.getSizes(object)
 
@@ -123,42 +103,10 @@ export class CollideObject {
   }
 
   collideObject(object) {
-    const collisionRects = this.getCollisionRects(object)
     const { size, columns } = this.level.tileMap
     const { width, height } = size
 
-    collisionRects.forEach(rect => {
-      const row = Math.floor(rect.y  / height)
-      const column = Math.floor(rect.x / width)
-      const index = row * columns + column
-
-      let tileX, tileY
-      tileX = rect.x
-      tileY = rect.y
-      switch (rect.type) {
-        case CollideType.top:
-          break
-        case CollideType.left:
-          break
-        case CollideType.right:
-          break
-        case CollideType.bottom:
-          break
-      }
-
-      const value = this.level.collisionMap[index]
-      if (value) {
-        this.collider.collide(value, index, object, tileX, tileY, size)
-      }
-    })
-
-    return collisionRects
-  }
-
-  collideObject2(object) {
-    const { size, columns } = this.level.tileMap
-    const { width, height } = size
-
+    const rects = []
     let bottom, left, right, top, value, index
 
     top = this.getSizes(object).top
@@ -166,25 +114,29 @@ export class CollideObject {
     index = top * columns + left
     value = this.level.collisionMap[index]
     this.collider.collide(value, index, object, left * width, top * height, size)
+    rects.push(new Rect(left * width, top * height, width, height))
 
     top = this.getSizes(object).top
     right = this.getSizes(object).right
     index = top * columns + right
     value = this.level.collisionMap[index]
     this.collider.collide(value, index, object, right * width, top * height, size)
+    rects.push(new Rect(right * width, top * height, width, height))
 
     bottom = this.getSizes(object).bottom
     left = this.getSizes(object).left
     index = bottom * columns + left
     value = this.level.collisionMap[index]
     this.collider.collide(value, index, object, left * width, bottom * height, size)
+    rects.push(new Rect(left * width, bottom * height, width, height))
 
     bottom = this.getSizes(object).bottom
     right = this.getSizes(object).right
     index = bottom * columns + right
     value = this.level.collisionMap[index]
     this.collider.collide(value, index, object, right * width, bottom * height, size)
+    rects.push(new Rect(right * width, bottom * height, width, height))
 
-    return this.getCollisionRects(object)
+    return rects
   }
 }

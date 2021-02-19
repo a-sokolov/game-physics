@@ -10,8 +10,8 @@ export class ObjectsFactory {
     return new Mob({
       x,
       y,
-      width: 16, // 22
-      height: 32, // 31
+      width: 16,
+      height: 16,
       velocityMax: 50,
       jumpPower: 32,
       speed: 1.55,
@@ -22,8 +22,8 @@ export class ObjectsFactory {
     return new Mob({
       x,
       y,
-      width: 32,
-      height: 32,
+      width: 16,
+      height: 16,
       velocityMax: 30,
       jumpPower: 30,
       speed: 1.2,
