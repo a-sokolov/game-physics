@@ -1,5 +1,6 @@
 import { FireBall } from './fire-ball'
 import { Mob } from '../../base/mob'
+import { Ninja } from './ninja'
 
 export class ObjectsFactory {
   constructor() {
@@ -7,7 +8,7 @@ export class ObjectsFactory {
   }
 
   static createPlayer(x, y) {
-    return new Mob({
+    return new Ninja({
       x,
       y,
       width: 16,

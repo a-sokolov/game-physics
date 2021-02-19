@@ -5,6 +5,8 @@ import { MobAnimation } from './animation/mob-animation'
 import { NinjaAnimation } from './animation/ninja-animation'
 // import { BackgroundAnimation } from './animation/background-animation'
 
+import { NinjaController } from './controllers/ninja-controller'
+
 import { CollideObject } from './collide-object'
 
 import { Rect } from '../base/rect'
@@ -70,6 +72,10 @@ export class World {
     this.env.setCollider(this.collider)
 
     this.checkCoins = new CheckCoins(this.player, this.level.coinsStaticAnimation)
+  }
+
+  getPlayerController(controller) {
+    return new NinjaController(this, this.player, controller)
   }
 
   fire() {

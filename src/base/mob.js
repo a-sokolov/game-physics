@@ -14,10 +14,8 @@ export class Mob extends MovingObject {
     this.speed = speed
     this.directionX = 1
     this.jumping = true
-    this.firing = false
     this.crouching = false
     this.idling = false
-    this.swordAttack = false
   }
 
   setHitBox(hitBox) {
@@ -39,13 +37,6 @@ export class Mob extends MovingObject {
     this.velocityX -= this.speed
   }
 
-  fire() {
-    if (!this.swordAttack) {
-      this.swordAttack = true
-      setTimeout(() => this.swordAttack = false, 300)
-    }
-  }
-
   moveRight() {
     this.crouching = false
     this.directionX = 1
@@ -53,7 +44,7 @@ export class Mob extends MovingObject {
   }
 
   crouch(crouching) {
-    if (!this.jumping && !this.firing) {
+    if (!this.jumping) {
       this.crouching = crouching
       if (!this.crouching) {
         this.hitBox = this.originHitBox

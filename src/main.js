@@ -7,6 +7,8 @@ import { Tools } from './tools';
 
 import { ImageLoader } from './loaders/image-loader'
 
+import { ASSETS } from './constants'
+
 /**
  * Основной класс, который грузит ресурсы и управляет:
  * - игрой (где описывается логика и физика игры)
@@ -43,6 +45,7 @@ export class Main {
     this.display = new Display(canvas)
     this.game = new Game()
     this.engine = new Engine(timeStep, this.update, this.render)
+    this.playerController = this.game.world.getPlayerController(this.controller)
 
     this.camera = new MainCamera({
       edgeRect: this.game.world.edgeRect,
@@ -64,19 +67,7 @@ export class Main {
     this.display.buffer.canvas.width = this.game.world.width
 
     // Грузим все ресурсы
-    const imageLoader = new ImageLoader({
-      'jerry-tiles': './assets/jerry-tiles.png',
-      'brick': './assets/brick.png',
-      'red-fire-ball-tiles': './assets/red-fireball-tiles.png',
-      'coin-tiles': './assets/coin-tiles.png',
-      'ninja-tiles': './assets/ninja-tiles.png',
-      'level01-tileset': './assets/level01/tileset.png',
-      'level01-clouds': './assets/level01/clouds.png',
-      'level01-far-grounds': './assets/level01/far-grounds.png',
-      'level01-sea': './assets/level01/sea.png',
-      'level01-sky': './assets/level01/sky.png'
-    })
-
+    const imageLoader = new ImageLoader(ASSETS)
     imageLoader.load().then(() => {
       // Когда загрузили, то стартуем движок
       this.display.setImages(imageLoader.images)
@@ -143,56 +134,15 @@ export class Main {
     })
 
     // Если в режиме "Debug"
-    if (this.tools.isDebug) {
-      if (this.tools.isShowGrid) {
-        // Рисуем сетку уровня
-        this.display.drawMapGrid(this.game.world.level.tileMap)
-      }
-
-      // Рисуем все коллизии красным цветом
-      this.game.world.level.collisionRects.forEach(rect => {
-        this.display.drawStroke({ ...rect, color: 'red' })
-      })
-
-      // Рисуем границы камеры игрока, заданным цветом
-      this.camera.rects.forEach((({ rect, color, sticky }) => {
-        this.display.drawStroke({ ...rect, color, sticky })
-      }))
-    }
-
+    this.tools.render()
     // Выводим на экран
     this.display.render()
   }
 
   // Здесь обновляем позиции объектов и "слушаем" ввод с клавиатуры
   update(time) {
-    // Флаг "игрок присел"
-    this.game.world.player.crouch(this.controller.down.active)
-
-    // Движение влево
-    if (this.controller.left.active)  {
-      this.game.world.player.moveLeft()
-    }
-    // Движение вправо
-    if (this.controller.right.active) {
-      this.game.world.player.moveRight()
-    }
-    // Прыжок (после, сразу деактивируем нажатие, чтобы убрать эффект "прыгаем пока зажата клавиша")
-    if (this.controller.jump.active) {
-      this.game.world.player.jump()
-      this.controller.jump.active = false
-    }
-    // Швыряем файер (также деактивируем нажатие)
-    if (this.controller.fire.active) {
-      this.game.world.fire()
-      this.controller.fire.active = false
-    }
-    // Удар мечом (также деактивируем нажатие)
-    if (this.controller.altFire.active) {
-      this.game.world.player.fire()
-      this.controller.altFire.active = false
-    }
-
+    // Слушаем ввод с клавиатуры
+    this.playerController.update()
     // Обновляем объекты самой игры
     this.game.update(time)
     // Обновляем координаты камеры

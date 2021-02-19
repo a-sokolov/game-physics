@@ -9,7 +9,8 @@ export class Controller {
     this.up = new ButtonInput()
     this.jump = new ButtonInput()
     this.fire = new ButtonInput()
-    this.altFire = new ButtonInput()
+    this.sword = new ButtonInput()
+    this.bow = new ButtonInput()
   }
 
   keyDownUp(type, keyCode) {
@@ -35,7 +36,10 @@ export class Controller {
         this.fire.getInput(down)
         break
       case 82: // Клавиша R
-        this.altFire.getInput(down)
+        this.sword.getInput(down)
+        break
+      case 66: // Клавиш B
+        this.bow.getInput(down)
         break
     }
   }

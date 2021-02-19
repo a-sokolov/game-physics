@@ -52,4 +52,23 @@ export class Tools {
       this.debugInfo.value = `${Math.round(x)}:${Math.round(y)} ${width}:${height}`
     }
   }
+
+  render() {
+    if (this.isDebug) {
+      if (this.isShowGrid) {
+        // Рисуем сетку уровня
+        this.main.display.drawMapGrid(this.main.game.world.level.tileMap)
+      }
+
+      // Рисуем все коллизии красным цветом
+      this.main.game.world.level.collisionRects.forEach(rect => {
+        this.main.display.drawStroke({...rect, color: 'red'})
+      })
+
+      // Рисуем границы камеры игрока, заданным цветом
+      this.main.camera.rects.forEach((({rect, color, sticky}) => {
+        this.main.display.drawStroke({...rect, color, sticky})
+      }))
+    }
+  }
 }
