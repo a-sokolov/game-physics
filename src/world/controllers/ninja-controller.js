@@ -24,7 +24,7 @@ export class NinjaController {
     }
     // Швыряем файер (также деактивируем нажатие)
     if (this.controller.fire.active) {
-      this.world.checkFireballs.fire()
+      this.player.cast(this.world.checkFireballs.fire)
       this.controller.fire.active = false
     }
     // Удар мечом (также деактивируем нажатие)

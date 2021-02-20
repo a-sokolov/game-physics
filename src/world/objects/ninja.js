@@ -5,21 +5,32 @@ export class Ninja extends Mob {
     super(props)
 
     this.casting = false
-    this.bowAttack = false
-    this.swordAttack = false
+    this.swordAttacking = false
+    this.bowAttacking = false
+
+    this.canCast = true
+    this.canBowAttack = true
+    this.canSwordAttack = true
   }
 
-  sword() {
-    if (!this.swordAttack) {
-      this.swordAttack = true
-      setTimeout(() => this.swordAttack = false, 200)
+  cast(callback) {
+    if (this.canCast) {
+      this.canCast = false
+      this.casting = true
     }
   }
 
-  bow() {
-    if (!this.bowAttack) {
-      this.bowAttack = true
-      setTimeout(() => this.bowAttack = false, 400)
+  sword(callback) {
+    if (this.canSwordAttack) {
+      this.canSwordAttack = false
+      this.swordAttacking = true
+    }
+  }
+
+  bow(callback) {
+    if (this.canBowAttack) {
+      this.canBowAttack = false
+      this.bowAttacking = true
     }
   }
 }

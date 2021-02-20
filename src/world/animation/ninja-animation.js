@@ -1,5 +1,6 @@
 import { SpriteSheet } from '../../graphic/sprite-sheet'
 import { Animator, AnimatorMode } from '../../graphic/animator'
+import { NinjaActionType, NinjaInterpretator } from '../interpretators/ninja-interpretator'
 
 export const NinjaAnimationDelay = {
   idle: 4,
@@ -10,6 +11,7 @@ export const NinjaAnimationDelay = {
   flip: 2,
   jump: 1,
   fall: 2,
+  touch: 3,
   move: 3
 }
 
@@ -27,6 +29,7 @@ export class NinjaAnimation extends Animator {
 
     this.flip = tiles.getAnimationFrames(19, 20, 21, 22)
     this.fall = tiles.getAnimationFrames(23, 24)
+    this.touch = tiles.getAnimationFrames(5, 6, 7)
     this.jump = tiles.getAnimationFrames(15, 16, 17, 18)
     this.move = tiles.getAnimationFrames(9, 10, 11, 12, 13, 14)
     this.cast = tiles.getAnimationFrames(89, 90, 91, 92, 93)
@@ -37,19 +40,18 @@ export class NinjaAnimation extends Animator {
 
     this.swordAttacks = [this.swordAttack1, this.swordAttack2, this.swordAttack3]
     this.attackIndex = 0
+
     this.longAnimation = false
     this.mob = null
+    this.actionType = NinjaActionType.idling
+    this.isFalling = false
 
     this.reset = this.reset.bind(this)
   }
 
   watch(mob) {
     this.mob = mob
-  }
-
-  isAttacking() {
-    return this.swordAttacks.find(animation => animation === this.animation)
-            || this.animation === this.bowAttack
+    this.interpretator = new NinjaInterpretator(mob)
   }
 
   position() {
@@ -69,8 +71,12 @@ export class NinjaAnimation extends Animator {
   }
 
   isInterrupted() {
-    const { crouching, jumping, casting } = this.mob
-    return crouching || jumping || casting
+    return this.interpretator.isCrouching()
+          || this.interpretator.isJumping()
+          || this.interpretator.isFalling()
+          || (this.actionType === NinjaActionType.casting && (this.interpretator.isBowAttacking() || this.interpretator.isSwordAttacking()))
+          || (this.actionType === NinjaActionType.bowAttacking && (this.interpretator.isCasting() || this.interpretator.isSwordAttacking()))
+          || (this.actionType === NinjaActionType.swordAttacking && (this.interpretator.isCasting() || this.interpretator.isBowAttacking()))
   }
 
   reset() {
@@ -79,6 +85,10 @@ export class NinjaAnimation extends Animator {
 
   update() {
     if (this.mob) {
+      if (this.isInterrupted()) {
+        this.reset()
+      }
+
       if (this.longAnimation) {
         /**
          * Если проигрывается длинная анимация, то её можно прервать 2мя путями:
@@ -89,65 +99,67 @@ export class NinjaAnimation extends Animator {
         this.position()
         this.animate(this.reset)
 
-        if (this.isInterrupted()) {
-          this.reset()
-        }
-
         return
       }
 
-      const velocityX = Math.abs(this.mob.velocityX)
-
-      if (this.mob.crouching) {
+      if (this.interpretator.isCrouching()) {
         // Приседания
         this.changeFrameSet(this.crouch, AnimatorMode.loop, NinjaAnimationDelay.crouch)
-      } else if (this.mob.casting) {
+      } else if (this.interpretator.isCasting()) {
         this.longAnimation = true
+        this.actionType = NinjaActionType.casting
 
         // Кастуем файер
         this.changeFrameSet(this.cast, AnimatorMode.pause, NinjaAnimationDelay.cast)
-      } else if ((this.mob.swordAttack || this.mob.bowAttack) && !this.isAttacking()) {
+      } else if (this.interpretator.isSwordAttacking()) {
         this.longAnimation = true
+        this.actionType = NinjaActionType.swordAttacking
 
         // Атакуем мечом
-        if (this.mob.swordAttack) {
-          const attackAnimation = this.swordAttacks[this.attackIndex]
-          this.changeFrameSet(attackAnimation, AnimatorMode.pause, NinjaAnimationDelay.sword)
-          this.attackIndex ++
-          if (this.attackIndex > this.swordAttacks.length - 1) {
-            this.attackIndex = 0
-          }
-        } else if (this.mob.bowAttack) {
-          this.changeFrameSet(this.bowAttack, AnimatorMode.pause, NinjaAnimationDelay.bow)
+        const attackAnimation = this.swordAttacks[this.attackIndex]
+        this.changeFrameSet(attackAnimation, AnimatorMode.pause, NinjaAnimationDelay.sword)
+        this.attackIndex ++
+        if (this.attackIndex > this.swordAttacks.length - 1) {
+          this.attackIndex = 0
         }
+      } else if (this.interpretator.isBowAttacking()) {
+        this.longAnimation = true
+        this.actionType = NinjaActionType.bowAttacking
+
+        // Стреляем из лука
+        this.changeFrameSet(this.bowAttack, AnimatorMode.pause, NinjaAnimationDelay.bow)
       } else {
-        if (this.mob.velocityY < 0) {
-          if (this.mob.velocityY > -17) {
-            // Переворот в верхней точке прыжка
-            this.changeFrameSet(this.flip, AnimatorMode.pause, NinjaAnimationDelay.flip)
-          } else {
-            // Прыжок
-            this.changeFrameSet(this.jump, AnimatorMode.pause, NinjaAnimationDelay.jump)
-          }
-        } else if (this.mob.velocityY > 11) {
+        if (this.interpretator.isFlipping()) {
+          // Переворот в верхней точке прыжка
+          this.changeFrameSet(this.flip, AnimatorMode.pause, NinjaAnimationDelay.flip)
+        } else if (this.interpretator.isJumping()) {
+          // Прыжок
+          this.changeFrameSet(this.jump, AnimatorMode.pause, NinjaAnimationDelay.jump)
+        } else if (this.interpretator.isFalling()) {
           // Падение вниз
-          this.changeFrameSet(this.fall, AnimatorMode.pause, NinjaAnimationDelay.fall)
-        } else if (!this.mob.jumping) {
-          if (velocityX < 0.08) {
-            // Ожидание
-            this.changeFrameSet(this.idle, AnimatorMode.loop, NinjaAnimationDelay.idle)
-          } else if (!(velocityX < 1)) {
-            // Двигаемся
-            this.changeFrameSet(this.move, AnimatorMode.loop, NinjaAnimationDelay.move)
-          }
+          this.changeFrameSet(this.fall, AnimatorMode.loop, NinjaAnimationDelay.fall)
+        } else if (this.interpretator.isIdling()) {
+          // Ожидание
+          this.changeFrameSet(this.idle, AnimatorMode.loop, NinjaAnimationDelay.idle)
+        } else if (this.interpretator.isMoving()) {
+          // Двигаемся
+          this.changeFrameSet(this.move, AnimatorMode.loop, NinjaAnimationDelay.move)
         }
       }
 
       this.position()
 
-      if (velocityX < 1 && velocityX > 0.09) {
-        // Если ускорение по X координате маленькое, то останавливаем анимацию
-        this.stop()
+      if (this.interpretator.isStopping()) {
+        if (this.animation === this.fall) {
+          // Проигрываем анимацию приземления
+          this.longAnimation = true
+          this.changeFrameSet(this.touch, AnimatorMode.loop, NinjaAnimationDelay.touch)
+          this.position()
+          this.animate(this.reset)
+        } else {
+          // Если ускорение по X координате маленькое, то останавливаем анимацию
+          this.stop()
+        }
       } else {
         // Проигрываем анимацию
         this.animate(this.reset)

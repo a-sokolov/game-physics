@@ -9,14 +9,8 @@ export class CheckFireballs {
   }
 
   fire() {
-    if (!this.player.casting) {
-      this.player.casting = true
-
-      const fireBall = ObjectsFactory.createFireBall(this.player)
-      this.fireBallsAnimation.push(new FireBallAnimation(fireBall))
-
-      setTimeout(() => this.player.casting = false, 200)
-    }
+    const fireBall = ObjectsFactory.createFireBall(this.player)
+    this.fireBallsAnimation.push(new FireBallAnimation(fireBall))
   }
 
   update() {

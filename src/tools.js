@@ -48,8 +48,18 @@ export class Tools {
 
   update() {
     if (this.player) {
-      const { x, y , width, height } = this.player
-      this.debugInfo.value = `${Math.round(x)}:${Math.round(y)} ${width}:${height}`
+      const { x, oldX, y, oldY, width, height, velocityX, velocityY } = this.player
+      const info = JSON.stringify({
+        x: Math.round(x),
+        oldX: Math.round(oldX),
+        y: Math.round(y),
+        oldY: Math.round(oldY),
+        width,
+        height,
+        velocityX: Math.round(velocityX),
+        velocityY: Math.round(velocityY)
+      })
+      this.debugInfo.value = info
     }
   }
 
