@@ -1,36 +1,24 @@
 import { Mob } from '../../base/mob'
+import { MobAction } from '../../base/mob-action'
 
 export class Ninja extends Mob {
   constructor(props) {
     super(props)
 
-    this.casting = false
-    this.swordAttacking = false
-    this.bowAttacking = false
-
-    this.canCast = true
-    this.canBowAttack = true
-    this.canSwordAttack = true
+    this.castAction = new MobAction()
+    this.swordAttackAction = new MobAction()
+    this.bowAttackAction = new MobAction()
   }
 
-  cast(callback) {
-    if (this.canCast) {
-      this.canCast = false
-      this.casting = true
-    }
+  cast() {
+    this.castAction.fire()
   }
 
-  sword(callback) {
-    if (this.canSwordAttack) {
-      this.canSwordAttack = false
-      this.swordAttacking = true
-    }
+  sword() {
+    this.swordAttackAction.fire()
   }
 
-  bow(callback) {
-    if (this.canBowAttack) {
-      this.canBowAttack = false
-      this.bowAttacking = true
-    }
+  bow() {
+    this.bowAttackAction.fire()
   }
 }

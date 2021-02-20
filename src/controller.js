@@ -8,7 +8,7 @@ export class Controller {
     this.right = new ButtonInput()
     this.up = new ButtonInput()
     this.jump = new ButtonInput()
-    this.fire = new ButtonInput()
+    this.cast = new ButtonInput()
     this.sword = new ButtonInput()
     this.bow = new ButtonInput()
   }
@@ -33,7 +33,7 @@ export class Controller {
         this.jump.getInput(down)
         break
       case 70: // Клавиша F
-        this.fire.getInput(down)
+        this.cast.getInput(down)
         break
       case 82: // Клавиша R
         this.sword.getInput(down)

@@ -24,14 +24,6 @@ export class Animator {
         this.playing = false
       }
     }
-
-    // switch(this.mode) {
-    //   case AnimatorMode.loop:
-    //     this.loop()
-    //     break
-    //   case AnimatorMode.pause:
-    //     break
-    // }
   }
 
   changeFrameSet(animation, mode, delay = 10, frameIndex = 0) {
@@ -72,7 +64,7 @@ export class Animator {
 
       this.animation.setFrame(this.frameIndex)
       if (callback && this.frameIndex === this.animation.frames.length - 1) {
-        callback()
+        callback(true)
       }
       if (this.stopAnimation
         || this.mode === AnimatorMode.pause

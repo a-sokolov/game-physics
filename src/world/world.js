@@ -45,6 +45,8 @@ export class World {
     this.playerAnimation = new NinjaAnimation({ main: NINJA_TILES, bow: NINJA_BOW_TILES })
 
     this.checkFireballs = new CheckFireballs(this.player, this.level.limitRect)
+    this.player.castAction.callback = this.checkFireballs.fire.bind(this.checkFireballs)
+    this.player.bowAttackAction.callback = this.checkFireballs.fire.bind(this.checkFireballs)
 
     // this.jerry = ObjectsFactory.createJerry(50, 100)
     // this.jerryAnimation = new MobAnimation(JERRY_TILES)

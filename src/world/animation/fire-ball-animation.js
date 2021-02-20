@@ -22,6 +22,7 @@ export class FireBallAnimation extends Animator {
 
     super(frames, 2, AnimatorMode.loop)
     this.fireBall = fireBall
+    this.animation.setXY(this.fireBall.x, this.fireBall.y)
   }
 
   update() {

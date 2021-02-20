@@ -5,7 +5,7 @@ import { NinjaActionType, NinjaInterpretator } from '../interpretators/ninja-int
 export const NinjaAnimationDelay = {
   idle: 4,
   crouch: 4,
-  cast: 1,
+  cast: 6,
   sword: 2,
   bow: 3,
   flip: 2,
@@ -46,7 +46,7 @@ export class NinjaAnimation extends Animator {
     this.actionType = NinjaActionType.idling
     this.isFalling = false
 
-    this.reset = this.reset.bind(this)
+    this.resetAnimation = this.resetAnimation.bind(this)
   }
 
   watch(mob) {
@@ -79,14 +79,33 @@ export class NinjaAnimation extends Animator {
           || (this.actionType === NinjaActionType.swordAttacking && (this.interpretator.isCasting() || this.interpretator.isBowAttacking()))
   }
 
-  reset() {
+  resetAnimation(done = false) {
+    let mobAction
+    if (this.animation === this.bowAttack) {
+      mobAction = this.mob.bowAttackAction
+    } else if (this.swordAttacks.find(animation => this.animation === animation)) {
+      mobAction = this.mob.swordAttackAction
+    } else if (this.animation === this.cast) {
+      mobAction = this.mob.castAction
+    }
+
+    if (mobAction) {
+      done && mobAction.done()
+      mobAction.clear()
+      console.log('Action is', mobAction)
+    }
+
     this.longAnimation = false
+  }
+
+  handleAnimate() {
+    this.animate(this.resetAnimation)
   }
 
   update() {
     if (this.mob) {
       if (this.isInterrupted()) {
-        this.reset()
+        this.resetAnimation()
       }
 
       if (this.longAnimation) {
@@ -97,7 +116,7 @@ export class NinjaAnimation extends Animator {
          * 2) Если анимация закончилась, то убираем флаг
          * */
         this.position()
-        this.animate(this.reset)
+        this.handleAnimate()
 
         return
       }
@@ -155,14 +174,14 @@ export class NinjaAnimation extends Animator {
           this.longAnimation = true
           this.changeFrameSet(this.touch, AnimatorMode.loop, NinjaAnimationDelay.touch)
           this.position()
-          this.animate(this.reset)
+          this.handleAnimate()
         } else {
           // Если ускорение по X координате маленькое, то останавливаем анимацию
           this.stop()
         }
       } else {
         // Проигрываем анимацию
-        this.animate(this.reset)
+        this.handleAnimate()
       }
     }
   }

@@ -25,15 +25,15 @@ export class NinjaInterpretator {
   }
 
   isCasting() {
-    return this.ninja.casting
+    return this.ninja.castAction.action
   }
 
   isBowAttacking() {
-    return this.ninja.bowAttacking
+    return this.ninja.bowAttackAction.action
   }
 
   isSwordAttacking() {
-    return this.ninja.swordAttacking
+    return this.ninja.swordAttackAction.action
   }
 
   isJumping() {
