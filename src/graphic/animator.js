@@ -12,10 +12,18 @@ export class Animator {
     this.mode = mode
 
     this.stopAnimation = false
+    this.playing = false
   }
 
-  animate() {
-    this.loop()
+  animate(callback) {
+    if (!this.playing) {
+      try {
+        this.playing = true
+        this.loop(callback)
+      } finally {
+        this.playing = false
+      }
+    }
 
     // switch(this.mode) {
     //   case AnimatorMode.loop:
@@ -35,18 +43,15 @@ export class Animator {
     this.delay = delay
     this.animation = animation
     this.frameIndex = frameIndex
+    this.animation.setFrame(frameIndex)
     this.mode = mode
-  }
-
-  isPlaying() {
-    return this.frameIndex < this.animation.frames.length - 1
   }
 
   stop() {
     this.stopAnimation = true
   }
 
-  loop() {
+  loop(callback) {
     this.count ++
 
     while(this.count > this.delay) {
@@ -66,6 +71,9 @@ export class Animator {
       }
 
       this.animation.setFrame(this.frameIndex)
+      if (callback && this.frameIndex === this.animation.frames.length - 1) {
+        callback()
+      }
       if (this.stopAnimation
         || this.mode === AnimatorMode.pause
         && this.frameIndex === this.animation.frames.length - 1) {

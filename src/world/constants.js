@@ -13,3 +13,11 @@ export const NINJA_TILES = {
   spriteWidth: 50,
   spriteHeight: 37
 }
+
+export const NINJA_BOW_TILES = {
+  name: 'ninja-bow-tiles',
+  width: 200,
+  height: 148,
+  spriteWidth: 50,
+  spriteHeight: 37
+}

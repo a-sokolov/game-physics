@@ -32,5 +32,10 @@ export class NinjaController {
       this.player.sword()
       this.controller.sword.active = false
     }
+    // Выстрел из лука (также деактивируем нажатие)
+    if (this.controller.bow.active) {
+      this.player.bow()
+      this.controller.bow.active = false
+    }
   }
 }
