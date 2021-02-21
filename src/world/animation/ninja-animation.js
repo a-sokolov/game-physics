@@ -21,22 +21,22 @@ export class NinjaAnimation extends Animator {
     const tiles = new SpriteSheet(main)
     const bowTiles = new SpriteSheet(bow)
 
-    const defaultFrame = tiles.getAnimationFrames(1, 2, 3, 4)
-    super(defaultFrame, NinjaAnimationDelay.idle, AnimatorMode.loop)
+    const defaultFrame = tiles.getAnimationFramesWithKey('idle',1, 2, 3, 4)
+    super(defaultFrame, NinjaAnimationDelay.idle, AnimatorMode.loop, 'ninja-animation')
 
     this.idle = defaultFrame
-    this.crouch = tiles.getAnimationFrames(5, 6, 7, 8)
+    this.crouch = tiles.getAnimationFramesWithKey('crouch',5, 6, 7, 8)
 
-    this.flip = tiles.getAnimationFrames(19, 20, 21, 22)
-    this.fall = tiles.getAnimationFrames(23, 24)
-    this.touch = tiles.getAnimationFrames(5, 6, 7)
-    this.jump = tiles.getAnimationFrames(15, 16, 17, 18)
-    this.move = tiles.getAnimationFrames(9, 10, 11, 12, 13, 14)
-    this.cast = tiles.getAnimationFrames(89, 90, 91, 92, 93)
-    this.swordAttack1 = tiles.getAnimationFrames(43, 44, 45, 46, 47, 48, 49)
-    this.swordAttack2 = tiles.getAnimationFrames(50, 51, 52, 53)
-    this.swordAttack3 = tiles.getAnimationFrames(54, 55, 56, 57, 58, 59)
-    this.bowAttack = bowTiles.getAnimationFrames(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    this.flip = tiles.getAnimationFramesWithKey('flip',19, 20, 21, 22)
+    this.fall = tiles.getAnimationFramesWithKey('fall',23, 24)
+    this.touch = tiles.getAnimationFramesWithKey('touch',5, 6, 7)
+    this.jump = tiles.getAnimationFramesWithKey('jump', 15, 16, 17, 18)
+    this.move = tiles.getAnimationFramesWithKey('move', 9, 10, 11, 12, 13, 14)
+    this.cast = tiles.getAnimationFramesWithKey('cast', 89, 90, 91, 92, 93)
+    this.swordAttack1 = tiles.getAnimationFramesWithKey('swordAttack1', 43, 44, 45, 46, 47, 48, 49)
+    this.swordAttack2 = tiles.getAnimationFramesWithKey('swordAttack2', 50, 51, 52, 53)
+    this.swordAttack3 = tiles.getAnimationFramesWithKey('swordAttack3', 54, 55, 56, 57, 58, 59)
+    this.bowAttack = bowTiles.getAnimationFramesWithKey('bowAttack', 1, 2, 3, 4, 5, 6, 7, 8, 9)
 
     this.swordAttacks = [this.swordAttack1, this.swordAttack2, this.swordAttack3]
     this.attackIndex = 0
@@ -79,7 +79,9 @@ export class NinjaAnimation extends Animator {
           || (this.actionType === NinjaActionType.swordAttacking && (this.interpretator.isCasting() || this.interpretator.isBowAttacking()))
   }
 
-  resetAnimation(done = false) {
+  resetAnimation(key, done = false) {
+    this.longAnimation = false
+
     let mobAction
     if (this.animation === this.bowAttack) {
       mobAction = this.mob.bowAttackAction
@@ -92,10 +94,7 @@ export class NinjaAnimation extends Animator {
     if (mobAction) {
       done && mobAction.done()
       mobAction.clear()
-      console.log('Action is', mobAction)
     }
-
-    this.longAnimation = false
   }
 
   handleAnimate() {

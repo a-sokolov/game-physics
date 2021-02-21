@@ -10,9 +10,9 @@ export class SpriteSheet {
     this.spriteHeight = spriteHeight
   }
 
-  getFlippedAnimationFrames(...indexes) {
+  getAnimationFramesWithKey(key, ...indexes) {
     const frames = this.getAnimationFrames(...indexes)
-    frames.flipped = true
+    frames.key = key
 
     return frames
   }

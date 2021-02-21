@@ -4,7 +4,7 @@ export const AnimatorMode = {
 }
 
 export class Animator {
-  constructor(animation, delay, mode = AnimatorMode.pause) {
+  constructor(animation, delay, mode = AnimatorMode.pause, key) {
     this.count = 0
     this.delay = (delay >= 1) ? delay : 1
     this.animation = animation
@@ -13,6 +13,7 @@ export class Animator {
 
     this.stopAnimation = false
     this.playing = false
+    this.key = key
   }
 
   animate(callback) {
@@ -43,32 +44,40 @@ export class Animator {
     this.stopAnimation = true
   }
 
+  isEnded() {
+    return this.frameIndex === this.animation.frames.length - 1
+  }
+
   loop(callback) {
     this.count ++
 
     while(this.count > this.delay) {
       this.count -= this.delay
+      this.frameIndex ++
 
       switch(this.mode) {
         case AnimatorMode.loop:
-          this.frameIndex = (this.frameIndex < this.animation.frames.length - 1)
-                              ? this.frameIndex + 1
-                              : 0
+          if (this.frameIndex === this.animation.frames.length) {
+            this.frameIndex = 0
+          }
           break
         case AnimatorMode.pause:
-          this.frameIndex = (this.frameIndex < this.animation.frames.length - 1)
-                              ? this.frameIndex + 1
-                              : this.frameIndex
+          if (this.frameIndex === this.animation.frames.length) {
+            this.frameIndex = this.animation.frames.length - 1
+          }
           break
       }
 
       this.animation.setFrame(this.frameIndex)
-      if (callback && this.frameIndex === this.animation.frames.length - 1) {
-        callback(true)
+      if (callback && this.isEnded()) {
+        // Когда закончилась анимация, то вызываем колбэк
+        callback(this.animation.key, true)
       }
-      if (this.stopAnimation
-        || this.mode === AnimatorMode.pause
-        && this.frameIndex === this.animation.frames.length - 1) {
+      if (this.stopAnimation || this.mode === AnimatorMode.pause && this.isEnded()) {
+        if (this.mode === AnimatorMode.pause && this.isEnded()) {
+          this.frameIndex = 0
+        }
+        // Если анимацию остановили или в режиме "пауза" дошли до последнего кадра
         this.stopAnimation = false
         break
       }

@@ -5,9 +5,9 @@ export class Ninja extends Mob {
   constructor(props) {
     super(props)
 
-    this.castAction = new MobAction()
-    this.swordAttackAction = new MobAction()
-    this.bowAttackAction = new MobAction()
+    this.castAction = new MobAction('cast')
+    this.swordAttackAction = new MobAction('sword-attack')
+    this.bowAttackAction = new MobAction('bow-attack')
   }
 
   cast() {
