@@ -12,6 +12,8 @@ const proxyHandler = {
         break
     }
 
+    target[prop] = val
+
     return true
   }
 }

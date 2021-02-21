@@ -12,4 +12,8 @@ export class Level {
   addStaticAnimation(animation) {
     this.staticAnimations.push(animation)
   }
+
+  update() {
+    this.staticAnimations.forEach(staticAnimation => staticAnimation.update())
+  }
 }

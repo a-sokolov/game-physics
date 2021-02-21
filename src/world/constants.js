@@ -29,3 +29,19 @@ export const NINJA_SWORD_RUN_TILES = {
   spriteWidth: 50,
   spriteHeight: 37
 }
+
+export const FIREBALL_TILES = {
+  name: 'red-fire-ball-tiles',
+  width: 3072,
+  height: 394,
+  spriteWidth: 512,
+  spriteHeight: 197
+}
+
+export const ARROW_TILES = {
+  name: 'arrow',
+  width: 18,
+  height: 3,
+  spriteWidth: 18,
+  spriteHeight: 3
+}

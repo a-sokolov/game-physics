@@ -1,13 +1,14 @@
-import { FireBall } from './fire-ball'
-import { Mob } from '../../base/mob'
+import { HMovingObject } from '../../base/hmoving-object'
 import { Ninja } from './ninja'
+import { SpriteSheet } from '../../graphic/sprite-sheet'
+import { FIREBALL_TILES, ARROW_TILES } from '../constants'
 
 export class ObjectsFactory {
   constructor() {
     //
   }
 
-  static createPlayer(x, y) {
+  createPlayer(x, y) {
     return new Ninja({
       x,
       y,
@@ -20,37 +21,55 @@ export class ObjectsFactory {
     })
   }
 
-  static createJerry(x, y) {
-    return new Mob({
-      x,
-      y,
-      width: 16,
-      height: 16,
-      velocityMax: 30,
-      jumpPower: 30,
-      speed: 1.2,
-    })
-  }
-
-  static createFireBall(player) {
-    const fireBallSize = {
+  createFireBall(player) {
+    const fireballProps = {
       width: 32,
-      height: 12
+      height: 12,
+      speed: 10.5,
+      key: 'fire-ball'
     }
 
     const x = player.directionX === -1
-                ? player.getRight() - fireBallSize.width - 10
+                ? player.getRight() - fireballProps.width - 10
                 : player.getLeft() + 10
 
     const y = player.y + player.height - player.hitBox.height
 
-    return new FireBall({
-      ...fireBallSize,
-      x,
-      y: y + (player.hitBox.height / 2) - 6,
-      directionX: player.directionX,
-      index: window.performance.now(),
-      speed: 10.5
-    })
+    return {
+      object: new HMovingObject({
+        ...fireballProps,
+        x,
+        y: y + (player.hitBox.height / 2) - 6,
+        directionX: player.directionX,
+      }),
+      frames: new SpriteSheet(FIREBALL_TILES).getAnimationFrames(7, 8, 9, 10, 11, 12),
+      delay: 2
+    }
+  }
+
+  createArrow(player) {
+    const arrowProps = {
+      width: 18,
+      height: 3,
+      speed: 18,
+      key: 'arrow'
+    }
+
+    const x = player.directionX === -1
+      ? player.getRight() - arrowProps.width - 10
+      : player.getLeft() + 10
+
+    const y = player.y + player.height - player.hitBox.height
+
+    return {
+      object: new HMovingObject({
+        ...arrowProps,
+        x,
+        y: y + (player.hitBox.height / 2) - 2,
+        directionX: player.directionX,
+      }),
+      frames: new SpriteSheet(ARROW_TILES).getAnimationFrames(1),
+      delay: 2
+    }
   }
 }

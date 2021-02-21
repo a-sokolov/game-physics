@@ -1,23 +1,17 @@
-// import { Background } from './objects/background'
-import { ObjectsFactory } from './objects/objects-factory'
-
-import { MobAnimation } from './animation/mob-animation'
 import { NinjaAnimation } from './animation/ninja-animation'
-// import { BackgroundAnimation } from './animation/background-animation'
-
 import { NinjaController } from './controllers/ninja-controller'
 
+import { ObjectsFactory } from './objects/objects-factory'
 import { CollideObject } from './collide-object'
 
 import { Rect } from '../base/rect'
-
 import { Level01 } from './levels/level-01'
+
 import { CheckCoins } from './checks/check-coins'
-import { CheckFireballs } from './checks/check-fireballs'
+import { CheckHMovingObjects } from './checks/check-hmoving-objects'
 
 import { Environment } from './environment'
-// import { DummyBehavior } from './npc/dummy-behavior'
-import { NINJA_TILES, NINJA_BOW_TILES, NINJA_SWORD_RUN_TILES, JERRY_TILES } from './constants'
+import { NINJA_TILES, NINJA_BOW_TILES, NINJA_SWORD_RUN_TILES } from './constants'
 
 export class World {
   constructor(friction = 0.85, gravity = 2) {
@@ -32,6 +26,8 @@ export class World {
       height: 16
     }
 
+    // Создаем фабрику объктов
+    this.objectFactory = new ObjectsFactory()
     // Прямоугольник, который определяет границы когда нужно двигать камеру
     this.edgeRect = new Rect(100, 0, this.width / 2 - 100, this.height)
     // Размер экрана
@@ -41,41 +37,34 @@ export class World {
     this.level = new Level01(this.spriteSize, this.width, this.height)
 
     this.env = new Environment(friction, gravity, this.level.limitRect)
-    this.player = ObjectsFactory.createPlayer(10, 100)
+    this.player = this.objectFactory.createPlayer(10, 100)
     this.playerAnimation = new NinjaAnimation({
       main: NINJA_TILES,
       bow: NINJA_BOW_TILES,
       sword: NINJA_SWORD_RUN_TILES
     })
 
-    this.checkFireballs = new CheckFireballs(this.player, this.level.limitRect)
-    this.player.castAction.callback = this.checkFireballs.fire.bind(this.checkFireballs)
-    this.player.bowAttackAction.callback = this.checkFireballs.fire.bind(this.checkFireballs)
-
-    // this.jerry = ObjectsFactory.createJerry(50, 100)
-    // this.jerryAnimation = new MobAnimation(JERRY_TILES)
-    //
-    // this.jerryBehavior = new DummyBehavior(this.jerry, this.player, this.screenRect, this.limitRect)
-
-    this.env.addMob(this.player) //, this.jerry
-
-    // this.background = new Background(this.screenRect, this.player.speed)
-
-    // this.backgroundAnimation = new BackgroundAnimation({
-    //   background: this.background,
-    //   camera: this.camera,
-    //   edgeRect: this.edgeRect,
-    //   screenRect: this.screenRect,
-    //   limitRect: this.limitRect
-    // })
-
+    this.env.addMob(this.player)
     this.playerAnimation.watch(this.player)
-    // this.jerryAnimation.watch(this.jerry)
-    // this.backgroundAnimation.watch(this.player)
 
     this.collider = new CollideObject()
     this.collider.setLevel(this.level)
     this.env.setCollider(this.collider)
+
+    this.checkFireballs = new CheckHMovingObjects({
+      player: this.player,
+      limitRect: this.level.limitRect,
+      callback: this.objectFactory.createFireBall
+    })
+
+    this.checkArrows = new CheckHMovingObjects({
+      player: this.player,
+      limitRect: this.level.limitRect,
+      callback: this.objectFactory.createArrow
+    })
+
+    this.player.castAction.callback = this.checkFireballs.fire.bind(this.checkFireballs)
+    this.player.bowAttackAction.callback = this.checkArrows.fire.bind(this.checkArrows)
 
     this.checkCoins = new CheckCoins(this.player, this.level.coinsStaticAnimation)
   }
@@ -87,17 +76,18 @@ export class World {
 
   update() {
     this.env.update()
-    // this.jerryBehavior.update()
     this.checkFireballs.update()
-    this.level.staticAnimations.forEach(staticAnimation => staticAnimation.update())
+    this.checkArrows.update()
+    this.level.update()
 
     this.playerAnimation.update()
-    // this.jerryAnimation.update()
-    // this.backgroundAnimation.update()
 
-    this.level.collisionRects = this.env.getAllCollisionRects().concat(
-        this.checkFireballs.fireBallsAnimation.map(({ fireBall }) => {
-          return this.collider.getCollisionRects(fireBall)
+    this.level.collisionRects = this.env.getAllCollisionRects()
+      .concat(this.checkFireballs.objects.map(object => {
+          return this.collider.getCollisionRects(object, true)
+        }).flat())
+      .concat(this.checkArrows.objects.map(object => {
+          return this.collider.getCollisionRects(object, true)
         }).flat())
     this.checkCoins.update(this.env.getMobCollisionRects(this.player))
   }

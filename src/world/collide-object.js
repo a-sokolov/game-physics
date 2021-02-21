@@ -74,9 +74,8 @@ export class CollideObject {
    * Функция для инициализации прямоугольников коллизий объекта
    * @deprecated
    * */
-  getCollisionRects(object) {
+  getCollisionRects(object, onlySquare = false) {
     const { width, height } = this.level.tileMap.size
-
 
     const objectWithHitBox = this.getObjectWithHitBox(object)
     const { bottom, left, right, top } = this.getSizes(objectWithHitBox)
@@ -88,12 +87,17 @@ export class CollideObject {
     const square = new Rect(topLeftV.x, topLeftV.y,
                 (topRightV.x + width) - topLeftV.x,
                 (bottomLeftV.y + height) - topLeftV.y)
+
+    if (onlySquare) {
+      return [square]
+    }
+
     const rects = this.getAllSquareRects(square, width, height).filter(rect => {
       const square = getIntersectingRectsSquare(objectWithHitBox, rect)
       return (square >= (width * height) / 3)
     })
 
-    // Ищем координаты хитбокса игрока
+    // Ищем координаты хитбокса объекта
     let x1, y1
     let x2 = 0
     let y2 = 0

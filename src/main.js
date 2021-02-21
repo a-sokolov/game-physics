@@ -96,16 +96,6 @@ export class Main {
     // Цвет фона
     this.display.fill(this.game.world.backgroundColor)
 
-    // Рисуем параллакс для облаков дальних
-    // this.display.drawParallaxImage(this.game.world.background.cloud1)
-    // Рисуем параллакс для облаков передних
-    // this.display.drawParallaxImage(this.game.world.background.cloud2)
-
-    // Рисуем параллакс для бэкграунда
-    // this.game.world.background.images.forEach(image => {
-    //   this.display.drawParallaxImage(image, image.sticky)
-    // })
-
     // Рисуем карту уровня
     this.display.drawMapSprites(this.game.world.level.mapSprites)
     // Рисуем всю статичную анимацию (сейчас это монетки)
@@ -116,21 +106,15 @@ export class Main {
     // Рисуем анимацию игрока со смещение в 0.5 пикселя, чтобы визуально он стоял на плитке, а не нависал над ней
     this.display.drawSprite(this.game.world.playerAnimation.animation)
 
-    // Рисуем единственного противника, Jerry из Rick&Morty (попытка написания простого AI)
-    // this.display.drawSprite(
-    //   this.game.world.jerryAnimation.animation,
-    //   {
-    //     width: this.game.world.jerry.width,
-    //     height: this.game.world.jerry.height,
-    //     offsetX: 0.5,
-    //     offsetY: 0.5
-    //   }
-    // )
-
     // Рисуем все файеры, которые находятся на экране
-    this.game.world.checkFireballs.fireBallsAnimation.forEach(fireBallAnimation => {
-      const { width, height } = fireBallAnimation.fireBall
-      this.display.drawSprite(fireBallAnimation.animation, { width, height })
+    this.game.world.checkFireballs.objects.forEach(fireball => {
+      const { width, height } = fireball
+      this.display.drawSprite(fireball.ref.animation, { width, height })
+    })
+    // Рисуем все стрелы, которые находятся на экране
+    this.game.world.checkArrows.objects.forEach(arrow => {
+      const { width, height } = arrow
+      this.display.drawSprite(arrow.ref.animation, { width, height })
     })
 
     // Если в режиме "Debug"
