@@ -2,12 +2,13 @@ import { SpriteSheet } from '../../graphic/sprite-sheet'
 import { Animator, AnimatorMode } from '../../graphic/animator'
 import { NinjaActionType, NinjaInterpretator } from '../interpretators/ninja-interpretator'
 import { AnimationSets } from '../../graphic/animation-sets'
+import { CollisionType } from '../collider'
 
 export const NinjaAnimationDelay = {
   idle: 4,
   crouch: 4,
   slide: 5,
-  cast: 3,
+  cast: 2,
   sword: 2,
   airSword: 1,
   bow: 3,
@@ -37,7 +38,7 @@ export class NinjaAnimation extends Animator {
     this.touch = tiles.getAnimationFramesWithKey('touch',5, 6, 7)
     this.jump = tiles.getAnimationFramesWithKey('jump', 15, 16, 17, 18)
     this.move = tiles.getAnimationFramesWithKey('move', 9, 10, 11, 12, 13, 14)
-    this.cast = tiles.getAnimationFramesWithKey('cast', 89, 90, 91, 92, 93)
+    this.cast = tiles.getAnimationFramesWithKey('cast', 86, 87, 88, 89, 90, 91, 92, 93)
 
     this.airSwordAttacks = new AnimationSets([
       tiles.getAnimationFramesWithKey('air-sword-attack1', 97, 98, 99, 100),
@@ -82,19 +83,36 @@ export class NinjaAnimation extends Animator {
     this.animation.setXY(newPosition.x, newPosition.y)
   }
 
+  isGroundAttack() {
+    return this.animation === this.bowAttack
+        || this.swordAttacks.equals(this.animation)
+        || this.isActionType(NinjaActionType.casting)
+  }
+
+  isAirAttack() {
+    return this.animation === this.airBowAttack
+        || this.airSwordAttacks.equals(this.animation)
+  }
+
+  isCollisionType(type) {
+    return this.mob.collisions.filter(collision => collision === type).length > 0
+  }
+
+  isCollisionTypes(types) {
+    return this.mob.collisions.filter(collision => types.some(type => type === collision)).length > 0
+  }
+
   isInterrupted() {
     return this.interpretator.isCrouching()
           || (this.isActionType(NinjaActionType.casting) && (this.interpretator.isBowAttacking() || this.interpretator.isSwordAttacking()))
           || (this.isActionType(NinjaActionType.bowAttacking) && (this.interpretator.isCasting() || this.interpretator.isSwordAttacking()))
           || (this.isActionType(NinjaActionType.swordAttacking) && (this.interpretator.isCasting() || this.interpretator.isBowAttacking()))
-          || (this.mob.jumping && (this.animation === this.bowAttack || this.swordAttacks.equals(this.animation)))
+          || ((this.mob.jumping || this.isCollisionTypes([CollisionType.left, CollisionType.right])) && this.isGroundAttack())
+          || (this.isCollisionTypes([CollisionType.top, CollisionType.bottom]) && this.isAirAttack())
   }
 
   checkController() {
-    if (this.interpretator.isMoving() && (
-      this.swordAttacks.equals(this.animation)
-      || this.isActionType(NinjaActionType.casting)
-      || this.animation === this.bowAttack)) {
+    if (this.interpretator.isMoving() && this.isGroundAttack()) {
       // Останавливаем движение игрока, если во время оного произведен выстрел из лука, каст файера или удар мячом
       if (this.mob.directionX < 0) {
         this.controller.left.active = false
@@ -162,10 +180,6 @@ export class NinjaAnimation extends Animator {
     return false
   }
 
-  isPlayerInAir() {
-    return this.isActionType(NinjaActionType.falling) || this.mob.jumping
-  }
-
   update() {
     if (this.mob) {
       if (this.isInterrupted()) {
@@ -197,7 +211,7 @@ export class NinjaAnimation extends Animator {
       } else if (this.interpretator.isCrouching()) {
         // Приседания
         this.changeFrameSet(this.crouch, AnimatorMode.loop, NinjaAnimationDelay.crouch)
-      } else if (this.interpretator.isCasting() && !this.isPlayerInAir()) {
+      } else if (this.interpretator.isCasting()) {
         this.longAnimation = true
 
         // Кастуем файер

@@ -1,3 +1,10 @@
+export const CollisionType = {
+  top: 'top',
+  bottom: 'bottom',
+  left: 'left',
+  right: 'right'
+}
+
 /**
  * Здесь происходит вся магия вычисления коллизий в зависимости на какой тип ячейки врезался игрок.
  * Внимание! Сейчас необходимо, чтобы размеры игрока соотв. одному спрайту карты.
@@ -95,21 +102,21 @@ export class Collider {
     const bin = this.dec2Bin(value)
     if ((bin & '0001') !== 0) {
       // top
-      if (this.collidePlatformTop(object, tileY)) return true
+      if (this.collidePlatformTop(object, tileY)) return CollisionType.top
     }
     if ((bin & '0010') !== 0) {
       // right
-      if (this.collidePlatformRight(object, tileX + width)) return true
+      if (this.collidePlatformRight(object, tileX + width)) return CollisionType.right
     }
     if ((bin & '0100') !== 0) {
       // bottom
-      if (this.collidePlatformBottom(object, tileY + height)) return true
+      if (this.collidePlatformBottom(object, tileY + height)) return CollisionType.bottom
     }
     if ((bin & '1000') !== 0) {
       // left
-      if (this.collidePlatformLeft(object, tileX)) return true
+      if (this.collidePlatformLeft(object, tileX)) return CollisionType.left
     }
 
-    return false
+    return null
   }
 }

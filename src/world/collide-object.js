@@ -120,34 +120,40 @@ export class CollideObject {
 
   /** Запуск вычисления коллизий */
   collideObject(object) {
+    object.collisions = []
+
     const { size, columns } = this.level.tileMap
     const { width, height } = size
 
-    let bottom, left, right, top, value, index
+    let bottom, left, right, top, value, index, collisionType
 
     top = this.getSizes(object).top
     left = this.getSizes(object).left
     index = top * columns + left
     value = this.level.collisionMap[index]
-    this.collider.collide(value, index, object, left * width, top * height, size)
+    collisionType = this.collider.collide(value, index, object, left * width, top * height, size)
+    if (collisionType) object.collisions.push(collisionType)
 
     top = this.getSizes(object).top
     right = this.getSizes(object).right
     index = top * columns + right
     value = this.level.collisionMap[index]
-    this.collider.collide(value, index, object, right * width, top * height, size)
+    collisionType = this.collider.collide(value, index, object, right * width, top * height, size)
+    if (collisionType) object.collisions.push(collisionType)
 
     bottom = this.getSizes(object).bottom
     left = this.getSizes(object).left
     index = bottom * columns + left
     value = this.level.collisionMap[index]
-    this.collider.collide(value, index, object, left * width, bottom * height, size)
+    collisionType = this.collider.collide(value, index, object, left * width, bottom * height, size)
+    if (collisionType) object.collisions.push(collisionType)
 
     bottom = this.getSizes(object).bottom
     right = this.getSizes(object).right
     index = bottom * columns + right
     value = this.level.collisionMap[index]
-    this.collider.collide(value, index, object, right * width, bottom * height, size)
+    collisionType = this.collider.collide(value, index, object, right * width, bottom * height, size)
+    if (collisionType) object.collisions.push(collisionType)
 
     return this.getCollisionRects(object)
   }
