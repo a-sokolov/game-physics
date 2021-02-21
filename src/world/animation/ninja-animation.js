@@ -7,7 +7,7 @@ import { CollisionType } from '../collider'
 export const NinjaAnimationDelay = {
   idle: 4,
   crouch: 4,
-  slide: 5,
+  slide: 2,
   cast: 2,
   sword: 2,
   airSword: 1,
@@ -207,7 +207,7 @@ export class NinjaAnimation extends Animator {
 
       if (this.interpretator.isSliding()) {
         // Скользим
-        this.changeFrameSet(this.slide, AnimatorMode.loop, NinjaAnimationDelay.slide)
+        this.changeFrameSet(this.slide, AnimatorMode.pause, NinjaAnimationDelay.slide)
       } else if (this.interpretator.isCrouching()) {
         // Приседания
         this.changeFrameSet(this.crouch, AnimatorMode.loop, NinjaAnimationDelay.crouch)
@@ -255,9 +255,10 @@ export class NinjaAnimation extends Animator {
 
       this.position()
 
-      if (this.interpretator.isStopping()) {
-        if (this.isActionType(NinjaActionType.falling)) {
-          // Проигрываем анимацию приземления
+      const isFalling = this.isActionType(NinjaActionType.falling) || this.isAirAttack()
+      if (this.interpretator.isStopping() && (isFalling || this.isActionType(NinjaActionType.moving))) {
+        if (isFalling) {
+          // Проигрываем анимацию приземления: когда просто падаем,
           this.longAnimation = true
           this.changeFrameSet(this.touch, AnimatorMode.loop, NinjaAnimationDelay.touch)
           this.position()

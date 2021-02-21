@@ -12,19 +12,7 @@ export class Animator {
     this.mode = mode
 
     this.stopAnimation = false
-    this.playing = false
     this.key = key
-  }
-
-  animate(callback) {
-    if (!this.playing) {
-      try {
-        this.playing = true
-        this.loop(callback)
-      } finally {
-        this.playing = false
-      }
-    }
   }
 
   changeFrameSet(animation, mode, delay = 10, frameIndex = 0) {
@@ -38,6 +26,7 @@ export class Animator {
     this.frameIndex = frameIndex
     this.animation.setFrame(frameIndex)
     this.mode = mode
+    this.played = false
   }
 
   stop() {
@@ -48,7 +37,12 @@ export class Animator {
     return this.frameIndex === this.animation.frames.length - 1
   }
 
-  loop(callback) {
+  animate(callback) {
+    if (this.mode === AnimatorMode.pause && this.played) {
+      // Если в режиме пауза и анимация уже проиграна, что выходим
+      return
+    }
+
     this.count ++
 
     while(this.count > this.delay) {
@@ -75,6 +69,7 @@ export class Animator {
       }
       if (this.stopAnimation || this.mode === AnimatorMode.pause && this.isEnded()) {
         if (this.mode === AnimatorMode.pause && this.isEnded()) {
+          this.played = true
           this.frameIndex = 0
         }
         // Если анимацию остановили или в режиме "пауза" дошли до последнего кадра

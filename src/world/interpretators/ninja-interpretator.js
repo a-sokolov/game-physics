@@ -26,7 +26,7 @@ export class NinjaInterpretator {
   }
 
   isSliding() {
-    return this.ninja.crouching && this.__getVelocityX() > 1.85
+    return this.ninja.crouching && this.__getVelocityX() > 1
   }
 
   isCasting() {
