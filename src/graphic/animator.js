@@ -63,18 +63,23 @@ export class Animator {
       }
 
       this.animation.setFrame(this.frameIndex)
-      if (callback && this.isEnded()) {
-        // Когда закончилась анимация, то вызываем колбэк
-        callback(this.animation.key, true)
-      }
-      if (this.stopAnimation || this.mode === AnimatorMode.pause && this.isEnded()) {
-        if (this.mode === AnimatorMode.pause && this.isEnded()) {
+
+      let animationEnded = this.isEnded()
+      if (this.stopAnimation || this.mode === AnimatorMode.pause && animationEnded) {
+        if (this.mode === AnimatorMode.pause && animationEnded) {
           this.played = true
           this.frameIndex = 0
         }
         // Если анимацию остановили или в режиме "пауза" дошли до последнего кадра
         this.stopAnimation = false
+
+        // Когда закончилась анимация, то вызываем колбэк
+        callback?.(this.animation.key, animationEnded)
+
         break
+      } else if (callback && animationEnded) {
+        // Когда закончилась анимация, то вызываем колбэк
+        callback(this.animation.key, true)
       }
     }
   }

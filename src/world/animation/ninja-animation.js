@@ -151,6 +151,8 @@ export class NinjaAnimation extends Animator {
       } else {
         this.controller.right.active = this.controller.right.down
       }
+
+      this.played = false
     }
   }
 
