@@ -39,15 +39,15 @@ export class ObjectsFactory {
     }
 
     const x = player.directionX === -1
-                ? player.getRight() - fireBallSize.width
-                : player.getLeft()
+                ? player.getRight() - fireBallSize.width - 10
+                : player.getLeft() + 10
 
     const y = player.y + player.height - player.hitBox.height
 
     return new FireBall({
       ...fireBallSize,
       x,
-      y: y + (player.hitBox.height / 2) - 9,
+      y: y + (player.hitBox.height / 2) - 6,
       directionX: player.directionX,
       index: window.performance.now(),
       speed: 10.5

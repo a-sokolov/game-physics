@@ -25,7 +25,7 @@ export class Ninja extends Mob {
     }
     this.isArmed = true
     this.swordAttackAction.fire()
-    this.timer = setTimeout(() => this.isArmed = false, 10000)
+    this.timer = setTimeout(() => this.isArmed = false, 5000)
   }
 
   bow() {
