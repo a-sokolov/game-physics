@@ -77,6 +77,7 @@ export class World {
   }
 
   getPlayerController(controller) {
+    this.playerAnimation.controller = controller
     return new NinjaController(this, this.player, controller)
   }
 

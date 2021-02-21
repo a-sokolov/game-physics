@@ -30,7 +30,7 @@ export class NinjaAnimation extends Animator {
 
     this.idle = defaultFrame
     this.crouch = tiles.getAnimationFramesWithKey('crouch',5, 6, 7, 8)
-    this.slide = tiles.getAnimationFramesWithKey('crouch',25, 26, 27, 28, 29)
+    this.slide = tiles.getAnimationFramesWithKey('slide',25, 26, 27, 28, 29)
 
     this.flip = tiles.getAnimationFramesWithKey('flip',19, 20, 21, 22)
     this.fall = tiles.getAnimationFramesWithKey('fall',23, 24)
@@ -52,9 +52,11 @@ export class NinjaAnimation extends Animator {
     ])
 
     this.bowAttack = bowTiles.getAnimationFramesWithKey('bow-attack', 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    this.airBowAttack = bowTiles.getAnimationFramesWithKey('air-bow-attack', 10, 11, 12, 13, 14, 15)
 
     this.longAnimation = false
     this.mob = null
+    this.controller = null
 
     this.resetAnimation = this.resetAnimation.bind(this)
   }
@@ -85,6 +87,21 @@ export class NinjaAnimation extends Animator {
           || (this.isActionType(NinjaActionType.casting) && (this.interpretator.isBowAttacking() || this.interpretator.isSwordAttacking()))
           || (this.isActionType(NinjaActionType.bowAttacking) && (this.interpretator.isCasting() || this.interpretator.isSwordAttacking()))
           || (this.isActionType(NinjaActionType.swordAttacking) && (this.interpretator.isCasting() || this.interpretator.isBowAttacking()))
+          || (this.mob.jumping && (this.animation === this.bowAttack || this.swordAttacks.equals(this.animation)))
+  }
+
+  checkController() {
+    if (this.interpretator.isMoving() && (
+      this.swordAttacks.equals(this.animation)
+      || this.isActionType(NinjaActionType.casting)
+      || this.animation === this.bowAttack)) {
+      // Останавливаем движение игрока, если во время оного произведен выстрел из лука, каст файера или удар мячом
+      if (this.mob.directionX < 0) {
+        this.controller.left.active = false
+      } else {
+        this.controller.right.active = false
+      }
+    }
   }
 
   resetAnimation(key, done = false) {
@@ -102,6 +119,13 @@ export class NinjaAnimation extends Animator {
     if (mobAction) {
       done && mobAction.done()
       mobAction.clear()
+
+      // Возвращаем обратно возможность движения не отпуская клавиши
+      if (this.mob.directionX < 0) {
+        this.controller.left.active = this.controller.left.down
+      } else {
+        this.controller.right.active = this.controller.right.down
+      }
     }
   }
 
@@ -125,6 +149,7 @@ export class NinjaAnimation extends Animator {
         return this.animation === this.move
       case NinjaActionType.bowAttacking:
         return this.animation === this.bowAttack
+            || this.animation === this.airBowAttack
       case NinjaActionType.swordAttacking:
         return this.swordAttacks.equals(this.animation)
             || this.airSwordAttacks.equals(this.animation)
@@ -154,6 +179,7 @@ export class NinjaAnimation extends Animator {
          * стреляет из лука (если идет анимация меча), ударяет мечом (если идет стрельба из лука) или ему нанесли урон
          * 2) Если анимация закончилась, то убираем флаг
          * */
+        this.checkController()
         this.position()
         this.handleAnimate()
 
@@ -189,7 +215,11 @@ export class NinjaAnimation extends Animator {
         this.longAnimation = true
 
         // Стреляем из лука
-        this.changeFrameSet(this.bowAttack, AnimatorMode.pause, NinjaAnimationDelay.bow)
+        if (this.mob.jumping) {
+          this.changeFrameSet(this.airBowAttack, AnimatorMode.pause, NinjaAnimationDelay.airBow)
+        } else {
+          this.changeFrameSet(this.bowAttack, AnimatorMode.pause, NinjaAnimationDelay.bow)
+        }
       } else {
         if (this.interpretator.isFlipping()) {
           // Переворот в верхней точке прыжка
@@ -226,6 +256,8 @@ export class NinjaAnimation extends Animator {
         // Проигрываем анимацию
         this.handleAnimate()
       }
+
+      this.checkController()
     }
   }
 }

@@ -11,7 +11,9 @@ export class Ninja extends Mob {
   }
 
   cast() {
-    this.castAction.fire()
+    if (!this.jumping) {
+      this.castAction.fire()
+    }
   }
 
   sword() {

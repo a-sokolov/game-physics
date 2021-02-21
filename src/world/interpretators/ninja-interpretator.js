@@ -65,7 +65,7 @@ export class NinjaInterpretator {
 
   isStopping() {
     const velocityX = this.__getVelocityX()
-    return velocityX < 1 && velocityX > 0.095
+    return velocityX < 1 && velocityX > 0.098
               && !this.ninja.jumping
   }
 
