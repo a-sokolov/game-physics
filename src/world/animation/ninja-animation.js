@@ -17,19 +17,22 @@ export const NinjaAnimationDelay = {
   jump: 1,
   fall: 2,
   touch: 3,
-  move: 3
+  move: 3,
+  getOrRemoveSword: 3
 }
 
 /** Здесь определяем анимацию персонажа в зависимости от его координат и скоростей */
 export class NinjaAnimation extends Animator {
-  constructor({ main, bow }) {
+  constructor({ main, bow, sword }) {
     const tiles = new SpriteSheet(main)
     const bowTiles = new SpriteSheet(bow)
+    const swordTiles = new SpriteSheet(sword)
 
     const defaultFrame = tiles.getAnimationFramesWithKey('idle',1, 2, 3, 4)
     super(defaultFrame, NinjaAnimationDelay.idle, AnimatorMode.loop, 'ninja-animation')
 
     this.idle = defaultFrame
+    this.armedIdle = tiles.getAnimationFramesWithKey('armed-idle',39, 40, 41, 42)
     this.crouch = tiles.getAnimationFramesWithKey('crouch',5, 6, 7, 8)
     this.slide = tiles.getAnimationFramesWithKey('slide',25, 26, 27, 28, 29)
 
@@ -38,7 +41,11 @@ export class NinjaAnimation extends Animator {
     this.touch = tiles.getAnimationFramesWithKey('touch',5, 6, 7)
     this.jump = tiles.getAnimationFramesWithKey('jump', 15, 16, 17, 18)
     this.move = tiles.getAnimationFramesWithKey('move', 9, 10, 11, 12, 13, 14)
+    this.armedMove = swordTiles.getAnimationFramesWithKey('armed-move', 1, 2, 3, 4, 5, 6)
     this.cast = tiles.getAnimationFramesWithKey('cast', 86, 87, 88, 89, 90, 91, 92, 93)
+
+    this.getSword = tiles.getAnimationFramesWithKey('get-sword', 86, 87, 88, 89, 90, 91, 92, 93)
+    this.removeSword = tiles.getAnimationFramesWithKey('remove-sword', 74, 75, 76, 77)
 
     this.airSwordAttacks = new AnimationSets([
       tiles.getAnimationFramesWithKey('air-sword-attack1', 97, 98, 99, 100),
@@ -165,6 +172,7 @@ export class NinjaAnimation extends Animator {
         return this.animation === this.slide
       case NinjaActionType.moving:
         return this.animation === this.move
+            || this.animation === this.armedMove
       case NinjaActionType.bowAttacking:
         return this.animation === this.bowAttack
             || this.animation === this.airBowAttack
@@ -173,6 +181,7 @@ export class NinjaAnimation extends Animator {
             || this.airSwordAttacks.equals(this.animation)
       case NinjaActionType.idling:
         return this.animation === this.idle
+            || this.animation === this.armedIdle
       case NinjaActionType.casting:
         return this.animation === this.cast
     }
@@ -205,7 +214,11 @@ export class NinjaAnimation extends Animator {
         this.airSwordAttacks.reset()
       }
 
-      if (this.interpretator.isSliding()) {
+      if (!this.mob.isArmed && this.animation === this.armedIdle) {
+        this.longAnimation = true
+        // Убираем меч
+        this.changeFrameSet(this.removeSword, AnimatorMode.pause, NinjaAnimationDelay.getOrRemoveSword)
+      } else if (this.interpretator.isSliding()) {
         // Скользим
         this.changeFrameSet(this.slide, AnimatorMode.pause, NinjaAnimationDelay.slide)
       } else if (this.interpretator.isCrouching()) {
@@ -246,10 +259,18 @@ export class NinjaAnimation extends Animator {
           this.changeFrameSet(this.fall, AnimatorMode.loop, NinjaAnimationDelay.fall)
         } else if (this.interpretator.isIdling()) {
           // Ожидание
-          this.changeFrameSet(this.idle, AnimatorMode.loop, NinjaAnimationDelay.idle)
+          if (this.mob.isArmed) {
+            this.changeFrameSet(this.armedIdle, AnimatorMode.loop, NinjaAnimationDelay.idle)
+          } else {
+            this.changeFrameSet(this.idle, AnimatorMode.loop, NinjaAnimationDelay.idle)
+          }
         } else if (this.interpretator.isMoving()) {
           // Двигаемся
-          this.changeFrameSet(this.move, AnimatorMode.loop, NinjaAnimationDelay.move)
+          if (this.mob.isArmed) {
+            this.changeFrameSet(this.armedMove, AnimatorMode.loop, NinjaAnimationDelay.move)
+          } else {
+            this.changeFrameSet(this.move, AnimatorMode.loop, NinjaAnimationDelay.move)
+          }
         }
       }
 
@@ -258,7 +279,7 @@ export class NinjaAnimation extends Animator {
       const isFalling = this.isActionType(NinjaActionType.falling) || this.isAirAttack()
       if (this.interpretator.isStopping() && (isFalling || this.isActionType(NinjaActionType.moving))) {
         if (isFalling) {
-          // Проигрываем анимацию приземления: когда просто падаем,
+          // Проигрываем анимацию приземления: когда просто падаем или производим "воздушную атаку"
           this.longAnimation = true
           this.changeFrameSet(this.touch, AnimatorMode.loop, NinjaAnimationDelay.touch)
           this.position()

@@ -9,7 +9,7 @@ export class Ninja extends Mob {
     this.swordAttackAction = new MobAction('sword-attack')
     this.bowAttackAction = new MobAction('bow-attack')
 
-    this.isSwordTakenOut = false
+    this.isArmed = false
     this.timer = 0
   }
 
@@ -23,9 +23,9 @@ export class Ninja extends Mob {
     if (this.timer) {
       clearTimeout(this.timer)
     }
-    this.isSwordTakenOut = true
+    this.isArmed = true
     this.swordAttackAction.fire()
-    this.timer = setTimeout(() => this.isSwordTakenOut = false, 10000)
+    this.timer = setTimeout(() => this.isArmed = false, 10000)
   }
 
   bow() {

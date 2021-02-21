@@ -17,7 +17,7 @@ import { CheckFireballs } from './checks/check-fireballs'
 
 import { Environment } from './environment'
 // import { DummyBehavior } from './npc/dummy-behavior'
-import { NINJA_TILES, NINJA_BOW_TILES, JERRY_TILES } from './constants'
+import { NINJA_TILES, NINJA_BOW_TILES, NINJA_SWORD_RUN_TILES, JERRY_TILES } from './constants'
 
 export class World {
   constructor(friction = 0.85, gravity = 2) {
@@ -42,7 +42,11 @@ export class World {
 
     this.env = new Environment(friction, gravity, this.level.limitRect)
     this.player = ObjectsFactory.createPlayer(10, 100)
-    this.playerAnimation = new NinjaAnimation({ main: NINJA_TILES, bow: NINJA_BOW_TILES })
+    this.playerAnimation = new NinjaAnimation({
+      main: NINJA_TILES,
+      bow: NINJA_BOW_TILES,
+      sword: NINJA_SWORD_RUN_TILES
+    })
 
     this.checkFireballs = new CheckFireballs(this.player, this.level.limitRect)
     this.player.castAction.callback = this.checkFireballs.fire.bind(this.checkFireballs)

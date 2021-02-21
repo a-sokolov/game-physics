@@ -21,3 +21,11 @@ export const NINJA_BOW_TILES = {
   spriteWidth: 50,
   spriteHeight: 37
 }
+
+export const NINJA_SWORD_RUN_TILES = {
+  name: 'ninja-sword-run-tiles',
+  width: 300,
+  height: 37,
+  spriteWidth: 50,
+  spriteHeight: 37
+}

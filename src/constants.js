@@ -9,5 +9,6 @@ export const ASSETS = {
   'level01-far-grounds': './assets/level01/far-grounds.png',
   'level01-sea': './assets/level01/sea.png',
   'level01-sky': './assets/level01/sky.png',
-  'ninja-bow-tiles': './assets/ninja-bow-tiles.png'
+  'ninja-bow-tiles': './assets/ninja-bow-tiles.png',
+  'ninja-sword-run-tiles': './assets/ninja-sword-run-tiles.png'
 }
