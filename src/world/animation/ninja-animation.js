@@ -259,8 +259,10 @@ export class NinjaAnimation extends Animator {
         } else if (this.interpretator.isFalling()) {
           // Падение вниз
           this.changeFrameSet(this.fall, AnimatorMode.loop, NinjaAnimationDelay.fall)
-        } else if (this.interpretator.isIdling()) {
-          // Ожидание
+        } else if (this.interpretator.isIdling()
+              || (this.interpretator.isStopping() && !this.isActionType(NinjaActionType.falling))) {
+          // Ожидание по триггеру "ожидание" и когда скорость почти упала
+          // Это нужно для того, чтобы не было дубля анимации, если в этом время производилась быстрая атака
           if (this.mob.isArmed) {
             this.changeFrameSet(this.armedIdle, AnimatorMode.loop, NinjaAnimationDelay.idle)
           } else {
@@ -278,16 +280,22 @@ export class NinjaAnimation extends Animator {
 
       this.position()
 
-      const isFalling = this.isActionType(NinjaActionType.falling) || this.isAirAttack()
-      if (this.interpretator.isStopping() && (isFalling || this.isActionType(NinjaActionType.moving))) {
-        if (isFalling) {
+      const isFallingOrAirAttack = this.isActionType(NinjaActionType.falling) || this.isAirAttack()
+      if (this.interpretator.isStopping() && (isFallingOrAirAttack || this.isActionType(NinjaActionType.moving))) {
+        // Это блок, когда игрок скорость игрока "почти" останавливается
+
+        if (isFallingOrAirAttack) {
           // Проигрываем анимацию приземления: когда просто падаем или производим "воздушную атаку"
           this.longAnimation = true
           this.changeFrameSet(this.touch, AnimatorMode.loop, NinjaAnimationDelay.touch)
           this.position()
           this.handleAnimate()
+        } else if (this.isGroundAttack()) {
+          // Если производится атака, то даем ей завершиться
+          this.handleAnimate()
         } else {
-          // Если ускорение по X координате маленькое, то останавливаем анимацию
+          // Если ускорение по X координате маленькое,
+          // то останавливаем анимацию, т.е. не проигрываем следующий кадр
           this.stop()
         }
       } else {

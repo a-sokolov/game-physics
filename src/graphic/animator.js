@@ -74,7 +74,9 @@ export class Animator {
         this.stopAnimation = false
 
         // Когда закончилась анимация, то вызываем колбэк
-        callback?.(this.animation.key, animationEnded)
+        if (callback) {
+          callback(this.animation.key, animationEnded)
+        }
 
         break
       } else if (callback && animationEnded) {
