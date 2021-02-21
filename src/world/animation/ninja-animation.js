@@ -5,9 +5,12 @@ import { NinjaActionType, NinjaInterpretator } from '../interpretators/ninja-int
 export const NinjaAnimationDelay = {
   idle: 4,
   crouch: 4,
-  cast: 6,
+  slide: 5,
+  cast: 3,
   sword: 2,
+  airSword: 2,
   bow: 3,
+  airBow: 1,
   flip: 2,
   jump: 1,
   fall: 2,
@@ -26,6 +29,7 @@ export class NinjaAnimation extends Animator {
 
     this.idle = defaultFrame
     this.crouch = tiles.getAnimationFramesWithKey('crouch',5, 6, 7, 8)
+    this.slide = tiles.getAnimationFramesWithKey('crouch',25, 26, 27, 28, 29)
 
     this.flip = tiles.getAnimationFramesWithKey('flip',19, 20, 21, 22)
     this.fall = tiles.getAnimationFramesWithKey('fall',23, 24)
@@ -33,10 +37,14 @@ export class NinjaAnimation extends Animator {
     this.jump = tiles.getAnimationFramesWithKey('jump', 15, 16, 17, 18)
     this.move = tiles.getAnimationFramesWithKey('move', 9, 10, 11, 12, 13, 14)
     this.cast = tiles.getAnimationFramesWithKey('cast', 89, 90, 91, 92, 93)
-    this.swordAttack1 = tiles.getAnimationFramesWithKey('swordAttack1', 43, 44, 45, 46, 47, 48, 49)
-    this.swordAttack2 = tiles.getAnimationFramesWithKey('swordAttack2', 50, 51, 52, 53)
-    this.swordAttack3 = tiles.getAnimationFramesWithKey('swordAttack3', 54, 55, 56, 57, 58, 59)
-    this.bowAttack = bowTiles.getAnimationFramesWithKey('bowAttack', 1, 2, 3, 4, 5, 6, 7, 8, 9)
+
+    this.airSwordAttack = tiles.getAnimationFramesWithKey('air-sword-attack',
+      97, 98, 99, 100, 101, 102, 103, 103, 105, 106, 107, 108, 109)
+
+    this.swordAttack1 = tiles.getAnimationFramesWithKey('sword-attack1', 43, 44, 45, 46, 47, 48, 49)
+    this.swordAttack2 = tiles.getAnimationFramesWithKey('sword-attack2', 50, 51, 52, 53)
+    this.swordAttack3 = tiles.getAnimationFramesWithKey('sword-attack3', 54, 55, 56, 57, 58, 59)
+    this.bowAttack = bowTiles.getAnimationFramesWithKey('bow-attack', 1, 2, 3, 4, 5, 6, 7, 8, 9)
 
     this.swordAttacks = [this.swordAttack1, this.swordAttack2, this.swordAttack3]
     this.attackIndex = 0
@@ -120,7 +128,10 @@ export class NinjaAnimation extends Animator {
         return
       }
 
-      if (this.interpretator.isCrouching()) {
+      if (this.interpretator.isSliding()) {
+        // Скользим
+        this.changeFrameSet(this.slide, AnimatorMode.loop, NinjaAnimationDelay.slide)
+      } else if (this.interpretator.isCrouching()) {
         // Приседания
         this.changeFrameSet(this.crouch, AnimatorMode.loop, NinjaAnimationDelay.crouch)
       } else if (this.interpretator.isCasting()) {

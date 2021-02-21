@@ -38,7 +38,7 @@ export class ObjectsFactory {
       height: 12
     }
 
-    const x = player.directionX === 1
+    const x = player.directionX === -1
                 ? player.getRight() - fireBallSize.width
                 : player.getLeft()
 
@@ -50,7 +50,7 @@ export class ObjectsFactory {
       y: y + (player.hitBox.height / 2) - 9,
       directionX: player.directionX,
       index: window.performance.now(),
-      speed: 15.5
+      speed: 10.5
     })
   }
 }

@@ -18,7 +18,7 @@ export class CheckFireballs {
     this.fireBallsAnimation.forEach(fireBallAnimation => fireBallAnimation.update())
 
     this.fireBallsAnimation = this.fireBallsAnimation.filter(({ fireBall }) => {
-      return fireBall.getRight() >= 0 && fireBall.getRight() <= this.limitRect.width
+      return fireBall.getRight() >= 0 && fireBall.getLeft() <= this.limitRect.width
     })
   }
 }

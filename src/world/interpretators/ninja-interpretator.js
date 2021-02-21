@@ -1,5 +1,6 @@
 export const NinjaActionType = {
   crouching: 'crouching',
+  sliding: 'sliding',
   casting: 'casting',
   bowAttacking: 'bowAttacking',
   swordAttacking: 'swordAttacking',
@@ -22,6 +23,10 @@ export class NinjaInterpretator {
 
   isCrouching() {
     return this.ninja.crouching
+  }
+
+  isSliding() {
+    return this.ninja.crouching && this.__getVelocityX() > 1.85
   }
 
   isCasting() {
@@ -51,7 +56,7 @@ export class NinjaInterpretator {
   }
 
   isIdling() {
-    return !this.ninja.jumping && this.__getVelocityX() < 0.08
+    return !this.ninja.jumping && this.__getVelocityX() < 0.05
   }
 
   isMoving() {
@@ -70,6 +75,7 @@ export class NinjaInterpretator {
     if (this.isFlipping()) types.push(NinjaActionType.flipping)
     if (this.isJumping()) types.push(NinjaActionType.jumping)
     if (this.isCrouching()) types.push(NinjaActionType.crouching)
+    if (this.isSliding()) types.push(NinjaActionType.sliding)
     if (this.isCasting()) types.push(NinjaActionType.casting)
     if (this.isBowAttacking()) types.push(NinjaActionType.bowAttacking)
     if (this.isSwordAttacking()) types.push(NinjaActionType.swordAttacking)

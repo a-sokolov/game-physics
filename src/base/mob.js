@@ -59,7 +59,7 @@ export class Mob extends MovingObject {
     this.oldY = this.y
 
     this.velocityY += gravity
-    this.velocityX *= friction
+    this.velocityX *= this.crouching ? friction + 0.08 : friction
 
     /* Made it so that velocity cannot exceed velocity_max */
     if (Math.abs(this.velocityX) > this.velocityMax) {
