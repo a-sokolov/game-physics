@@ -1,6 +1,7 @@
 import { SpriteSheet } from '../../graphic/sprite-sheet'
 import { Animator, AnimatorMode } from '../../graphic/animator'
 import { NinjaActionType, NinjaInterpretator } from '../interpretators/ninja-interpretator'
+import { AnimationSets } from '../../graphic/animation-sets'
 
 export const NinjaAnimationDelay = {
   idle: 4,
@@ -8,7 +9,7 @@ export const NinjaAnimationDelay = {
   slide: 5,
   cast: 3,
   sword: 2,
-  airSword: 2,
+  airSword: 1,
   bow: 3,
   airBow: 1,
   flip: 2,
@@ -38,21 +39,22 @@ export class NinjaAnimation extends Animator {
     this.move = tiles.getAnimationFramesWithKey('move', 9, 10, 11, 12, 13, 14)
     this.cast = tiles.getAnimationFramesWithKey('cast', 89, 90, 91, 92, 93)
 
-    this.airSwordAttack = tiles.getAnimationFramesWithKey('air-sword-attack',
-      97, 98, 99, 100, 101, 102, 103, 103, 105, 106, 107, 108, 109)
+    this.airSwordAttacks = new AnimationSets([
+      tiles.getAnimationFramesWithKey('air-sword-attack1', 97, 98, 99, 100),
+      tiles.getAnimationFramesWithKey('air-sword-attack2', 101, 102, 103, 104),
+      tiles.getAnimationFramesWithKey('air-sword-attack3', 105, 106, 107, 108, 109)
+    ])
 
-    this.swordAttack1 = tiles.getAnimationFramesWithKey('sword-attack1', 43, 44, 45, 46, 47, 48, 49)
-    this.swordAttack2 = tiles.getAnimationFramesWithKey('sword-attack2', 50, 51, 52, 53)
-    this.swordAttack3 = tiles.getAnimationFramesWithKey('sword-attack3', 54, 55, 56, 57, 58, 59)
+    this.swordAttacks = new AnimationSets([
+      tiles.getAnimationFramesWithKey('sword-attack1', 43, 44, 45, 46, 47, 48, 49),
+      tiles.getAnimationFramesWithKey('sword-attack2', 50, 51, 52, 53),
+      tiles.getAnimationFramesWithKey('sword-attack3', 54, 55, 56, 57, 58, 59)
+    ])
+
     this.bowAttack = bowTiles.getAnimationFramesWithKey('bow-attack', 1, 2, 3, 4, 5, 6, 7, 8, 9)
-
-    this.swordAttacks = [this.swordAttack1, this.swordAttack2, this.swordAttack3]
-    this.attackIndex = 0
 
     this.longAnimation = false
     this.mob = null
-    this.actionType = NinjaActionType.idling
-    this.isFalling = false
 
     this.resetAnimation = this.resetAnimation.bind(this)
   }
@@ -80,22 +82,20 @@ export class NinjaAnimation extends Animator {
 
   isInterrupted() {
     return this.interpretator.isCrouching()
-          || this.interpretator.isJumping()
-          || this.interpretator.isFalling()
-          || (this.actionType === NinjaActionType.casting && (this.interpretator.isBowAttacking() || this.interpretator.isSwordAttacking()))
-          || (this.actionType === NinjaActionType.bowAttacking && (this.interpretator.isCasting() || this.interpretator.isSwordAttacking()))
-          || (this.actionType === NinjaActionType.swordAttacking && (this.interpretator.isCasting() || this.interpretator.isBowAttacking()))
+          || (this.isActionType(NinjaActionType.casting) && (this.interpretator.isBowAttacking() || this.interpretator.isSwordAttacking()))
+          || (this.isActionType(NinjaActionType.bowAttacking) && (this.interpretator.isCasting() || this.interpretator.isSwordAttacking()))
+          || (this.isActionType(NinjaActionType.swordAttacking) && (this.interpretator.isCasting() || this.interpretator.isBowAttacking()))
   }
 
   resetAnimation(key, done = false) {
     this.longAnimation = false
 
     let mobAction
-    if (this.animation === this.bowAttack) {
+    if (this.isActionType(NinjaActionType.bowAttacking)) {
       mobAction = this.mob.bowAttackAction
-    } else if (this.swordAttacks.find(animation => this.animation === animation)) {
+    } else if (this.isActionType(NinjaActionType.swordAttacking)) {
       mobAction = this.mob.swordAttackAction
-    } else if (this.animation === this.cast) {
+    } else if (this.isActionType(NinjaActionType.casting)) {
       mobAction = this.mob.castAction
     }
 
@@ -107,6 +107,38 @@ export class NinjaAnimation extends Animator {
 
   handleAnimate() {
     this.animate(this.resetAnimation)
+  }
+
+  isActionType(type) {
+    switch (type) {
+      case NinjaActionType.falling:
+        return this.animation === this.fall
+      case NinjaActionType.jumping:
+        return this.animation === this.jump
+      case NinjaActionType.flipping:
+        return this.animation === this.flip
+      case NinjaActionType.crouching:
+        return this.animation === this.crouch
+      case NinjaActionType.sliding:
+        return this.animation === this.slide
+      case NinjaActionType.moving:
+        return this.animation === this.move
+      case NinjaActionType.bowAttacking:
+        return this.animation === this.bowAttack
+      case NinjaActionType.swordAttacking:
+        return this.swordAttacks.equals(this.animation)
+            || this.airSwordAttacks.equals(this.animation)
+      case NinjaActionType.idling:
+        return this.animation === this.idle
+      case NinjaActionType.casting:
+        return this.animation === this.cast
+    }
+
+    return false
+  }
+
+  isPlayerInAir() {
+    return this.isActionType(NinjaActionType.falling) || this.mob.jumping
   }
 
   update() {
@@ -128,32 +160,33 @@ export class NinjaAnimation extends Animator {
         return
       }
 
+      if (!this.mob.jumping) {
+        // Если прыжок закончился, то сбрасываем анимацию удара мечом в воздухе до первого сета
+        this.airSwordAttacks.reset()
+      }
+
       if (this.interpretator.isSliding()) {
         // Скользим
         this.changeFrameSet(this.slide, AnimatorMode.loop, NinjaAnimationDelay.slide)
       } else if (this.interpretator.isCrouching()) {
         // Приседания
         this.changeFrameSet(this.crouch, AnimatorMode.loop, NinjaAnimationDelay.crouch)
-      } else if (this.interpretator.isCasting()) {
+      } else if (this.interpretator.isCasting() && !this.isPlayerInAir()) {
         this.longAnimation = true
-        this.actionType = NinjaActionType.casting
 
         // Кастуем файер
         this.changeFrameSet(this.cast, AnimatorMode.pause, NinjaAnimationDelay.cast)
       } else if (this.interpretator.isSwordAttacking()) {
         this.longAnimation = true
-        this.actionType = NinjaActionType.swordAttacking
 
         // Атакуем мечом
-        const attackAnimation = this.swordAttacks[this.attackIndex]
-        this.changeFrameSet(attackAnimation, AnimatorMode.pause, NinjaAnimationDelay.sword)
-        this.attackIndex ++
-        if (this.attackIndex > this.swordAttacks.length - 1) {
-          this.attackIndex = 0
+        if (this.mob.jumping) {
+          this.changeFrameSet(this.airSwordAttacks.next(), AnimatorMode.pause, NinjaAnimationDelay.airSword)
+        } else {
+          this.changeFrameSet(this.swordAttacks.next(), AnimatorMode.pause, NinjaAnimationDelay.sword)
         }
       } else if (this.interpretator.isBowAttacking()) {
         this.longAnimation = true
-        this.actionType = NinjaActionType.bowAttacking
 
         // Стреляем из лука
         this.changeFrameSet(this.bowAttack, AnimatorMode.pause, NinjaAnimationDelay.bow)
@@ -179,7 +212,7 @@ export class NinjaAnimation extends Animator {
       this.position()
 
       if (this.interpretator.isStopping()) {
-        if (this.animation === this.fall) {
+        if (this.isActionType(NinjaActionType.falling)) {
           // Проигрываем анимацию приземления
           this.longAnimation = true
           this.changeFrameSet(this.touch, AnimatorMode.loop, NinjaAnimationDelay.touch)
