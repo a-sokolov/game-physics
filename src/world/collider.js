@@ -70,6 +70,25 @@ export class Collider {
   }
 
   /**
+   * Функция проверки, что есть нужный бит.
+   * Я понимаю, что есть побитовые операции в JS, но например:
+   *
+   * 0010 & 1000 -> выдает 8, хотя я ожидают, что будет 0
+   *
+   * а если дополнить лидирующими нуля до 30 символов, результат уже который надо:
+   *
+   * 000000000000000000000000000010 & 000000000000000000000000001000 -> 0
+   * 0b0010 & 0b1000 -> 0
+   *
+   * как нативно привести запись '0010' к 0b0010?
+   *
+   * */
+  checkBit(left, right) {
+    const position = right.indexOf('1')
+    return left[position] === '1'
+  }
+
+  /**
    * 0 0 0 0 = l b r t
    *
    * 0000 00 - no walls
@@ -100,21 +119,29 @@ export class Collider {
     const { width, height } = size
 
     const bin = this.dec2Bin(value)
-    if ((bin & '0001') !== 0) {
+
+    /*
+      Сперва проверяем коллизию, когда объект продвигается слева-направо или справа-налево
+      Такой приоритет обусловлен тем, что в случае, когда игрок жмет стрелку -> или <- и одновременно
+      производит прыжок, исключить кратковременною задержку на платформе оформленную битом 0001 (top).
+      Т.е. сперва мы "выталкиваем" объект левее платформы, если это нужно, а затем уже производим
+      остальные коллизии.
+    */
+
+    if (this.checkBit(bin, '0010')) {
+      if (this.collidePlatformRight(object, tileX + width)) return CollisionType.right
+    }
+    if (this.checkBit(bin, '1000')) {
+      // left
+      if (this.collidePlatformLeft(object, tileX)) return CollisionType.left
+    }
+    if (this.checkBit(bin, '0001')) {
       // top
       if (this.collidePlatformTop(object, tileY)) return CollisionType.top
     }
-    if ((bin & '0010') !== 0) {
-      // right
-      if (this.collidePlatformRight(object, tileX + width)) return CollisionType.right
-    }
-    if ((bin & '0100') !== 0) {
+    if (this.checkBit(bin,'0100')) {
       // bottom
       if (this.collidePlatformBottom(object, tileY + height)) return CollisionType.bottom
-    }
-    if ((bin & '1000') !== 0) {
-      // left
-      if (this.collidePlatformLeft(object, tileX)) return CollisionType.left
     }
 
     return null
