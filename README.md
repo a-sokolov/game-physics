@@ -129,23 +129,21 @@ if (y + height > platform.y && oldY + height <= platform.y) {
 ## TODO
 - Разобраться как хранить анимацию и карту уровня со списком коллизий
       
-  1. https://www.youtube.com/watch?v=r6F7WafrvTE&t=0s - создание графики
-  2. https://www.youtube.com/watch?v=PmZ38JHEAys&t=0s - тайловая карта
+  1. https://www.youtube.com/watch?v=r6F7WafrvTE&t - создание графики
+  2. https://www.youtube.com/watch?v=PmZ38JHEAys&t - тайловая карта
 
 - Разобраться как можно считать коллизии если хит-бокс объекта больше базового размера спрайта
 - Заливка фона "куском" картинки, например залить все небо карты куском из `./assets/level01/sky.png`
 
 ## Links
 
-    https://m.habr.com/ru/company/pixonic/blog/428892/ - гайд по созданию игрового ИИ
-    https://rvros.itch.io/animated-pixel-hero - тайлы персонажа
-    https://thorbjorn.itch.io/tiled - приложение, где можно загружать тайловый карты и формировать JSON
-    
-    https://ansimuz.itch.io/magic-cliffs-environment - уровень 01
-    https://edermunizz.itch.io/free-pixel-art-forest - уровень 02 (подуровень)
-    
-    https://oco.itch.io/ - еще какие-то тайлы
-    https://www.spriters-resource.com/ - бесплатные спрайты
-    https://itch.io/game-assets/free - еще беплатные тайлы
-    https://vectorjs.org/ - библиотека Vector
-    https://suvitruf.ru/2019/03/13/4305/a-brief-introduction-to-lerp/ - линейная интерполяция LERP
+1. https://m.habr.com/ru/company/pixonic/blog/428892/ - гайд по созданию игрового ИИ
+2. https://rvros.itch.io/animated-pixel-hero - тайлы персонажа
+3. https://thorbjorn.itch.io/tiled - приложение, где можно загружать тайловый карты и формировать JSON
+4. https://ansimuz.itch.io/magic-cliffs-environment - уровень 01
+5. https://edermunizz.itch.io/free-pixel-art-forest - уровень 02 (подуровень)
+6. https://oco.itch.io/ - еще какие-то тайлы
+7. https://www.spriters-resource.com/ - бесплатные спрайты
+8. https://itch.io/game-assets/free - еще беплатные тайлы
+9. https://vectorjs.org/ - библиотека Vector
+10. https://suvitruf.ru/2019/03/13/4305/a-brief-introduction-to-lerp/ - линейная интерполяция LERP
