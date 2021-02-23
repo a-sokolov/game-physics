@@ -49,7 +49,7 @@ export class Tools {
   update() {
     if (this.player) {
       const { x, oldX, y, oldY, width, height, velocityX, velocityY } = this.player
-      const info = JSON.stringify({
+      this.debugInfo.value = JSON.stringify({
         x: Math.round(x),
         oldX: Math.round(oldX),
         y: Math.round(y),
@@ -59,7 +59,6 @@ export class Tools {
         velocityX: Math.round(velocityX),
         velocityY: Math.round(velocityY)
       })
-      this.debugInfo.value = info
     }
   }
 
@@ -67,7 +66,8 @@ export class Tools {
     if (this.isDebug) {
       if (this.isShowGrid) {
         // Рисуем сетку уровня
-        this.main.display.drawMapGrid(this.main.game.world.level.tileMap)
+        const { tileMap, collisionMap } = this.main.game.world.level
+        this.main.display.drawMapGrid(tileMap, collisionMap)
       }
 
       // Рисуем все коллизии красным цветом

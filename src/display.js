@@ -1,4 +1,5 @@
 import { Sprite } from './graphic/sprite'
+import { SpriteSheet } from './graphic/sprite-sheet'
 
 /** Здесь находятся API для работы с канвой */
 export class Display {
@@ -32,6 +33,58 @@ export class Display {
   /** Установка камеры */
   setCamera(camera) {
     this.camera = camera
+  }
+
+  __createCanvas(width, height) {
+    const canvas = document.createElement('canvas')
+    canvas.width = width
+    canvas.height = height
+    return canvas.getContext('2d')
+  }
+
+  createMap(name, mapData, tileSet) {
+    const spriteSheet = new SpriteSheet(tileSet)
+    const { tilewidth: spriteWidth, tileheight: spriteHeight } = mapData
+    const context = this.__createCanvas(
+      mapData.width * spriteWidth,
+      mapData.height * spriteHeight)
+
+    let row, col
+    mapData.layers.filter(({ type }) => type === 'tilelayer').forEach(layer => {
+      row = 0
+      col = 0
+      layer.data.forEach(index => {
+        if (index) {
+          context.drawImage(
+            this.images[tileSet.name],
+            spriteSheet.getSourceX(index),
+            spriteSheet.getSourceY(index),
+            spriteWidth,
+            spriteHeight,
+            col * spriteWidth,
+            row * spriteHeight,
+            spriteWidth,
+            spriteHeight
+          )
+        }
+        col ++
+        if (col > (mapData.width - 1)) {
+          col = 0
+          row ++
+        }
+      })
+    })
+
+    const { canvas } = context
+    this.images[name] = canvas
+
+    return new Sprite({
+      name,
+      sourceX: 0,
+      sourceY: 0,
+      width: canvas.width,
+      height: canvas.height,
+    })
   }
 
   /**
@@ -251,8 +304,8 @@ export class Display {
   }
 
   /** Рисуем сетку уровня */
-  drawMapGrid(tileMap) {
-    const { columns, size, map } = tileMap
+  drawMapGrid(tileMap, map) {
+    const { columns, size } = tileMap
     const { width, height } = size
 
     let x = 0

@@ -47,33 +47,41 @@ export class Main {
     this.engine = new Engine(timeStep, this.update, this.render)
     this.playerController = this.game.world.getPlayerController(this.controller)
 
-    this.camera = new MainCamera({
-      edgeRect: this.game.world.edgeRect,
-      limitRect: this.game.world.level.limitRect,
-      screenRect: this.game.world.screenRect
-    })
-    this.camera.watch(this.game.world.player)
     this.tools.watch(this.game.world.player)
-
-    // Устанавливаем камеру (сейчас это прямоугольник, который игрок двигает вперед/назад)
-    this.display.setCamera(this.camera)
 
     window.addEventListener('resize', this.resize)
     window.addEventListener('keydown', this.keyDownUp)
     window.addEventListener('keyup', this.keyDownUp)
-
-    // Устанавливаем размер канвы
-    this.display.buffer.canvas.height = this.game.world.height
-    this.display.buffer.canvas.width = this.game.world.width
 
     // Грузим все ресурсы
     const imageLoader = new ImageLoader(ASSETS)
     imageLoader.load().then(() => {
       // Когда загрузили, то стартуем движок
       this.display.setImages(imageLoader.images)
+      // Подгружаем уровень
+      this.createLevelSprite()
+
       this.resize()
       this.engine.start()
     })
+  }
+
+  createLevelSprite() {
+    const { key, map, spriteSheet, limitRect, cameraTrap, screenRect } = this.game.world.level
+    this.game.world.level.levelSprite = this.display.createMap(key, map, spriteSheet)
+
+    // Устанавливаем размер канвы
+    this.display.buffer.canvas.width = screenRect.width
+    this.display.buffer.canvas.height = screenRect.height
+
+    this.camera = new MainCamera({
+      edgeRect: cameraTrap,
+      limitRect,
+      screenRect
+    })
+    this.camera.watch(this.game.world.player)
+    // Устанавливаем камеру (сейчас это прямоугольник, который игрок двигает вперед/назад)
+    this.display.setCamera(this.camera)
   }
 
   keyDownUp(event) {
@@ -81,10 +89,11 @@ export class Main {
   }
 
   resize() {
+    const { screenRect } = this.game.world.level
     this.display.resize(
       document.documentElement.clientWidth - 32,
       document.documentElement.clientHeight - 32,
-      this.game.world.height / this.game.world.width)
+      screenRect.height / screenRect.width)
     this.display.render()
   }
 
@@ -97,7 +106,7 @@ export class Main {
     this.display.fill(this.game.world.backgroundColor)
 
     // Рисуем карту уровня
-    this.display.drawMapSprites(this.game.world.level.mapSprites)
+    this.display.drawSprite(this.game.world.level.levelSprite)
     // Рисуем всю статичную анимацию (сейчас это монетки)
     this.game.world.level.staticAnimations.forEach(staticAnimation => {
       this.display.drawStaticAnimation(staticAnimation)

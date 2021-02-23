@@ -58,7 +58,8 @@ export class MainCamera extends Camera {
         }
       }
 
-      this.y = Math.min(0, -(this.edgeRect.y - this.object.y))
+      // TODO: временно не считаем Y координату (пока непонятно как будут строиться уровни)
+      this.y = 0 // Math.min(0, -(this.edgeRect.y - this.object.y))
 
       // Округляем для более плавного движения камеры
       this.y = Math.round(this.y)

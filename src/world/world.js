@@ -4,10 +4,9 @@ import { NinjaController } from './controllers/ninja-controller'
 import { ObjectsFactory } from './objects/objects-factory'
 import { CollideObject } from './collide-object'
 
-import { Rect } from '../base/rect'
 import { Level01 } from './levels/level-01'
 
-import { CheckCoins } from './checks/check-coins'
+// import { CheckCoins } from './checks/check-coins'
 import { CheckHMovingObjects } from './checks/check-hmoving-objects'
 
 import { Environment } from './environment'
@@ -17,27 +16,15 @@ export class World {
   constructor(friction = 0.85, gravity = 2) {
     // Цвет фона
     this.backgroundColor = 'grey'
-    // Ширина и высота экрана
-    this.width = 320
-    this.height = 160
-    // Базовый размер спрайта - он нужен чтобы строить карту и считать коллизии
-    this.spriteSize = {
-      width: 16,
-      height: 16
-    }
 
-    // Создаем фабрику объктов
+    // Создаем фабрику объектов
     this.objectFactory = new ObjectsFactory()
-    // Прямоугольник, который определяет границы когда нужно двигать камеру
-    this.edgeRect = new Rect(100, 0, this.width / 2 - 100, this.height)
-    // Размер экрана
-    this.screenRect = new Rect(0, 0, this.width, this.height)
 
     // Создаем простой уровень
-    this.level = new Level01(this.spriteSize, this.width, this.height)
+    this.level = new Level01()
 
     this.env = new Environment(friction, gravity, this.level.limitRect)
-    this.player = this.objectFactory.createPlayer(10, 100)
+    this.player = this.objectFactory.createPlayer(this.level.playerPosition.x, this.level.playerPosition.y)
     this.playerAnimation = new NinjaAnimation({
       main: NINJA_TILES,
       bow: NINJA_BOW_TILES,
@@ -66,7 +53,7 @@ export class World {
     this.player.castAction.callback = this.checkFireballs.fire.bind(this.checkFireballs)
     this.player.bowAttackAction.callback = this.checkArrows.fire.bind(this.checkArrows)
 
-    this.checkCoins = new CheckCoins(this.player, this.level.coinsStaticAnimation)
+    // this.checkCoins = new CheckCoins(this.player, this.level.coinsStaticAnimation)
   }
 
   getPlayerController(controller) {
@@ -89,6 +76,6 @@ export class World {
       .concat(this.checkArrows.objects.map(object => {
           return this.collider.getCollisionRects(object, true)
         }).flat())
-    this.checkCoins.update(this.env.getMobCollisionRects(this.player))
+    // this.checkCoins.update(this.env.getMobCollisionRects(this.player))
   }
 }
