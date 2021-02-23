@@ -14,7 +14,6 @@ export class ObjectsFactory {
       y,
       width: 16,
       height: 16,
-      velocityMax: 50,
       jumpPower: 32,
       speed: 1.55,
       hitBox: { width: 16, height: 32 }

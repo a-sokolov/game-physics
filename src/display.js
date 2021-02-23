@@ -112,14 +112,6 @@ export class Display {
     this.context.imageSmoothingEnabled = false
   }
 
-  /** Отрисовка массива спрайтов карты уровня */
-  drawMapSprites(points) {
-    points.forEach(point => {
-      const sprite = new Sprite(point)
-      this.drawSprite(sprite)
-    })
-  }
-
   /** Отрисовка массива объектов статичной анимации */
   drawStaticAnimation(staticAnimation) {
     staticAnimation.objects.forEach(object => {

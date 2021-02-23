@@ -6,7 +6,7 @@ import { CollideObject } from './collide-object'
 
 import { Level01 } from './levels/level-01'
 
-// import { CheckCoins } from './checks/check-coins'
+import { CheckCoins } from './checks/check-coins'
 import { CheckHMovingObjects } from './checks/check-hmoving-objects'
 
 import { Environment } from './environment'
@@ -53,7 +53,7 @@ export class World {
     this.player.castAction.callback = this.checkFireballs.fire.bind(this.checkFireballs)
     this.player.bowAttackAction.callback = this.checkArrows.fire.bind(this.checkArrows)
 
-    // this.checkCoins = new CheckCoins(this.player, this.level.coinsStaticAnimation)
+    this.checkCoins = new CheckCoins(this.player, this.level.coinsStaticAnimation)
   }
 
   getPlayerController(controller) {
@@ -68,7 +68,7 @@ export class World {
     this.level.update()
 
     this.playerAnimation.update()
-
+    console.log('VelocityY', this.player.velocityY)
     this.level.collisionRects = this.env.getAllCollisionRects()
       .concat(this.checkFireballs.objects.map(object => {
           return this.collider.getCollisionRects(object, true)
@@ -76,6 +76,6 @@ export class World {
       .concat(this.checkArrows.objects.map(object => {
           return this.collider.getCollisionRects(object, true)
         }).flat())
-    // this.checkCoins.update(this.env.getMobCollisionRects(this.player))
+    this.checkCoins.update(this.env.getMobCollisionRects(this.player))
   }
 }

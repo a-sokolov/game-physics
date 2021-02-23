@@ -32,29 +32,28 @@ export const getRectPosition = (rect, position, spriteSize) => {
   return { x: newX, y: newY }
 }
 
-export const getTileMapPoints = (tileMap, props) => {
-  const { imageName, tileIndex, size, columns, map } = tileMap
-  const { width, height, position } = props ?? {}
-
+export const getTileMapPoints = (tileMap, size, props) => {
+  const { width, height, position = RectPosition.center } = props ?? {}
   const points = []
 
-  for (let index = map.length - 1; index > -1; -- index) {
-    if (map[index] === tileIndex) {
-      const destinationX = (index % columns) * size.width
-      const destinationY = Math.floor(index / columns) * size.height
+  tileMap.objects.forEach(object => {
+    let startX = object.x
+    let startY = object.y
+    const rows = object.height / size.height
+    const columns = object.width / size.width
 
-      const pointRect = new Rect(destinationX, destinationY, width || size.width, height || size.height)
+    for (let i = 1; i <= rows * columns; i ++) {
+      const pointRect = new Rect(startX, startY, width ?? size.width, height ?? size.height)
       const newPosition = getRectPosition(pointRect, position, size)
+      points.push(new Rect(newPosition.x, newPosition.y, pointRect.width, pointRect.height))
 
-      points.push({
-        name: imageName,
-        x: newPosition.x,
-        y: newPosition.y,
-        width: pointRect.width,
-        height: pointRect.height,
-      })
+      startX += size.width
+      if (i % columns === 0) {
+        startY += size.height
+        startX = object.x
+      }
     }
-  }
+  })
 
   return points
 }

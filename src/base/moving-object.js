@@ -1,7 +1,7 @@
 import { SimpleObject } from './simple-object'
 
 export class MovingObject extends SimpleObject {
-  constructor(x, y, width, height, velocityMax = 15) {
+  constructor(x, y, width, height, velocityMax = 35) {
     super(x, y, width, height)
 
     this.jumping = false
