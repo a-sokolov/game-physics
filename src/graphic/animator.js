@@ -78,13 +78,13 @@ export class Animator {
 
         // Когда закончилась анимация, то вызываем колбэк
         if (callback) {
-          callback(this.animation.key, animationEnded)
+          callback(animationEnded, this.animation.key)
         }
 
         break
       } else if (callback && animationEnded) {
         // Когда закончилась анимация, то вызываем колбэк
-        callback(this.animation.key, true)
+        callback(true, this.animation.key)
       }
     }
   }

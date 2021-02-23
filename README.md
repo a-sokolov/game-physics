@@ -119,6 +119,46 @@ if (y + height > platform.y && oldY + height <= platform.y) {
 Здесь `src/graphic/animator.js` находится реализация, которая от типа анимации `pause` или `loop`, каждый заданный
 кадр вычисляем следующий слайд и вызываем колбэк, когда она закончилась.
 
+Сама графика хранится в виде `tileset` - это `.png` где на сетке расположена раскадровка того или иного объекта.
+Например, в файле `src/assets/ninja-bow-tiles.png` представлена раскадровка атаки из лука (на земле и в воздухе).
+
+Загружая ресурс через класс `src/graphic/sprite-sheet.js`, куда передаем размеры картинки, размеры спрайта,
+мы получаем массив кадров по их индексу.
+Например, так мы получим кадры для анимации стрельбы из лука на земле:
+```javascript
+const BOW_TILES = {
+  name: 'ninja-bow-tiles', // уникальное имя ресурса, которое грузится классом src/loaders/image-loader.js
+  width: 200, // ширина картинки
+  height: 148, // высота картинки
+  spriteWidth: 50, // ширина спрайта (кадра)
+  spriteHeight: 37 // высота спрайта (кадра)
+}
+// Получаем объект, где хранится массив кадров с их координатами на тайле.
+const bowAttackFrames = new SpriteSheet(BOW_TILES).getAnimationFrames(1, 2, 3, 4, 5, 6, 7, 8, 9)
+// Далее, помещаем его в объект анимации, где у нас, в зависимости от типа, вычисляется следующий кадр
+const bowAttackAnimation = new Animator(bowAttackFrames, 3, AnimatorMode.pause)
+// Обновляем следуюий кадр анимации
+bowAttackAnimation.animate((done, key) => {
+  // колбэк, когда анимация закончилась или её прервали
+})
+
+// Отрисовка текущего кадр
+new Display().drawSprite(bowAttackAnimation.animation)
+```
+
+Координаты вычисляются в зависимости от индекса картинки.
+Например, если мы указали индекс 3, то для размеров из примера это будет так:
+```javascript
+const index = 3
+const x = (-- index * spriteWidth) % width
+const y = Math.trunc((-- index * spriteWidth) / width) * spriteHeight
+```
+
+https://developer.mozilla.org/ru/docs/Web/API/CanvasRenderingContext2D/drawImage
+
+Для отрисовки кадра, используется метод `canvas.drawImage`, где указываем тайл, где расположен
+наш кадр, его координаты на нем и координаты, куда поместить "вырезанный кусок" на канву.
+
 ### Принцип работы общей камеры игры
 Тут можно посмотреть какие типы камер бывают:
 - https://www.youtube.com/watch?v=l9G6MNhfV7M
