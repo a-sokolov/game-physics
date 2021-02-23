@@ -1,12 +1,12 @@
+/** Здесь мы уже перенаправляем ввод с клавиатуры на действия персонажа */
 export class NinjaController {
-  constructor(world, player, controller) {
-    this.world = world
+  constructor(player, controller) {
     this.player = player
     this.controller = controller
   }
 
   update() {
-    // Флаг "игрок присел"
+    // Флаг игрок присел/игрок встал
     this.player.crouch(this.controller.down.active)
 
     // Движение влево
@@ -22,17 +22,17 @@ export class NinjaController {
       this.player.jump()
       this.controller.jump.active = false
     }
-    // Швыряем файер (также деактивируем нажатие)
+    // Кастуем файербол
     if (this.controller.cast.active) {
       this.player.cast()
       this.controller.cast.active = false
     }
-    // Удар мечом (также деактивируем нажатие)
+    // Удар мечом
     if (this.controller.sword.active) {
       this.player.sword()
       this.controller.sword.active = false
     }
-    // Выстрел из лука (также деактивируем нажатие)
+    // Выстрел из лука
     if (this.controller.bow.active) {
       this.player.bow()
       this.controller.bow.active = false

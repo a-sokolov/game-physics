@@ -1,25 +1,10 @@
-import { SpriteSheet } from '../../graphic/sprite-sheet'
-import { Animator, AnimatorMode } from '../../graphic/animator'
-import { NinjaActionType, NinjaInterpretator } from '../interpretators/ninja-interpretator'
-import { AnimationSets } from '../../graphic/animation-sets'
-import { CollisionType } from '../collider'
+import { SpriteSheet } from '../../../graphic/sprite-sheet'
+import { Animator, AnimatorMode } from '../../../graphic/animator'
+import { NinjaInterpreter } from '../../interpreters/ninja-interpreter'
+import { AnimationSets } from '../../../graphic/animation-sets'
+import { CollisionType } from '../../collider'
 
-export const NinjaAnimationDelay = {
-  idle: 4,
-  crouch: 4,
-  slide: 2,
-  cast: 2,
-  sword: 2,
-  airSword: 1,
-  bow: 3,
-  airBow: 1,
-  flip: 2,
-  jump: 1,
-  fall: 2,
-  touch: 3,
-  move: 3,
-  getOrRemoveSword: 3
-}
+import { NinjaAnimationDelay, NinjaActionType } from './constants'
 
 /** Здесь определяем анимацию персонажа в зависимости от его координат и скоростей */
 export class NinjaAnimation extends Animator {
@@ -71,7 +56,7 @@ export class NinjaAnimation extends Animator {
 
   watch(mob) {
     this.mob = mob
-    this.interpretator = new NinjaInterpretator(mob)
+    this.interpreter = new NinjaInterpreter(mob)
   }
 
   position() {
@@ -90,37 +75,47 @@ export class NinjaAnimation extends Animator {
     this.animation.setXY(newPosition.x, newPosition.y)
   }
 
+  // Флаг, что производиться атака на земле
   isGroundAttack() {
     return this.animation === this.bowAttack
         || this.swordAttacks.equals(this.animation)
         || this.isActionType(NinjaActionType.casting)
   }
 
+  // Флаг, что производится атака в воздухе
   isAirAttack() {
     return this.animation === this.airBowAttack
         || this.airSwordAttacks.equals(this.animation)
   }
 
-  isCollisionType(type) {
-    return this.mob.collisions.filter(collision => collision === type).length > 0
-  }
-
+  // Проверяем наличие заданных коллизий в данный момент
   isCollisionTypes(types) {
-    return this.mob.collisions.filter(collision => types.some(type => type === collision)).length > 0
+    return this.mob.collisions.filter(collision => {
+      return types.some(type => type === collision)
+    }).length > 0
   }
 
+  // Флаг, определяющий нужно ли прерывать длинную анимацию
   isInterrupted() {
-    return this.interpretator.isCrouching()
-          || (this.isActionType(NinjaActionType.casting) && (this.interpretator.isBowAttacking() || this.interpretator.isSwordAttacking()))
-          || (this.isActionType(NinjaActionType.bowAttacking) && (this.interpretator.isCasting() || this.interpretator.isSwordAttacking()))
-          || (this.isActionType(NinjaActionType.swordAttacking) && (this.interpretator.isCasting() || this.interpretator.isBowAttacking()))
+    return this.interpreter.isCrouching() // когда присели
+          // когда кастуем и начали атаку мечом или луком
+          || (this.isActionType(NinjaActionType.casting) && (this.interpreter.isBowAttacking() || this.interpreter.isSwordAttacking()))
+          // когда стреляем из лука и начали кастовать или атаковать мечом
+          || (this.isActionType(NinjaActionType.bowAttacking) && (this.interpreter.isCasting() || this.interpreter.isSwordAttacking()))
+          // когда атакуем мечом и начали кастовать или стрелять из лука
+          || (this.isActionType(NinjaActionType.swordAttacking) && (this.interpreter.isCasting() || this.interpreter.isBowAttacking()))
+          // когда в прыжке или в момент атаки на земле, но слева или справа находится коллизия (т.е. мы уперлись в стену и хотим атаковать)
+          // чтобы анимация не выходила за пределы стены
           || ((this.mob.jumping || this.isCollisionTypes([CollisionType.left, CollisionType.right])) && this.isGroundAttack())
+          // когда производится атака в воздухе и сверху или снизу находится коллизия (т.е. мы приземлились на платформу или ударились голой в нее)
           || (this.isCollisionTypes([CollisionType.top, CollisionType.bottom]) && this.isAirAttack())
   }
 
+  // Проверка, нужно ли прерывать ввода влево-вправо, в тот момент когда персонаж двигается и одновременно производит атаку
+  // Это нужно, т.к. нет анимации атаки в движении
   checkController() {
-    if (this.interpretator.isMoving() && this.isGroundAttack()) {
-      // Останавливаем движение игрока, если во время оного произведен выстрел из лука, каст файера или удар мячом
+    if (this.interpreter.isMoving() && this.isGroundAttack()) {
+      // Останавливаем движение игрока, если во время оного произведен выстрел из лука, каст файера или удар мечом
       if (this.mob.directionX < 0) {
         this.controller.left.active = false
       } else {
@@ -129,9 +124,21 @@ export class NinjaAnimation extends Animator {
     }
   }
 
+  /**
+   * Окончание длинной анимации и вызов колбэка, если она завершилась удачно.
+   * Т.е. побуждение к действию атаки (удар мечом, файер или стрела) производится тогда, когда закончилась анимация (флаг done).
+   *
+   * Такое поведение необходимо, чтобы мы могли прерывать, например выстрел из лука, если игрок хочет "прямо сейчас"
+   * произвести удар мечом, или присесть, или он получил урон и какое-то время "обездвижен" (мы должны отменять
+   * текущее действие).
+   *
+   * Пока сделано "в лоб", т.е. данный класс определяет и какую анимацию выполнять и вызывает выполнение того или иного действия
+   * по окончании анимации. В будущем, нужно это дело разводиться по отдельным объектам.
+   */
   resetAnimation(key, done = false) {
     this.longAnimation = false
 
+    // По типу анимации определяем, какое действие производится
     let mobAction
     if (this.isActionType(NinjaActionType.bowAttacking)) {
       mobAction = this.mob.bowAttackAction
@@ -142,16 +149,20 @@ export class NinjaAnimation extends Animator {
     }
 
     if (mobAction) {
+      // Если действие определено и анимация выполнена, то запускаем его
       done && mobAction.done()
       mobAction.clear()
 
-      // Возвращаем обратно возможность движения не отпуская клавиши
+      // Возвращаем обратно возможность движения, не отпуская клавиши
+      // Т.е. когда игрок во время движения выполнил атаку (мы остановились) и по окончании анимации, клавиша
+      // все еще нажата, ты возвращаем ей активность - чтобы продолжить движение
       if (this.mob.directionX < 0) {
         this.controller.left.active = this.controller.left.down
       } else {
         this.controller.right.active = this.controller.right.down
       }
 
+      // Убираем флаг, что анимация была проиграна
       this.played = false
     }
   }
@@ -220,18 +231,18 @@ export class NinjaAnimation extends Animator {
         this.longAnimation = true
         // Убираем меч
         this.changeFrameSet(this.removeSword, AnimatorMode.pause, NinjaAnimationDelay.getOrRemoveSword)
-      } else if (this.interpretator.isSliding()) {
+      } else if (this.interpreter.isSliding()) {
         // Скользим
         this.changeFrameSet(this.slide, AnimatorMode.pause, NinjaAnimationDelay.slide)
-      } else if (this.interpretator.isCrouching()) {
+      } else if (this.interpreter.isCrouching()) {
         // Приседания
         this.changeFrameSet(this.crouch, AnimatorMode.loop, NinjaAnimationDelay.crouch)
-      } else if (this.interpretator.isCasting()) {
+      } else if (this.interpreter.isCasting()) {
         this.longAnimation = true
 
         // Кастуем файер
         this.changeFrameSet(this.cast, AnimatorMode.pause, NinjaAnimationDelay.cast)
-      } else if (this.interpretator.isSwordAttacking()) {
+      } else if (this.interpreter.isSwordAttacking()) {
         this.longAnimation = true
 
         // Атакуем мечом
@@ -240,7 +251,7 @@ export class NinjaAnimation extends Animator {
         } else {
           this.changeFrameSet(this.swordAttacks.next(), AnimatorMode.pause, NinjaAnimationDelay.sword)
         }
-      } else if (this.interpretator.isBowAttacking()) {
+      } else if (this.interpreter.isBowAttacking()) {
         this.longAnimation = true
 
         // Стреляем из лука
@@ -250,25 +261,26 @@ export class NinjaAnimation extends Animator {
           this.changeFrameSet(this.bowAttack, AnimatorMode.pause, NinjaAnimationDelay.bow)
         }
       } else {
-        if (this.interpretator.isFlipping()) {
+        if (this.interpreter.isFlipping()) {
           // Переворот в верхней точке прыжка
           this.changeFrameSet(this.flip, AnimatorMode.pause, NinjaAnimationDelay.flip)
-        } else if (this.interpretator.isJumping()) {
+        } else if (this.interpreter.isJumping()) {
           // Прыжок
           this.changeFrameSet(this.jump, AnimatorMode.pause, NinjaAnimationDelay.jump)
-        } else if (this.interpretator.isFalling()) {
+        } else if (this.interpreter.isFalling()) {
           // Падение вниз
           this.changeFrameSet(this.fall, AnimatorMode.loop, NinjaAnimationDelay.fall)
-        } else if (this.interpretator.isIdling()
-              || (this.interpretator.isStopping() && !this.isActionType(NinjaActionType.falling))) {
+        } else if (this.interpreter.isIdling()
+              || (this.interpreter.isSlowing() && !this.isActionType(NinjaActionType.falling))) {
           // Ожидание по триггеру "ожидание" и когда скорость почти упала
-          // Это нужно для того, чтобы не было дубля анимации, если в этом время производилась быстрая атака
+          // Это нужно для того, чтобы выполнить переход от "длинную анимации", когда она производится
+          // в момент покоя, к следующему состоянию
           if (this.mob.isArmed) {
             this.changeFrameSet(this.armedIdle, AnimatorMode.loop, NinjaAnimationDelay.idle)
           } else {
             this.changeFrameSet(this.idle, AnimatorMode.loop, NinjaAnimationDelay.idle)
           }
-        } else if (this.interpretator.isMoving()) {
+        } else if (this.interpreter.isMoving()) {
           // Двигаемся
           if (this.mob.isArmed) {
             this.changeFrameSet(this.armedMove, AnimatorMode.loop, NinjaAnimationDelay.move)
@@ -280,12 +292,13 @@ export class NinjaAnimation extends Animator {
 
       this.position()
 
-      const isFallingOrAirAttack = this.isActionType(NinjaActionType.falling) || this.isAirAttack()
-      if (this.interpretator.isStopping() && (isFallingOrAirAttack || this.isActionType(NinjaActionType.moving))) {
-        // Это блок, когда игрок скорость игрока "почти" останавливается
+      if (this.interpreter.isSlowing() && (
+            this.isActionType(NinjaActionType.falling)
+          || this.isActionType(NinjaActionType.moving))) {
+        // Это блок, когда скорость игрока "почти" останавливается
 
-        if (isFallingOrAirAttack) {
-          // Проигрываем анимацию приземления: когда просто падаем или производим "воздушную атаку"
+        if (this.isActionType(NinjaActionType.falling)) {
+          // Проигрываем анимацию приземления когда просто падаем
           this.longAnimation = true
           this.changeFrameSet(this.touch, AnimatorMode.loop, NinjaAnimationDelay.touch)
           this.position()

@@ -1,8 +1,11 @@
 export const AnimatorMode = {
+  // Выполняем анимацию и когда она завершилась останавливаемся
   pause: 'pause',
+  // Зацикливаем анимацию
   loop: 'loop'
 }
 
+/** Класс где производится логика вычисления следующего кадра анимации */
 export class Animator {
   constructor(animation, delay, mode = AnimatorMode.pause, key) {
     this.count = 0
@@ -15,6 +18,7 @@ export class Animator {
     this.key = key
   }
 
+  // Смена набора фреймов анимации с заданием с какого кадра ее проигрывать
   changeFrameSet(animation, mode, delay = 10, frameIndex = 0) {
     if (this.animation === animation) {
       return
@@ -29,14 +33,17 @@ export class Animator {
     this.played = false
   }
 
+  // Остановка анимации
   stop() {
     this.stopAnimation = true
   }
 
+  // Флаг, что анимация проиграна до конца
   isEnded() {
     return this.frameIndex === this.animation.frames.length - 1
   }
 
+  // Сам процесс анимации
   animate(callback) {
     if (this.mode === AnimatorMode.pause && this.played) {
       // Если в режиме пауза и анимация уже проиграна, что выходим
@@ -45,21 +52,17 @@ export class Animator {
 
     this.count ++
 
+    // Цикл работает тогда, когда счетчик превысил заданную задержку (в нашем случае задержка - это кадр)
+    // Т.е. исходим не из времени выполнения в миллисекундах, а кол-ве пройденных кадров
     while(this.count > this.delay) {
       this.count -= this.delay
+      // Следующий кадр
       this.frameIndex ++
 
-      switch(this.mode) {
-        case AnimatorMode.loop:
-          if (this.frameIndex === this.animation.frames.length) {
-            this.frameIndex = 0
-          }
-          break
-        case AnimatorMode.pause:
-          if (this.frameIndex === this.animation.frames.length) {
-            this.frameIndex = this.animation.frames.length - 1
-          }
-          break
+      if (this.frameIndex === this.animation.frames.length) {
+        this.frameIndex = this.mode === AnimatorMode.loop
+              ? this.frameIndex = 0
+              : this.frameIndex = this.animation.frames.length - 1
       }
 
       this.animation.setFrame(this.frameIndex)

@@ -14,21 +14,28 @@ export class Ninja extends Mob {
   }
 
   cast() {
-    if (!this.jumping) {
+    if (!this.jumping && !this.crouching) {
+      // Кастуем, только на земле и когда стоим
       this.castAction.fire()
     }
   }
 
   sword() {
-    if (this.timer) {
-      clearTimeout(this.timer)
+    if (!this.crouching) {
+      // Атака мечом, только когда стоим или в воздухе
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      this.isArmed = true
+      this.swordAttackAction.fire()
+      this.timer = setTimeout(() => this.isArmed = false, 5000)
     }
-    this.isArmed = true
-    this.swordAttackAction.fire()
-    this.timer = setTimeout(() => this.isArmed = false, 5000)
   }
 
   bow() {
-    this.bowAttackAction.fire()
+    if (!this.crouching) {
+      // Стреляем из лука, только когда стоим, на земле или в воздухе на определенном расстоянии от "земли"
+      this.bowAttackAction.fire()
+    }
   }
 }

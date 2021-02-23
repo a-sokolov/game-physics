@@ -1,6 +1,6 @@
 import { ButtonInput } from './button-input'
 
-/** Контроллер, который слушает ввод */
+/** Контроллер, который слушает ввод с клавиатуры и мыши (когда это понадобиться) */
 export class Controller {
   constructor() {
     this.down = new ButtonInput()
@@ -17,28 +17,28 @@ export class Controller {
     const down = (type === "keydown")
 
     switch(keyCode) {
-      case 37: // Стрелка влево
+      case 37: // Стрелка влево - двигаемся влево (во время прыжка можно управлять)
         this.left.getInput(down)
         break
-      case 38: // Стрелка вверх
+      case 38: // Стрелка вверх - пока ничего нет
         this.up.getInput(down)
         break
-      case 39: // Стрелка вправо
+      case 39: // Стрелка вправо - двигаемся вправо (во время прыжка можно управлять)
         this.right.getInput(down)
         break
-      case 40: // Стрелка вниз
+      case 40: // Стрелка вниз - присесть или слайд во время движения
         this.down.getInput(down)
         break
-      case 32: // Пробел
+      case 32: // Пробел - прыжок
         this.jump.getInput(down)
         break
-      case 70: // Клавиша F
+      case 70: // Клавиша F - каст файербола
         this.cast.getInput(down)
         break
-      case 82: // Клавиша R
+      case 82: // Клавиша R - удар мечом (как на земле, так и в воздухе)
         this.sword.getInput(down)
         break
-      case 66: // Клавиш B
+      case 66: // Клавиш B - выстрел из лука (как на земле, так и в воздухе)
         this.bow.getInput(down)
         break
     }
