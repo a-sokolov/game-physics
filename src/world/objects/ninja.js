@@ -13,6 +13,28 @@ export class Ninja extends Mob {
     this.timer = 0
   }
 
+  isAction() {
+    return this.bowAttackAction.action
+      || this.castAction.action
+      || this.swordAttackAction.action
+  }
+
+  moveLeft() {
+    if (!this.jumping && this.isAction()) {
+      return
+    }
+
+    super.moveLeft()
+  }
+
+  moveRight() {
+    if (!this.jumping && this.isAction()) {
+       return
+    }
+
+    super.moveRight()
+  }
+
   cast() {
     if (!this.jumping && !this.crouching) {
       // Кастуем, только на земле и когда стоим

@@ -16,7 +16,7 @@ export class CheckCoins {
   hitCoin(job) {
     this.moveToPlayersJobs.removeJob(job)
     this.coinsStaticAnimation.removePoints(job.coin)
-    console.log('Coins left', {
+    console.debug('Coins left', {
       objects: this.coinsStaticAnimation.objects.length,
       jobs: this.moveToPlayersJobs.jobs.length,
       coins: this.coinsStaticAnimation.points.length

@@ -114,7 +114,7 @@ export class NinjaAnimation extends Animator {
   // Проверка, нужно ли прерывать ввода влево-вправо, в тот момент когда персонаж двигается и одновременно производит атаку
   // Это нужно, т.к. нет анимации атаки в движении
   checkController() {
-    if (this.interpreter.isMoving() && this.isGroundAttack()) {
+    if ((this.interpreter.isMoving() && this.isGroundAttack()) || this.isGroundAttack()) {
       // Останавливаем движение игрока, если во время оного произведен выстрел из лука, каст файера или удар мечом
       if (this.mob.directionX < 0) {
         this.controller.left.active = false

@@ -3,12 +3,15 @@ export class ButtonInput {
   constructor() {
     this.down = false
     this.active = false
+    this.disabled = false
   }
 
   getInput(down) {
-    if (this.down !== down) {
-      this.active = down
+    if (!this.disabled) {
+      if (this.down !== down) {
+        this.active = down
+      }
+      this.down = down
     }
-    this.down = down
   }
 }
