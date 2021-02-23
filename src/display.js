@@ -44,13 +44,13 @@ export class Display {
 
   createMap(name, mapData, tileSet) {
     const spriteSheet = new SpriteSheet(tileSet)
-    const { tilewidth: spriteWidth, tileheight: spriteHeight } = mapData
+    const { spriteWidth, spriteHeight } = mapData
     const context = this.__createCanvas(
       mapData.width * spriteWidth,
       mapData.height * spriteHeight)
 
     let row, col
-    mapData.layers.filter(({ type }) => type === 'tilelayer').forEach(layer => {
+    mapData.layers.forEach(layer => {
       row = 0
       col = 0
       layer.data.forEach(index => {

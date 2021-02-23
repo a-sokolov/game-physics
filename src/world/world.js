@@ -66,9 +66,8 @@ export class World {
     this.checkFireballs.update()
     this.checkArrows.update()
     this.level.update()
-
     this.playerAnimation.update()
-    console.log('VelocityY', this.player.velocityY)
+
     this.level.collisionRects = this.env.getAllCollisionRects()
       .concat(this.checkFireballs.objects.map(object => {
           return this.collider.getCollisionRects(object, true)

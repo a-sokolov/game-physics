@@ -53,6 +53,7 @@ export class Level {
     this.limitRect = new Rect(0, 0, map.width * map.tilewidth, map.height * map.tileheight)
 
     this.levelSprite = null
+    this.beforeSprite = null
   }
 
   addStaticAnimation(animation) {

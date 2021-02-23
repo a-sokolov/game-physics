@@ -68,7 +68,29 @@ export class Main {
 
   createLevelSprite() {
     const { key, map, spriteSheet, limitRect, cameraTrap, screenRect } = this.game.world.level
-    this.game.world.level.levelSprite = this.display.createMap(key, map, spriteSheet)
+    const levelMap = {
+      width: map.width,
+      height: map.height,
+      spriteWidth: map.tilewidth,
+      spriteHeight: map.tileheight
+    }
+    this.game.world.level.levelSprite = this.display.createMap(
+      key,
+      {
+        ...levelMap,
+        layers: map.layers.filter(({ name, type }) => {
+          return type === 'tilelayer' && name !== 'before-layer'
+        })
+      }, spriteSheet)
+
+    this.game.world.level.beforeSprite = this.display.createMap(
+      `${key}-before-sprite`,
+      {
+        ...levelMap,
+        layers: map.layers.filter(({ name, type }) => {
+          return type === 'tilelayer' && name === 'before-layer'
+        })
+      }, spriteSheet)
 
     // Устанавливаем размер канвы
     this.display.buffer.canvas.width = screenRect.width
@@ -125,6 +147,9 @@ export class Main {
       const { width, height } = arrow
       this.display.drawSprite(arrow.ref.animation, { width, height })
     })
+
+    // Рисуем, что должно быть поверх всего
+    this.display.drawSprite(this.game.world.level.beforeSprite)
 
     // Если в режиме "Debug"
     this.tools.render()
