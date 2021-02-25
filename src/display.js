@@ -35,17 +35,21 @@ export class Display {
     this.camera = camera
   }
 
-  __createCanvas(width, height) {
+  createContext(width, height) {
     const canvas = document.createElement('canvas')
     canvas.width = width
     canvas.height = height
     return canvas.getContext('2d')
   }
 
+  addImage(name, image) {
+    this.images[name] = image
+  }
+
   createMap(name, mapData, tileSet) {
     const spriteSheet = new SpriteSheet(tileSet)
     const { spriteWidth, spriteHeight } = mapData
-    const context = this.__createCanvas(
+    const context = this.createContext(
       mapData.width * spriteWidth,
       mapData.height * spriteHeight)
 
@@ -76,7 +80,7 @@ export class Display {
     })
 
     const { canvas } = context
-    this.images[name] = canvas
+    this.addImage(name, canvas)
 
     return new Sprite({
       name,

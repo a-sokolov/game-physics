@@ -117,8 +117,8 @@ export class CollideObject {
 
     return this.getAllSquareRects(new Rect(x1, y1, x2 - x1, y2 - y1), width, height,
               (row, column, rows, columns) => {
-                return  !((row === 1 || row === rows) && (column === 1 || column === columns)
-                          || row > 1 && row < rows && (column > 1 && column < columns))
+                return row === 1 || row === rows
+                      || (row > 1 && row < rows && (column === 1 || column === columns))
               })
   }
 

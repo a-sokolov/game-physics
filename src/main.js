@@ -91,6 +91,8 @@ export class Main {
           return type === 'tilelayer' && name === 'before-layer'
         })
       }, spriteSheet)
+    // Создаем нужные спрайты уровня
+    this.game.world.level.createImages(this.display)
 
     // Устанавливаем размер канвы
     this.display.buffer.canvas.width = screenRect.width
@@ -126,7 +128,8 @@ export class Main {
   render() {
     // Цвет фона
     this.display.fill(this.game.world.backgroundColor)
-
+    // Рисуем все что до карты уровня
+    this.game.world.level.images.forEach(image => this.display.drawImg(image))
     // Рисуем карту уровня
     this.display.drawSprite(this.game.world.level.levelSprite)
     // Рисуем всю статичную анимацию (сейчас это монетки)
@@ -137,15 +140,11 @@ export class Main {
     // Рисуем анимацию игрока со смещение в 0.5 пикселя, чтобы визуально он стоял на плитке, а не нависал над ней
     this.display.drawSprite(this.game.world.playerAnimation.animation)
 
-    // Рисуем все файеры, которые находятся на экране
-    this.game.world.checkFireballs.objects.forEach(fireball => {
-      const { width, height } = fireball
-      this.display.drawSprite(fireball.ref.animation, { width, height })
-    })
-    // Рисуем все стрелы, которые находятся на экране
-    this.game.world.checkArrows.objects.forEach(arrow => {
-      const { width, height } = arrow
-      this.display.drawSprite(arrow.ref.animation, { width, height })
+    // Рисуем все снаряды, которые находятся на экране
+    const { checkFireballs, checkArrows } = this.game.world
+    checkFireballs.objects.concat(checkArrows.objects).forEach(object => {
+      const { width, height } = object
+      this.display.drawSprite(object.ref.animation, { width, height })
     })
 
     // Рисуем, что должно быть поверх всего

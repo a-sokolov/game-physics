@@ -1,4 +1,5 @@
 import { Rect } from '../base/rect'
+import { Img } from '../graphic/img'
 
 export class Level {
   constructor(key, map, spriteSheet) {
@@ -54,6 +55,15 @@ export class Level {
 
     this.levelSprite = null
     this.beforeSprite = null
+    this.images = []
+  }
+
+  createImages(display) {
+    //
+  }
+
+  addImage(name, x, y, width, height) {
+    this.images.push(new Img({ name, x, y, width, height }))
   }
 
   addStaticAnimation(animation) {
