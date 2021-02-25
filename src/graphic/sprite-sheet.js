@@ -10,7 +10,7 @@ export class SpriteSheet {
     this.spriteHeight = spriteHeight
   }
 
-  getAnimationFramesWithKey(key, ...indexes) {
+    getAnimationFramesWithKey(key, ...indexes) {
     const frames = this.getAnimationFrames(...indexes)
     frames.key = key
 
@@ -20,7 +20,7 @@ export class SpriteSheet {
   getAnimationFrames(...indexes) {
     return new AnimationFrames({
       name: this.name,
-      frames: indexes.map(index => ({
+      frames: (Array.isArray(indexes[0]) ? indexes[0] : indexes).map(index => ({
         sx: this.getSourceX(index),
         sy: this.getSourceY(index)
       })),

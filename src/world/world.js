@@ -11,6 +11,7 @@ import { CheckHMovingObjects } from './checks/check-hmoving-objects'
 
 import { Environment } from './environment'
 import { NINJA_TILES, NINJA_BOW_TILES, NINJA_SWORD_RUN_TILES } from './constants'
+import {TilesetSpriteSheet} from "../graphic/tileset-sprite-sheet";
 
 export class World {
   constructor(friction = 0.85, gravity = 2) {
@@ -26,9 +27,9 @@ export class World {
     this.env = new Environment(friction, gravity, this.level.limitRect)
     this.player = this.objectFactory.createPlayer(this.level.playerPosition.x, this.level.playerPosition.y)
     this.playerAnimation = new NinjaAnimation({
-      main: NINJA_TILES,
-      bow: NINJA_BOW_TILES,
-      sword: NINJA_SWORD_RUN_TILES
+      main: new TilesetSpriteSheet(NINJA_TILES, require('../assets/ninja.json')),
+      bow: new TilesetSpriteSheet(NINJA_BOW_TILES, require('../assets/ninja-bow.json')),
+      sword: new TilesetSpriteSheet(NINJA_SWORD_RUN_TILES, require('../assets/ninja-sword.json'))
     })
 
     this.env.addMob(this.player)

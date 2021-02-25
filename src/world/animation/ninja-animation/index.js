@@ -1,4 +1,3 @@
-import { SpriteSheet } from '../../../graphic/sprite-sheet'
 import { Animator, AnimatorMode } from '../../../graphic/animator'
 import { NinjaInterpreter } from '../../interpreters/ninja-interpreter'
 import { AnimationSets } from '../../../graphic/animation-sets'
@@ -9,43 +8,37 @@ import { NinjaAnimationDelay, NinjaActionType } from './constants'
 /** Здесь определяем анимацию персонажа в зависимости от его координат и скоростей */
 export class NinjaAnimation extends Animator {
   constructor({ main, bow, sword }) {
-    const tiles = new SpriteSheet(main)
-    const bowTiles = new SpriteSheet(bow)
-    const swordTiles = new SpriteSheet(sword)
-
-    const defaultFrame = tiles.getAnimationFramesWithKey('idle',1, 2, 3, 4)
+    const defaultFrame = main.getTileSet('idle')
     super(defaultFrame, NinjaAnimationDelay.idle, AnimatorMode.loop, 'ninja-animation')
 
     this.idle = defaultFrame
-    this.armedIdle = tiles.getAnimationFramesWithKey('armed-idle',39, 40, 41, 42)
-    this.crouch = tiles.getAnimationFramesWithKey('crouch',5, 6, 7, 8)
-    this.slide = tiles.getAnimationFramesWithKey('slide',25, 26, 27, 28, 29)
+    this.armedIdle = main.getTileSet('armed-idle')
+    this.crouch = main.getTileSet('crouch')
+    this.slide = main.getTileSet('slide')
 
-    this.flip = tiles.getAnimationFramesWithKey('flip',19, 20, 21, 22)
-    this.fall = tiles.getAnimationFramesWithKey('fall',23, 24)
-    this.touch = tiles.getAnimationFramesWithKey('touch',5, 6, 7)
-    this.jump = tiles.getAnimationFramesWithKey('jump', 15, 16, 17, 18)
-    this.move = tiles.getAnimationFramesWithKey('move', 9, 10, 11, 12, 13, 14)
-    this.armedMove = swordTiles.getAnimationFramesWithKey('armed-move', 1, 2, 3, 4, 5, 6)
-    this.cast = tiles.getAnimationFramesWithKey('cast', 86, 87, 88, 89, 90, 91, 92, 93)
-
-    this.getSword = tiles.getAnimationFramesWithKey('get-sword', 86, 87, 88, 89, 90, 91, 92, 93)
-    this.removeSword = tiles.getAnimationFramesWithKey('remove-sword', 74, 75, 76, 77)
+    this.flip = main.getTileSet('flip')
+    this.fall = main.getTileSet('fall')
+    this.touch = main.getTileSet('touch')
+    this.jump = main.getTileSet('jump')
+    this.move = main.getTileSet('move')
+    this.armedMove = sword.getTileSet('armed-move')
+    this.cast = main.getTileSet('cast')
+    this.removeSword = main.getTileSet('remove-sword')
 
     this.airSwordAttacks = new AnimationSets([
-      tiles.getAnimationFramesWithKey('air-sword-attack1', 97, 98, 99, 100),
-      tiles.getAnimationFramesWithKey('air-sword-attack2', 101, 102, 103, 104),
-      tiles.getAnimationFramesWithKey('air-sword-attack3', 105, 106, 107, 108, 109)
+      main.getTileSet('air-sword-attack1'),
+      main.getTileSet('air-sword-attack2'),
+      main.getTileSet('air-sword-attack3')
     ])
 
     this.swordAttacks = new AnimationSets([
-      tiles.getAnimationFramesWithKey('sword-attack1', 43, 44, 45, 46, 47, 48, 49),
-      tiles.getAnimationFramesWithKey('sword-attack2', 50, 51, 52, 53),
-      tiles.getAnimationFramesWithKey('sword-attack3', 54, 55, 56, 57, 58, 59)
+      main.getTileSet('sword-attack1'),
+      main.getTileSet('sword-attack2'),
+      main.getTileSet('sword-attack3')
     ])
 
-    this.bowAttack = bowTiles.getAnimationFramesWithKey('bow-attack', 1, 2, 3, 4, 5, 6, 7, 8, 9)
-    this.airBowAttack = bowTiles.getAnimationFramesWithKey('air-bow-attack', 10, 11, 12, 13, 14, 15)
+    this.bowAttack = bow.getTileSet('bow-attack')
+    this.airBowAttack = bow.getTileSet('air-bow-attack')
 
     this.longAnimation = false
     this.mob = null

@@ -1,5 +1,4 @@
 export const ASSETS = {
-  'jerry-tiles': './assets/jerry-tiles.png',
   'brick': './assets/brick.png',
   'red-fire-ball-tiles': './assets/red-fireball-tiles.png',
   'coin-tiles': './assets/coin-tiles.png',
