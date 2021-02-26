@@ -59,7 +59,8 @@ export class ParallaxImage {
 
   nextFrame() {
     this.images.forEach(image => {
-      image.setXY(image.x + (this.direction === ParallaxDirection.forward ? -this.step : this.step), this.y)
+      const x = image.x + (this.direction === ParallaxDirection.forward ? -this.step : this.step)
+      image.setXY(Math.round(x), this.y)
     })
 
     const first = this.images[0]
