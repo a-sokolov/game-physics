@@ -13,9 +13,11 @@ import { Camera } from './base/camera'
  * - красный - финишная позиция камеры
  * */
 export class MainCamera extends Camera {
-  constructor({ edgeRect, screenRect, limitRect }) {
+  constructor() {
     super()
+   }
 
+  init({ edgeRect, screenRect, limitRect }) {
     this.edgeRect = edgeRect
     this.screenRect = screenRect
     this.limitRect = limitRect
@@ -32,7 +34,7 @@ export class MainCamera extends Camera {
       { rect: this.endEdgeRect, color: 'red' },
       { rect: this.edgeRect, color: 'black', sticky: true },
     ]
-   }
+  }
 
   update() {
     super.update()

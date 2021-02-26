@@ -7,5 +7,6 @@ export class Game {
 
   update(time) {
     this.world.update(time)
+    this.world.level.parallaxes.forEach(parallax => parallax.update())
   }
 }

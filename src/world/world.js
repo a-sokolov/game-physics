@@ -38,6 +38,7 @@ export class World {
 
     this.env.addMob(this.player)
     this.playerAnimation.watch(this.player)
+    this.level.watch(this.player)
 
     this.collider = new CollideObject()
     this.collider.setLevel(this.level)

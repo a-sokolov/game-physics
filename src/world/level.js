@@ -1,11 +1,13 @@
 import { Rect } from '../base/rect'
 import { Img } from '../graphic/img'
+import { ParallaxImage } from '../graphic/parallax-image'
 
 export class Level {
   constructor(key, map, spriteSheet) {
     this.key = key
     this.map = map
     this.spriteSheet = spriteSheet
+
     this.tileMap = {
       rows: map.height,
       columns: map.width,
@@ -56,14 +58,29 @@ export class Level {
     this.levelSprite = null
     this.beforeSprite = null
     this.images = []
+    this.parallaxes = []
   }
 
-  createImages(display) {
+  createImages(display, camera) {
     //
   }
 
+  watch(player) {
+    this.player = player
+  }
+
   addImage(name, x, y, width, height) {
-    this.images.push(new Img({ name, x, y, width, height }))
+    const image = new Img({ name, x, y, width, height })
+    this.images.push(image)
+    return image
+  }
+
+  addParallax({ name, y, width, height, delay, step, direction, space }) {
+    const parallax = new ParallaxImage({
+      name, screenWidth: this.screenRect.width, y, width, height, delay, step, direction, space
+    })
+    this.parallaxes.push(parallax)
+    return parallax
   }
 
   addStaticAnimation(animation) {

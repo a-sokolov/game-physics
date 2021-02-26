@@ -43,6 +43,7 @@ export class Main {
 
     this.controller = new Controller()
     this.display = new Display(canvas)
+    this.camera = new MainCamera()
     this.game = new Game()
     this.engine = new Engine(timeStep, this.update, this.render)
     this.playerController = this.game.world.getPlayerController(this.controller)
@@ -91,18 +92,16 @@ export class Main {
           return type === 'tilelayer' && name === 'before-layer'
         })
       }, spriteSheet)
+
     // Создаем нужные спрайты уровня
-    this.game.world.level.createImages(this.display)
+    this.game.world.level.createImages(this.display, this.camera)
 
     // Устанавливаем размер канвы
     this.display.buffer.canvas.width = screenRect.width
     this.display.buffer.canvas.height = screenRect.height
 
-    this.camera = new MainCamera({
-      edgeRect: cameraTrap,
-      limitRect,
-      screenRect
-    })
+    // Инициализируем камеру по параметрам уровня
+    this.camera.init({ edgeRect: cameraTrap, limitRect, screenRect })
     this.camera.watch(this.game.world.player)
     // Устанавливаем камеру (сейчас это прямоугольник, который игрок двигает вперед/назад)
     this.display.setCamera(this.camera)
@@ -130,6 +129,10 @@ export class Main {
     this.display.fill(this.game.world.backgroundColor)
     // Рисуем все что до карты уровня
     this.game.world.level.images.forEach(image => this.display.drawImg(image))
+    // Рисуем параллакс, все что после бэкграунда и до карты уровня
+    this.game.world.level.parallaxes.forEach(parallax => {
+      parallax.images.forEach(image => this.display.drawImg(image))
+    })
     // Рисуем карту уровня
     this.display.drawSprite(this.game.world.level.levelSprite)
     // Рисуем всю статичную анимацию (сейчас это монетки)

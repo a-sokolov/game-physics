@@ -82,7 +82,7 @@ export const getImageScreenCountsByX = (screenWidth, imgWidth, callback) => {
   let x = 0
 
   const columns = Math.floor(screenWidth / imgWidth) + 1
-  for (let i = 1; i <= columns; i ++) {
+  for (let i = 0; i < columns; i ++) {
     callback(x)
     x += imgWidth
   }
