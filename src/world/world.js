@@ -10,8 +10,12 @@ import { CheckCoins } from './checks/check-coins'
 import { CheckHMovingObjects } from './checks/check-hmoving-objects'
 
 import { Environment } from './environment'
-import { NINJA_TILES, NINJA_BOW_TILES, NINJA_SWORD_RUN_TILES } from './constants'
-import {TilesetSpriteSheet} from "../graphic/tileset-sprite-sheet";
+import { TilesetSpriteSheet } from '../graphic/tileset-sprite-sheet'
+import { Resources } from '../resources'
+
+const NINJA_TILES = Resources.getSprite('ninja-tiles')
+const NINJA_BOW_TILES = Resources.getSprite('ninja-bow-tiles')
+const NINJA_SWORD_RUN_TILES = Resources.getSprite('ninja-sword-run-tiles')
 
 export class World {
   constructor(friction = 0.85, gravity = 2) {

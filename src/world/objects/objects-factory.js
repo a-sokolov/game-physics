@@ -1,7 +1,7 @@
 import { HMovingObject } from '../../base/hmoving-object'
 import { Ninja } from './ninja'
 import { SpriteSheet } from '../../graphic/sprite-sheet'
-import { FIREBALL_TILES, ARROW_TILES } from '../constants'
+import { Resources } from '../../resources'
 
 export class ObjectsFactory {
   constructor() {
@@ -41,7 +41,8 @@ export class ObjectsFactory {
         y: y + (player.hitBox.height / 2) - 6,
         directionX: player.directionX,
       }),
-      frames: new SpriteSheet(FIREBALL_TILES).getAnimationFrames(7, 8, 9, 10, 11, 12),
+      frames: new SpriteSheet(Resources.getSprite('red-fire-ball-tiles'))
+                .getAnimationFrames(7, 8, 9, 10, 11, 12),
       delay: 2
     }
   }
@@ -67,7 +68,8 @@ export class ObjectsFactory {
         y: y + (player.hitBox.height / 2) - 2,
         directionX: player.directionX,
       }),
-      frames: new SpriteSheet(ARROW_TILES).getAnimationFrames(1),
+      frames: new SpriteSheet(Resources.getSprite('arrow'))
+                .getAnimationFrames(1),
       delay: 2
     }
   }

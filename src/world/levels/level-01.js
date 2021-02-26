@@ -1,24 +1,25 @@
 import { Level } from '../level'
 import { StaticMapAnimation } from '../../graphic/static-map-animation'
-import { getTileMapPoints, RectPosition } from '../../utils'
+import { getTileMapPoints, getImageScreenCountsByX, RectPosition } from '../../utils'
+import { Resources } from '../../resources'
 
-import { LEVEL_TILES, COIN_TILES, SEA_IMAGE, SKY_IMAGE } from './constants'
+const LEVEL_TILES = Resources.getSprite('level01-tileset')
+const COIN_TILES = Resources.getSprite('coin-tiles')
+const SEA_IMAGE = Resources.getImg('level01-sea')
+const SKY_IMAGE = Resources.getImg('level01-sky')
+const CLOUDS_IMAGE = Resources.getImg('level01-clouds')
+const FAR_GROUNDS_IMAGE  = Resources.getImg('level01-far-grounds')
 
 const levelMap = require('../../assets/level01/level01.json')
 
 export class Level01 extends Level {
   constructor() {
-    super('level1', levelMap, LEVEL_TILES)
+    super('level01', levelMap, LEVEL_TILES)
 
     const coinsBoxes = levelMap.layers.find(({ name }) => name === 'coins')
     const coins = getTileMapPoints(coinsBoxes,
-      {
-        width: LEVEL_TILES.spriteWidth,
-        height: LEVEL_TILES.spriteHeight
-      },
-      {
-        position: RectPosition
-      })
+      { width: LEVEL_TILES.spriteWidth, height: LEVEL_TILES.spriteHeight },
+      { position: RectPosition })
     this.coinsStaticAnimation = new StaticMapAnimation(
       coins,
       COIN_TILES,
@@ -32,22 +33,26 @@ export class Level01 extends Level {
 
     const backgroundContext = display.createContext(this.screenRect.width, this.screenRect.height)
 
-    let x = 0
-    let columns = Math.floor(this.screenRect.width / SKY_IMAGE.width) + 1
-    for (let i = 1; i <= columns; i ++) {
-      backgroundContext.drawImage(display.getImage(SKY_IMAGE.name), x, 0, SKY_IMAGE.width, SKY_IMAGE.height)
-      x += SKY_IMAGE.width
-    }
+    getImageScreenCountsByX(this.screenRect.width, SKY_IMAGE.width, (x) => {
+      backgroundContext.drawImage(display.getImage(SKY_IMAGE.name), x, 0,
+        SKY_IMAGE.width, SKY_IMAGE.height)
+    })
 
-    x = 0
-    columns = Math.floor(this.screenRect.width / SEA_IMAGE.width) + 1
-    for (let i = 1; i <= columns; i ++) {
-      backgroundContext.drawImage(display.getImage(SEA_IMAGE.name), x, SKY_IMAGE.height, SEA_IMAGE.width, SEA_IMAGE.height)
-      x += SEA_IMAGE.width
-    }
+    getImageScreenCountsByX(this.screenRect.width, SEA_IMAGE.width, (x) => {
+      backgroundContext.drawImage(display.getImage(SEA_IMAGE.name), x,
+        SKY_IMAGE.height, SEA_IMAGE.width, SEA_IMAGE.height)
+    })
+
+    getImageScreenCountsByX(this.screenRect.width, CLOUDS_IMAGE.width, (x) => {
+      backgroundContext.drawImage(display.getImage(CLOUDS_IMAGE.name), x,
+        SKY_IMAGE.height - CLOUDS_IMAGE.height, CLOUDS_IMAGE.width, CLOUDS_IMAGE.height)
+    })
+
+    backgroundContext.drawImage(display.getImage(FAR_GROUNDS_IMAGE.name), 0,
+      this.screenRect.height - FAR_GROUNDS_IMAGE.height, FAR_GROUNDS_IMAGE.width, FAR_GROUNDS_IMAGE.height)
 
     const { canvas } = backgroundContext
-    const name = `${SKY_IMAGE.name}-background`
+    const name = 'level01-background'
     display.addImage(name, canvas)
     this.addImage(name, 0, 0, canvas.width, canvas.height)
   }

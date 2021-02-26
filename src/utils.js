@@ -69,11 +69,21 @@ export const checkRectCollision = (rect1, rect2) => {
     rect1.y + rect1.height > rect2.y)
 }
 
-/** Функуия читающая площадь пересечения 2х прямоугольников */
+/** Функция читающая площадь пересечения 2х прямоугольников */
 export const getIntersectingRectsSquare = (rect1, rect2) => {
   const x_overlap = Math.max(0,
     Math.min(rect1.x + rect1.width, rect2.x + rect2.width) - Math.max(rect1.x, rect2.x))
   const y_overlap = Math.max(0,
     Math.min(rect1.y + rect1.height, rect2.y + rect2.height) - Math.max(rect1.y, rect2.y))
   return Math.floor(x_overlap * y_overlap)
+}
+
+export const getImageScreenCountsByX = (screenWidth, imgWidth, callback) => {
+  let x = 0
+
+  const columns = Math.floor(screenWidth / imgWidth) + 1
+  for (let i = 1; i <= columns; i ++) {
+    callback(x)
+    x += imgWidth
+  }
 }

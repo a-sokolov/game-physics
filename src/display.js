@@ -1,6 +1,8 @@
 import { Sprite } from './graphic/sprite'
 import { SpriteSheet } from './graphic/sprite-sheet'
 
+const IMAGE_SMOOTHING_ENABLED = false
+
 /** Здесь находятся API для работы с канвой */
 export class Display {
   /**
@@ -113,7 +115,7 @@ export class Display {
     }
 
     // Флаг сглаживания отрисовки
-    this.context.imageSmoothingEnabled = false
+    this.context.imageSmoothingEnabled = IMAGE_SMOOTHING_ENABLED
   }
 
   /** Отрисовка массива объектов статичной анимации */
