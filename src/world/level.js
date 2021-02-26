@@ -75,9 +75,9 @@ export class Level {
     return image
   }
 
-  addParallax({ name, y, width, height, delay, step, direction, space }) {
+  addParallax({ name, y, width, height, delay, step, direction, type, space }) {
     const parallax = new ParallaxImage({
-      name, screenWidth: this.screenRect.width, y, width, height, delay, step, direction, space
+      name, screenWidth: this.screenRect.width, y, width, height, delay, step, direction, type, space
     })
     this.parallaxes.push(parallax)
     return parallax

@@ -1,13 +1,19 @@
 import { Img } from './img'
 
-export const Direction = {
+export const ParallaxDirection = {
   forward: 'forward',
   backward: 'backward'
 }
 
+export const ParallaxType = {
+  custom: 'custom',
+  delay: 'delay'
+}
+
 export class ParallaxImage {
   constructor({ name, y = 0, screenWidth, width, height, delay = 10, step = 0,
-                direction = Direction.forward, autorun = false, space = 0 }) {
+                direction = ParallaxDirection.forward, type = ParallaxType.delay,
+                autorun = false, space = 0 }) {
 
     this.name = name
     this.y = y
@@ -17,6 +23,7 @@ export class ParallaxImage {
     this.delay = delay
     this.running = autorun
     this.direction = direction
+    this.type = type
     this.space = space
     this.count = 0
     this.images = []
@@ -40,7 +47,8 @@ export class ParallaxImage {
     })
   }
 
-  run(direction = Direction.forward) {
+  run(direction = ParallaxDirection.forward, step) {
+    this.step = step ?? this.step
     this.direction = direction
     this.running = true
   }
@@ -50,26 +58,20 @@ export class ParallaxImage {
   }
 
   nextFrame() {
-    this.count ++
+    this.images.forEach(image => {
+      image.setXY(image.x + (this.direction === ParallaxDirection.forward ? -this.step : this.step), this.y)
+    })
 
-    while(this.count > this.delay) {
-      this.count -= this.delay
+    const first = this.images[0]
+    const last = this.images[this.images.length - 1]
+    const others = this.images.filter((_, index) => index > 0 && index < this.images.length - 1)
 
-      this.images.forEach(image => {
-        image.setXY(image.x + (this.direction === Direction.forward ? -this.step : this.step), this.y)
-      })
-
-      const first = this.images[0]
-      const last = this.images[this.images.length - 1]
-      const others = this.images.filter((_, index) => index > 0 && index < this.images.length - 1)
-
-      if (this.direction === Direction.forward && (first.x + first.width + this.space <= 0)) {
-        first.setXY(last.x + last.width + this.space, this.y)
-        this.images = [...others, last, first]
-      } else if (this.direction === Direction.backward && (first.x >= 0)) {
-        last.setXY(-((last.width + this.space) - first.x), this.y)
-        this.images = [last, first, ...others]
-      }
+    if (this.direction === ParallaxDirection.forward && (first.x + first.width + this.space <= 0)) {
+      first.setXY(last.x + last.width + this.space, this.y)
+      this.images = [...others, last, first]
+    } else if (this.direction === ParallaxDirection.backward && (first.x >= 0)) {
+      last.setXY(-((last.width + this.space) - first.x), this.y)
+      this.images = [last, first, ...others]
     }
   }
 
@@ -78,6 +80,15 @@ export class ParallaxImage {
       return
     }
 
-    this.nextFrame()
+    if (this.type === ParallaxType.delay) {
+      this.count ++
+
+      while(this.count > this.delay) {
+        this.count -= this.delay
+        this.nextFrame()
+      }
+    } else {
+      this.nextFrame()
+    }
   }
 }

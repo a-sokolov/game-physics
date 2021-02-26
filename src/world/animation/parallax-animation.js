@@ -1,4 +1,4 @@
-import { Direction } from '../../graphic/parallax-image'
+import { ParallaxDirection } from '../../graphic/parallax-image'
 
 export class ParallaxAnimation {
   constructor({ parallax, camera, screenRect, cameraTrap, limitRect }) {
@@ -16,6 +16,7 @@ export class ParallaxAnimation {
 
   watch(player) {
     this.player = player
+    this.parallax.step = player.speed
   }
 
   update() {
@@ -31,7 +32,7 @@ export class ParallaxAnimation {
         || roundedVelocityX === 0) {
         this.parallax.stop()
       } else {
-        this.parallax.run(this.player.directionX < 0 ? Direction.backward : Direction.forward)
+        this.parallax.run(this.player.directionX < 0 ? ParallaxDirection.backward : ParallaxDirection.forward)
       }
     }
   }

@@ -2,7 +2,7 @@ import { Level } from '../level'
 import { StaticMapAnimation } from '../../graphic/static-map-animation'
 import { getTileMapPoints, getImageScreenCountsByX, RectPosition } from '../../utils'
 import { Resources } from '../../resources'
-import { Direction } from '../../graphic/parallax-image'
+import { ParallaxDirection, ParallaxType } from '../../graphic/parallax-image'
 import { ParallaxAnimation } from '../animation/parallax-animation'
 
 const LEVEL_TILES = Resources.getSprite('level01-tileset')
@@ -55,10 +55,9 @@ export class Level01 extends Level {
     const farGroundParallax = this.addParallax(({
       ...FAR_GROUNDS_IMAGE,
       y: this.screenRect.height - FAR_GROUNDS_IMAGE.height,
-      step: 1,
-      delay: 1,
-      space: 700,
-      direction: Direction.backward
+      space: this.screenRect.width,
+      direction: ParallaxDirection.backward,
+      type: ParallaxType.custom
     }))
 
     this.farGroundParallaxAnimation = new ParallaxAnimation({
