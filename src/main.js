@@ -20,6 +20,7 @@ export class Main {
   /**
    * Конструктор
    * @param timeStep - кол-во кадров в секунду (сейчас это 1000 / 30)
+   * @param callback - колбэк, который нужно вызвать, когда будут подгружены все ресурсы
    * */
   constructor(timeStep, callback) {
     const root = document.getElementById('container')

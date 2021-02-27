@@ -8,46 +8,53 @@
         "spriteHeight": 37
       },
       {
-      "name": "ninja-bow-tiles",
-      "width": 200,
-      "height": 148,
-      "spriteWidth": 50,
-      "spriteHeight": 37
+        "name": "ninja-bow-tiles",
+        "width": 200,
+        "height": 148,
+        "spriteWidth": 50,
+        "spriteHeight": 37
       },
       {
-      "name": "ninja-sword-run-tiles",
-      "width": 300,
-      "height": 37,
-      "spriteWidth": 50,
-      "spriteHeight": 37
+        "name": "ninja-sword-run-tiles",
+        "width": 300,
+        "height": 37,
+        "spriteWidth": 50,
+        "spriteHeight": 37
       },
       {
-      "name": "red-fire-ball-tiles",
-      "width": 3072,
-      "height": 394,
-      "spriteWidth": 512,
-      "spriteHeight": 197
+        "name": "red-fire-ball-tiles",
+        "width": 3072,
+        "height": 394,
+        "spriteWidth": 512,
+        "spriteHeight": 197
       },
       {
-      "name": "arrow",
-      "width": 18,
-      "height": 3,
-      "spriteWidth": 18,
-      "spriteHeight": 3
+        "name": "arrow",
+        "width": 18,
+        "height": 3,
+        "spriteWidth": 18,
+        "spriteHeight": 3
       },
       {
-      "name": "coin-tiles",
-      "width": 512,
-      "height": 256,
-      "spriteWidth": 128,
-      "spriteHeight": 128
+        "name": "coin-tiles",
+        "width": 512,
+        "height": 256,
+        "spriteWidth": 128,
+        "spriteHeight": 128
       },
       {
-      "name": "level01-tileset",
-      "width": 928,
-      "height": 320,
-      "spriteWidth": 16,
-      "spriteHeight": 16
+        "name": "level01-tileset",
+        "width": 928,
+        "height": 320,
+        "spriteWidth": 16,
+        "spriteHeight": 16
+      },
+      {
+        "name": "level02-tileset",
+        "width": 368,
+        "height": 224,
+        "spriteWidth": 16,
+        "spriteHeight": 16
       }
     ],
   "images": [
