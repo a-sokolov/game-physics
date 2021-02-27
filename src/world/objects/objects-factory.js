@@ -8,7 +8,7 @@ export class ObjectsFactory {
     //
   }
 
-  createPlayer(x, y) {
+  static createPlayer(x, y) {
     return new Ninja({
       x,
       y,
@@ -20,7 +20,7 @@ export class ObjectsFactory {
     })
   }
 
-  createFireBall(player) {
+  static createFireBall(player) {
     const fireballProps = {
       width: 32,
       height: 12,
@@ -47,7 +47,7 @@ export class ObjectsFactory {
     }
   }
 
-  createArrow(player) {
+  static createArrow(player) {
     const arrowProps = {
       width: 18,
       height: 3,

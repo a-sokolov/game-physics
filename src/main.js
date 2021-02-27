@@ -21,7 +21,7 @@ export class Main {
    * Конструктор
    * @param timeStep - кол-во кадров в секунду (сейчас это 1000 / 30)
    * */
-  constructor(timeStep) {
+  constructor(timeStep, callback) {
     const root = document.getElementById('container')
     const elements = root.getElementsByTagName('canvas')
 
@@ -42,13 +42,11 @@ export class Main {
     this.tools = new Tools(this)
 
     this.controller = new Controller()
-    this.display = new Display(canvas)
     this.camera = new MainCamera()
+    this.display = new Display(canvas, this.camera)
     this.game = new Game()
     this.engine = new Engine(timeStep, this.update, this.render)
     this.playerController = this.game.world.getPlayerController(this.controller)
-
-    this.tools.watch(this.game.world.player)
 
     window.addEventListener('resize', this.resize)
     window.addEventListener('keydown', this.keyDownUp)
@@ -57,14 +55,28 @@ export class Main {
     // Грузим все ресурсы
     const imageLoader = new ImageLoader(ASSETS)
     imageLoader.load().then(() => {
-      // Когда загрузили, то стартуем движок
       this.display.setImages(imageLoader.images)
-      // Подгружаем уровень
-      this.createLevelSprite()
-
-      this.resize()
-      this.engine.start()
+      callback?.(this)
     })
+  }
+
+  createLevel(level) {
+    try {
+      this.game.world.setLevel(level)
+    } catch (e) {
+      console.error(e)
+      return
+    }
+
+    this.createLevelSprite()
+
+    const { player } = this.game.world
+    this.camera.watch(player)
+    this.playerController.watch(player)
+    this.tools.watch(player)
+
+    this.resize()
+    this.engine.start()
   }
 
   createLevelSprite() {
@@ -102,9 +114,6 @@ export class Main {
 
     // Инициализируем камеру по параметрам уровня
     this.camera.init({ edgeRect: cameraTrap, limitRect, screenRect })
-    this.camera.watch(this.game.world.player)
-    // Устанавливаем камеру (сейчас это прямоугольник, который игрок двигает вперед/назад)
-    this.display.setCamera(this.camera)
   }
 
   keyDownUp(event) {

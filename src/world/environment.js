@@ -1,16 +1,14 @@
 export class Environment {
-  constructor(friction, gravity, limitRect) {
+  constructor(friction, gravity, collider) {
     this.friction = friction
     this.gravity = gravity
-    this.limitRect = limitRect
-
-    this.mobs = []
-    this.mobsCollisioRects = new Map()
-    this.collider = null
+    this.collider = collider
   }
 
-  setCollider(collider) {
-    this.collider = collider
+  init(limitRect) {
+    this.mobs = []
+    this.limitRect = limitRect
+    this.mobsCollisioRects = new Map()
   }
 
   addMob(...mob) {

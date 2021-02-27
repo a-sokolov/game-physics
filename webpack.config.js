@@ -42,7 +42,7 @@ module.exports = {
   },
   plugins: [
     new HTMLWebpackPlugin({
-      title: 'The Game physics',
+      title: 'The Last Ninja',
       template: './public/index.html',
       favicon: './public/favicon.ico',
       version: PACKAGE.version

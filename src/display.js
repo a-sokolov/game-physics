@@ -9,15 +9,15 @@ export class Display {
    * Конструктор
    * @param canvas ссылка на канву, которую определили ранее
    */
-  constructor(canvas) {
+  constructor(canvas, camera) {
     /**
      * Буффер (еще одна канва), где мы будет накидывать все что нужно отрисовать в текущем кадре,
      * а потом от туда переносить на основной экран
      */
     this.buffer = document.createElement('canvas').getContext('2d')
     this.context = canvas.getContext('2d')
+    this.camera = camera
     this.images = []
-    this.camera = null
 
     this.isDebug = false
   }
@@ -30,11 +30,6 @@ export class Display {
   /** Чтение картинки по имени */
   getImage(name) {
     return this.images[name]
-  }
-
-  /** Установка камеры */
-  setCamera(camera) {
-    this.camera = camera
   }
 
   createContext(width, height) {

@@ -5,6 +5,7 @@ import { ObjectsFactory } from './objects/objects-factory'
 import { CollideObject } from './collide-object'
 
 import { Level01 } from './levels/level-01'
+import { Level02 } from './levels/level-02'
 
 import { CheckCoins } from './checks/check-coins'
 import { CheckHMovingObjects } from './checks/check-hmoving-objects'
@@ -22,49 +23,60 @@ export class World {
     // Цвет фона
     this.backgroundColor = 'grey'
 
-    // Создаем фабрику объектов
-    this.objectFactory = new ObjectsFactory()
-
-    // Создаем простой уровень
-    this.level = new Level01()
-
-    this.env = new Environment(friction, gravity, this.level.limitRect)
-    this.player = this.objectFactory.createPlayer(this.level.playerPosition.x, this.level.playerPosition.y)
+    this.collider = new CollideObject()
+    this.env = new Environment(friction, gravity, this.collider)
+    // Анимация игрока
     this.playerAnimation = new NinjaAnimation({
       main: new TilesetSpriteSheet(NINJA_TILES, require('../assets/ninja.json')),
       bow: new TilesetSpriteSheet(NINJA_BOW_TILES, require('../assets/ninja-bow.json')),
       sword: new TilesetSpriteSheet(NINJA_SWORD_RUN_TILES, require('../assets/ninja-sword.json'))
     })
+  }
 
+  setLevel(level) {
+    switch (level) {
+      case '01':
+        this.level = new Level01()
+        break
+      case '02':
+        this.level = new Level02()
+        break
+      default:
+        throw new Error(`Unsupported level value ${level}`)
+    }
+
+    this.initLevel()
+  }
+
+  initLevel() {
+    this.player = ObjectsFactory.createPlayer(this.level.playerPosition.x, this.level.playerPosition.y)
+    this.collider.setLevel(this.level)
+
+    this.env.init(this.level.limitRect)
     this.env.addMob(this.player)
     this.playerAnimation.watch(this.player)
     this.level.watch(this.player)
 
-    this.collider = new CollideObject()
-    this.collider.setLevel(this.level)
-    this.env.setCollider(this.collider)
-
     this.checkFireballs = new CheckHMovingObjects({
       player: this.player,
       limitRect: this.level.limitRect,
-      callback: this.objectFactory.createFireBall
+      callback: ObjectsFactory.createFireBall
     })
 
     this.checkArrows = new CheckHMovingObjects({
       player: this.player,
       limitRect: this.level.limitRect,
-      callback: this.objectFactory.createArrow
+      callback: ObjectsFactory.createArrow
     })
 
     this.player.castAction.callback = this.checkFireballs.fire.bind(this.checkFireballs)
     this.player.bowAttackAction.callback = this.checkArrows.fire.bind(this.checkArrows)
-
     this.checkCoins = new CheckCoins(this.player, this.level.coinsStaticAnimation)
   }
 
   getPlayerController(controller) {
     this.playerAnimation.controller = controller
-    return new NinjaController(this.player, controller)
+    return new NinjaController(controller)
   }
 
   update() {

@@ -1,8 +1,12 @@
 /** Здесь мы уже перенаправляем ввод с клавиатуры на действия персонажа */
 export class NinjaController {
-  constructor(player, controller) {
-    this.player = player
+  constructor(controller) {
     this.controller = controller
+    this.player = null
+  }
+
+  watch(player) {
+    this.player = player
   }
 
   update() {

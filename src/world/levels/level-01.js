@@ -1,12 +1,11 @@
 import { Level } from '../level'
-import { StaticMapAnimation } from '../../graphic/static-map-animation'
-import { getTileMapPoints, getImageScreenCountsByX, RectPosition } from '../../utils'
+import { getImageScreenCountsByX } from '../../utils'
 import { Resources } from '../../resources'
 import { ParallaxDirection, ParallaxType } from '../../graphic/parallax-image'
 import { ParallaxAnimation } from '../animation/parallax-animation'
+import { createCoinsStaticAnimation } from './helpers'
 
 const LEVEL_TILES = Resources.getSprite('level01-tileset')
-const COIN_TILES = Resources.getSprite('coin-tiles')
 const SEA_IMAGE = Resources.getImg('level01-sea')
 const SKY_IMAGE = Resources.getImg('level01-sky')
 const CLOUDS_IMAGE = Resources.getImg('level01-clouds')
@@ -18,15 +17,7 @@ export class Level01 extends Level {
   constructor() {
     super('level01', levelMap, LEVEL_TILES)
 
-    const coinsBoxes = levelMap.layers.find(({ name }) => name === 'coins')
-    const coins = getTileMapPoints(coinsBoxes,
-      { width: LEVEL_TILES.spriteWidth, height: LEVEL_TILES.spriteHeight },
-      { position: RectPosition })
-    this.coinsStaticAnimation = new StaticMapAnimation(
-      coins,
-      COIN_TILES,
-      { frames: [1, 2, 3, 4, 5, 6, 7, 8], delay: 2 })
-
+    this.coinsStaticAnimation = createCoinsStaticAnimation(levelMap, LEVEL_TILES)
     this.addStaticAnimation(this.coinsStaticAnimation)
   }
 
