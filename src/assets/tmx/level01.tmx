@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="left-up" width="200" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="105">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="left-up" width="200" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="110">
  <editorsettings>
   <export target="../level01/level01.json" format="json"/>
  </editorsettings>
@@ -171,7 +171,8 @@
   <object id="91" name="screen" x="0" y="0" width="800" height="400"/>
   <object id="96" name="camera-trap" x="256" y="0" width="144" height="400"/>
   <object id="100" name="player" x="64" y="176" width="16" height="16"/>
-  <object id="101" name="next-level-gate" x="3184" y="256" width="16" height="16"/>
+  <object id="101" name="next-level-gate" x="3168" y="256" width="16" height="16"/>
+  <object id="109" name="next-level-arrow" x="3168" y="208" width="16" height="32"/>
  </objectgroup>
  <objectgroup id="6" name="coins" visible="0">
   <object id="57" x="192" y="256" width="16" height="16"/>

@@ -1,6 +1,8 @@
 import { Rect } from '../base/rect'
 import { Img } from '../graphic/img'
 import { ParallaxImage } from '../graphic/parallax-image'
+import { Resources } from '../resources'
+import { StaticMapAnimation } from '../graphic/static-map-animation'
 
 const findByName = (array) => (name) => {
   return array.find((object) => object.name === name)
@@ -13,6 +15,7 @@ export class Level {
     this.spriteSheet = spriteSheet
     this.nextLevel = nextLevel
     this.prevLevel = prevLevel
+    this.nextLevelArrowCreated = false
 
     this.tileMap = {
       rows: map.height,
@@ -32,6 +35,7 @@ export class Level {
     this.playerPosition = getObjectByName('player')
     this.nextLevelGate = getObjectByName('next-level-gate')
     this.prevLevelGate = getObjectByName('prev-level-gate')
+    this.nextLevelArrow = getObjectByName('next-level-arrow')
 
     this.collisionMap = [...Array.from({ length: this.tileMap.rows * this.tileMap.columns }).map(() => 0)]
 
@@ -99,7 +103,22 @@ export class Level {
     this.staticAnimations.push(animation)
   }
 
+  isCanMoveToTheNextLevel() {
+    return true
+  }
+
   update() {
     this.staticAnimations.forEach(staticAnimation => staticAnimation.update())
+    if (this.isCanMoveToTheNextLevel() && !this.nextLevelArrowCreated) {
+      this.nextLevelArrowCreated = true
+      const arrowStaticAnimation = new StaticMapAnimation(
+        [this.nextLevelArrow],
+        Resources.getSprite('arrow-down'),
+        {
+          frames: [1, 2, 3, 4],
+          delay: 4
+        })
+      this.addStaticAnimation(arrowStaticAnimation)
+    }
   }
 }

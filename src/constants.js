@@ -1,5 +1,4 @@
 export const ASSETS = {
-  'brick': './assets/brick.png',
   'red-fire-ball-tiles': './assets/red-fireball-tiles.png',
   'coin-tiles': './assets/coin-tiles.png',
   'ninja-tiles': './assets/ninja-tiles.png',
@@ -11,7 +10,8 @@ export const ASSETS = {
   'ninja-bow-tiles': './assets/ninja-bow-tiles.png',
   'ninja-sword-run-tiles': './assets/ninja-sword-run-tiles.png',
   'arrow': './assets/arrow.png',
-  'level02-tileset': './assets/level02/tileset.png'
+  'level02-tileset': './assets/level02/tileset.png',
+  'arrow-down': './assets/arrow-down.png'
 }
 
 export const LEVELS = {

@@ -55,6 +55,13 @@
         "height": 224,
         "spriteWidth": 16,
         "spriteHeight": 16
+      },
+      {
+        "name": "arrow-down",
+        "width": 448,
+        "height": 153,
+        "spriteWidth": 112,
+        "spriteHeight": 153
       }
     ],
   "images": [

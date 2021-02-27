@@ -79,6 +79,10 @@ export class Level01 extends Level {
     }
   }
 
+  isCanMoveToTheNextLevel() {
+    return !this.coinsStaticAnimation.objects.length
+  }
+
   update() {
     super.update()
     this.farGroundParallaxAnimation.update()

@@ -97,7 +97,7 @@ export class World {
         }).flat())
     this.checkCoins.update(this.env.getMobCollisionRects(this.player))
 
-    if (this.level.nextLevelGate) {
+    if (this.level.nextLevelGate && this.level.isCanMoveToTheNextLevel()) {
       if (checkRectCollision(this.player, this.level.nextLevelGate)) {
         this.createLevel(this.level.nextLevel)
       }
