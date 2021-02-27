@@ -1,5 +1,6 @@
 import { Main } from './main'
 import './styles/styles.css'
+import { LEVELS } from './constants'
 
 window.onload = () => {
   const query = String(window.location).split("?")[1];
@@ -10,6 +11,6 @@ window.onload = () => {
     level = value
   }
   new Main(1000 / 30, (main) => {
-    main.createLevel(level ?? '01')
+    main.createLevel(level ?? LEVELS.level01)
   })
 }

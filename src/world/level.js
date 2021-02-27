@@ -2,11 +2,17 @@ import { Rect } from '../base/rect'
 import { Img } from '../graphic/img'
 import { ParallaxImage } from '../graphic/parallax-image'
 
+const findByName = (array) => (name) => {
+  return array.find((object) => object.name === name)
+}
+
 export class Level {
-  constructor(key, map, spriteSheet) {
+  constructor({ key, map, spriteSheet, nextLevel, prevLevel }) {
     this.key = key
     this.map = map
     this.spriteSheet = spriteSheet
+    this.nextLevel = nextLevel
+    this.prevLevel = prevLevel
 
     this.tileMap = {
       rows: map.height,
@@ -17,9 +23,15 @@ export class Level {
       }
     }
 
-    const hitBoxes = map.layers.find(({ name }) => name === 'collisions')
-    const levelBoxes = map.layers.find(({ name }) => name === 'level')
-    this.playerPosition = levelBoxes.objects.find(({ name }) => name === 'player')
+    const getLayerByName = findByName(map.layers)
+    const hitBoxes = getLayerByName('collisions')
+    const levelBoxes = getLayerByName('level')
+    this.respawns = getLayerByName('respawn')
+
+    const getObjectByName = findByName(levelBoxes.objects)
+    this.playerPosition = getObjectByName('player')
+    this.nextLevelGate = getObjectByName('next-level-gate')
+    this.prevLevelGate = getObjectByName('prev-level-gate')
 
     this.collisionMap = [...Array.from({ length: this.tileMap.rows * this.tileMap.columns }).map(() => 0)]
 
@@ -48,8 +60,8 @@ export class Level {
     this.collisionRects = []
     this.staticAnimations = []
 
-    const cameraTrap = levelBoxes.objects.find(({ name }) => name === 'camera-trap')
-    const screen = levelBoxes.objects.find(({ name }) => name === 'screen')
+    const cameraTrap = getObjectByName('camera-trap')
+    const screen = getObjectByName('screen')
 
     this.cameraTrap = new Rect(cameraTrap.x, cameraTrap.y, cameraTrap.width, cameraTrap.height)
     this.screenRect = new Rect(0, 0, screen.width, screen.height)

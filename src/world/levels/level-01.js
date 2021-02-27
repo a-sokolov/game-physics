@@ -4,6 +4,7 @@ import { Resources } from '../../resources'
 import { ParallaxDirection, ParallaxType } from '../../graphic/parallax-image'
 import { ParallaxAnimation } from '../animation/parallax-animation'
 import { createCoinsStaticAnimation } from './helpers'
+import { LEVELS } from '../../constants'
 
 const LEVEL_TILES = Resources.getSprite('level01-tileset')
 const SEA_IMAGE = Resources.getImg('level01-sea')
@@ -15,7 +16,12 @@ const levelMap = require('../../assets/level01/level01.json')
 
 export class Level01 extends Level {
   constructor() {
-    super('level01', levelMap, LEVEL_TILES)
+    super({
+      key: 'level01',
+      map: levelMap,
+      spriteSheet: LEVEL_TILES,
+      nextLevel: LEVELS.level02
+    })
 
     this.coinsStaticAnimation = createCoinsStaticAnimation(levelMap, LEVEL_TILES)
     this.addStaticAnimation(this.coinsStaticAnimation)

@@ -13,15 +13,17 @@ import { CheckHMovingObjects } from './checks/check-hmoving-objects'
 import { Environment } from './environment'
 import { TilesetSpriteSheet } from '../graphic/tileset-sprite-sheet'
 import { Resources } from '../resources'
+import { checkRectCollision } from '../utils'
 
 const NINJA_TILES = Resources.getSprite('ninja-tiles')
 const NINJA_BOW_TILES = Resources.getSprite('ninja-bow-tiles')
 const NINJA_SWORD_RUN_TILES = Resources.getSprite('ninja-sword-run-tiles')
 
 export class World {
-  constructor(friction = 0.85, gravity = 2) {
+  constructor({ friction = 0.85, gravity = 2, createLevel }) {
     // Цвет фона
     this.backgroundColor = 'grey'
+    this.createLevel = createLevel
 
     this.collider = new CollideObject()
     this.env = new Environment(friction, gravity, this.collider)
@@ -94,5 +96,17 @@ export class World {
           return this.collider.getCollisionRects(object, true)
         }).flat())
     this.checkCoins.update(this.env.getMobCollisionRects(this.player))
+
+    if (this.level.nextLevelGate) {
+      if (checkRectCollision(this.player, this.level.nextLevelGate)) {
+        this.createLevel(this.level.nextLevel)
+      }
+    }
+
+    // if (this.level.prevLevelGate) {
+    //   if (checkRectCollision(this.player, this.level.prevLevelGate)) {
+    //     this.createLevel(this.level.prevLevel)
+    //   }
+    // }
   }
 }

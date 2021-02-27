@@ -13,3 +13,8 @@ export const ASSETS = {
   'arrow': './assets/arrow.png',
   'level02-tileset': './assets/level02/tileset.png'
 }
+
+export const LEVELS = {
+  level01: '01',
+  level02: '02'
+}

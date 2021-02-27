@@ -29,7 +29,7 @@
          "name":"bridges-layer",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -65,7 +65,7 @@
          "name":"before-layer",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":200,
          "x":0,
          "y":0
@@ -215,6 +215,39 @@
         }, 
         {
          "draworder":"topdown",
+         "id":10,
+         "name":"respawn",
+         "objects":[
+                {
+                 "height":16,
+                 "id":102,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1536,
+                 "y":224
+                }, 
+                {
+                 "height":16,
+                 "id":103,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":2224,
+                 "y":336
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":8,
          "name":"level",
          "objects":[
@@ -230,17 +263,6 @@
                  "y":0
                 }, 
                 {
-                 "height":32,
-                 "id":92,
-                 "name":"player",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":64,
-                 "y":176
-                }, 
-                {
                  "height":400,
                  "id":96,
                  "name":"camera-trap",
@@ -250,10 +272,32 @@
                  "width":144,
                  "x":256,
                  "y":0
+                }, 
+                {
+                 "height":16,
+                 "id":100,
+                 "name":"player",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":64,
+                 "y":176
+                }, 
+                {
+                 "height":16,
+                 "id":101,
+                 "name":"next-level-gate",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":3184,
+                 "y":256
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -499,8 +543,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":10,
- "nextobjectid":100,
+ "nextlayerid":11,
+ "nextobjectid":105,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.4.3",

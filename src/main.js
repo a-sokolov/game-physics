@@ -45,7 +45,7 @@ export class Main {
     this.controller = new Controller()
     this.camera = new MainCamera()
     this.display = new Display(canvas, this.camera)
-    this.game = new Game()
+    this.game = new Game(this.createLevel.bind(this))
     this.engine = new Engine(timeStep, this.update, this.render)
     this.playerController = this.game.world.getPlayerController(this.controller)
 

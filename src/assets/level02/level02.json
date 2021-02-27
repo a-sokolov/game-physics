@@ -141,12 +141,23 @@
                  "type":"",
                  "visible":true,
                  "width":16,
+                 "x":32,
+                 "y":256
+                }, 
+                {
+                 "height":16,
+                 "id":142,
+                 "name":"prev-level-gate",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
                  "x":0,
                  "y":256
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1537,7 +1548,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":142,
+ "nextobjectid":143,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.4.3",

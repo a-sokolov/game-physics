@@ -2,6 +2,7 @@ import { Level } from '../level'
 import { Resources } from '../../resources'
 import { createCoinsStaticAnimation } from './helpers'
 import {getImageScreenCountsByX} from "../../utils";
+import { LEVELS } from '../../constants'
 
 const LEVEL_TILES = Resources.getSprite('level02-tileset')
 const SEA_IMAGE = Resources.getImg('level01-sea')
@@ -12,7 +13,12 @@ const levelMap = require('../../assets/level02/level02.json')
 
 export class Level02 extends Level {
   constructor() {
-    super('level02', levelMap, LEVEL_TILES)
+    super({
+      key: 'level02',
+      map: levelMap,
+      spriteSheet: LEVEL_TILES,
+      prevLevel: LEVELS.level01
+    })
 
     this.coinsStaticAnimation = createCoinsStaticAnimation(levelMap, LEVEL_TILES)
     this.addStaticAnimation(this.coinsStaticAnimation)
