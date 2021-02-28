@@ -29,14 +29,21 @@ export class Level {
     const getLayerByName = findByName(map.layers)
     const hitBoxes = getLayerByName('collisions')
     const levelBoxes = getLayerByName('level')
+    // Точки респауна
     this.respawns = getLayerByName('respawn')
+    // Исходные позиции противников
+    this.enemies = getLayerByName('enemies')?.objects ?? []
 
     const getObjectByName = findByName(levelBoxes.objects)
+    // Позиция игрока на старте
     this.playerPosition = getObjectByName('player')
+    // Точка входа на следующий уровень
     this.nextLevelGate = getObjectByName('next-level-gate')
+    // Точка входа на предыдущий уровень
     this.prevLevelGate = getObjectByName('prev-level-gate')
+    // Указатель на следующий уровень
     this.nextLevelArrow = getObjectByName('next-level-arrow')
-
+    // Мапа коллизий
     this.collisionMap = [...Array.from({ length: this.tileMap.rows * this.tileMap.columns }).map(() => 0)]
 
     hitBoxes.objects.forEach(({ type, x, y, width, height }) => {
@@ -64,7 +71,9 @@ export class Level {
     this.collisionRects = []
     this.staticAnimations = []
 
+    // Позиция камеры
     const cameraTrap = getObjectByName('camera-trap')
+    // Размер экрана
     const screen = getObjectByName('screen')
 
     this.cameraTrap = new Rect(cameraTrap.x, cameraTrap.y, cameraTrap.width, cameraTrap.height)

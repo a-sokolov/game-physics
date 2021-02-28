@@ -51,4 +51,8 @@ export class Level02 extends Level {
     display.addImage(name, canvas)
     this.addImage(name, 0, 0, canvas.width, canvas.height)
   }
+
+  isCanMoveToTheNextLevel() {
+    return !this.coinsStaticAnimation.objects.length
+  }
 }

@@ -6,8 +6,7 @@ import { MainCamera } from './main-camera'
 import { Tools } from './tools';
 
 import { ImageLoader } from './loaders/image-loader'
-
-import { ASSETS } from './constants'
+import { Resources } from './resources'
 
 /**
  * Основной класс, который грузит ресурсы и управляет:
@@ -54,7 +53,7 @@ export class Main {
     window.addEventListener('keyup', this.keyDownUp)
 
     // Грузим все ресурсы
-    const imageLoader = new ImageLoader(ASSETS)
+    const imageLoader = new ImageLoader(Resources.getAllAssets())
     imageLoader.load().then(() => {
       this.display.setImages(imageLoader.images)
       callback?.(this)
@@ -150,7 +149,12 @@ export class Main {
       this.display.drawStaticAnimation(staticAnimation)
     })
 
-    // Рисуем анимацию игрока, чтобы визуально он стоял на плитке, а не нависал над ней
+    // Рисуем анимацию противников
+    this.game.world.enemies.enemyAnimations.forEach(({ animation }) => {
+      this.display.drawSprite(animation)
+    })
+
+    // Рисуем анимацию игрока
     this.display.drawSprite(this.game.world.playerAnimation.animation)
 
     // Рисуем все снаряды, которые находятся на экране

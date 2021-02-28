@@ -3,6 +3,7 @@ import { NinjaController } from './controllers/ninja-controller'
 
 import { ObjectsFactory } from './objects/objects-factory'
 import { CollideObject } from './collide-object'
+import { Enemies } from './enemies';
 
 import { Level01 } from './levels/level-01'
 import { Level02 } from './levels/level-02'
@@ -27,6 +28,8 @@ export class World {
 
     this.collider = new CollideObject()
     this.env = new Environment(friction, gravity, this.collider)
+    // Противники
+    this.enemies = new Enemies(this.env)
     // Анимация игрока
     this.playerAnimation = new NinjaAnimation({
       main: new TilesetSpriteSheet(NINJA_TILES, require('../assets/ninja.json')),
@@ -58,6 +61,7 @@ export class World {
     this.env.addMob(this.player)
     this.playerAnimation.watch(this.player)
     this.level.watch(this.player)
+    this.enemies.init(this.level.enemies)
 
     this.checkFireballs = new CheckHMovingObjects({
       player: this.player,
@@ -87,6 +91,7 @@ export class World {
     this.checkArrows.update()
     this.level.update()
     this.playerAnimation.update()
+    this.enemies.update()
 
     this.level.collisionRects = this.env.getAllCollisionRects()
       .concat(this.checkFireballs.objects.map(object => {

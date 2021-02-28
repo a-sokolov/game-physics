@@ -2,6 +2,7 @@ import { HMovingObject } from '../../base/hmoving-object'
 import { Ninja } from './ninja'
 import { SpriteSheet } from '../../graphic/sprite-sheet'
 import { Resources } from '../../resources'
+import { Enemy } from './enemy'
 
 export class ObjectsFactory {
   constructor() {
@@ -72,5 +73,17 @@ export class ObjectsFactory {
                 .getAnimationFrames(1),
       delay: 2
     }
+  }
+
+  static createSkeleton(x, y) {
+    return new Enemy({
+      x,
+      y,
+      width: 16,
+      height: 16,
+      jumpPower: 20,
+      speed: 0.8,
+      hitBox: { width: 32, height: 48 }
+    })
   }
 }

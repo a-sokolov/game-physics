@@ -17,7 +17,7 @@
          "name":"trees-layer",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -41,7 +41,7 @@
          "name":"caves-layer",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -65,7 +65,7 @@
          "name":"before-layer",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -242,7 +242,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -305,6 +305,28 @@
                  "width":16,
                  "x":3168,
                  "y":208
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":11,
+         "name":"enemies",
+         "objects":[
+                {
+                 "height":16,
+                 "id":112,
+                 "name":"",
+                 "rotation":0,
+                 "type":"skeleton",
+                 "visible":true,
+                 "width":16,
+                 "x":448,
+                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -554,8 +576,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":11,
- "nextobjectid":110,
+ "nextlayerid":12,
+ "nextobjectid":113,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.4.3",

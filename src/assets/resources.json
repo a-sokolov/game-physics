@@ -2,6 +2,7 @@
   "sprites": [
       {
         "name": "ninja-tiles",
+        "src": "./assets/ninja-tiles.png",
         "width": 350,
         "height": 592,
         "spriteWidth": 50,
@@ -9,6 +10,7 @@
       },
       {
         "name": "ninja-bow-tiles",
+        "src": "./assets/ninja-bow-tiles.png",
         "width": 200,
         "height": 148,
         "spriteWidth": 50,
@@ -16,6 +18,7 @@
       },
       {
         "name": "ninja-sword-run-tiles",
+        "src": "./assets/ninja-sword-run-tiles.png",
         "width": 300,
         "height": 37,
         "spriteWidth": 50,
@@ -23,6 +26,7 @@
       },
       {
         "name": "red-fire-ball-tiles",
+        "src": "./assets/red-fireball-tiles.png",
         "width": 3072,
         "height": 394,
         "spriteWidth": 512,
@@ -30,6 +34,7 @@
       },
       {
         "name": "arrow",
+        "src": "./assets/arrow.png",
         "width": 18,
         "height": 3,
         "spriteWidth": 18,
@@ -37,6 +42,7 @@
       },
       {
         "name": "coin-tiles",
+        "src": "./assets/coin-tiles.png",
         "width": 512,
         "height": 256,
         "spriteWidth": 128,
@@ -44,6 +50,7 @@
       },
       {
         "name": "level01-tileset",
+        "src": "./assets/level01/tileset.png",
         "width": 928,
         "height": 320,
         "spriteWidth": 16,
@@ -51,6 +58,7 @@
       },
       {
         "name": "level02-tileset",
+        "src": "./assets/level02/tileset.png",
         "width": 368,
         "height": 224,
         "spriteWidth": 16,
@@ -58,30 +66,43 @@
       },
       {
         "name": "arrow-down",
+        "src": "./assets/arrow-down.png",
         "width": 448,
         "height": 153,
         "spriteWidth": 112,
         "spriteHeight": 153
+      },
+      {
+        "name": "skeleton-tiles",
+        "src": "./assets/enemies/skeleton-tiles.png",
+        "width": 1500,
+        "height": 900,
+        "spriteWidth": 150,
+        "spriteHeight": 150
       }
     ],
   "images": [
     {
       "name": "level01-sky",
+      "src": "./assets/level01/sky.png",
       "width": 112,
       "height": 304
     },
     {
       "name": "level01-sea",
+      "src": "./assets/level01/sea.png",
       "width": 112,
       "height": 96
     },
     {
       "name": "level01-clouds",
+      "src": "./assets/level01/clouds.png",
       "width": 544,
       "height": 236
     },
     {
       "name": "level01-far-grounds",
+      "src": "./assets/level01/far-grounds.png",
       "width": 616,
       "height": 110
     }
