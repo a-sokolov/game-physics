@@ -1,16 +1,52 @@
 import { Animator, AnimatorMode } from '../../graphic/animator'
+import { EnemyInterpreter } from '../interpreters/enemy-interpreter'
 
 export class EnemyAnimation extends Animator {
-  constructor({ tiles, delay, key }) {
+  constructor({ tiles, delays, key }) {
   const defaultFrame = tiles.getTileSet('idle')
-    super(defaultFrame, delay.idle, AnimatorMode.loop, key)
+    super(defaultFrame, delays.idle, AnimatorMode.loop, key)
 
     this.idle = defaultFrame
+    this.attack = tiles.getTileSet('attack')
+    this.move = tiles.getTileSet('move')
+    this.takeHit = tiles.getTileSet('take-hit')
+    this.dead = tiles.getTileSet('dead')
+    this.block = tiles.getTileSet('block')
+
     this.mob = null
+    this.delays = delays
+    this.longAnimation = false
+
+    this.resetAnimation = this.resetAnimation.bind(this)
   }
 
   watch(mob) {
     this.mob = mob
+    this.interpreter = new EnemyInterpreter(mob)
+  }
+
+  resetAnimation(done = false) {
+    this.longAnimation = false
+
+    // По типу анимации определяем, какое действие производится
+    let mobAction
+    if (mobAction) {
+      // Если действие определено и анимация выполнена, то запускаем его
+      done && mobAction.done()
+      mobAction.clear()
+
+      // Убираем флаг, что анимация была проиграна
+      this.played = false
+    }
+  }
+
+  handleAnimate() {
+    this.animate(this.resetAnimation)
+  }
+
+  // Флаг, определяющий нужно ли прерывать длинную анимацию
+  isInterrupted() {
+    return false
   }
 
   position() {
@@ -31,36 +67,33 @@ export class EnemyAnimation extends Animator {
 
   update() {
     if (this.mob) {
-      // const roundedVelocityX = Math.trunc(Math.abs(this.mob.velocityX))
-      //
-      // if (this.mob.idling) {
-      //   this.changeFrameSet(this.idling, AnimatorMode.loop)
-      // } else if (this.mob.velocityY < 0) {
-      //   if (roundedVelocityX === 0) {
-      //     this.changeFrameSet(this.jump, AnimatorMode.pause)
-      //   } else if (this.mob.directionX < 0) {
-      //     this.changeFrameSet(this.jumpLeft, AnimatorMode.pause);
-      //   } else {
-      //     this.changeFrameSet(this.jumpRight, AnimatorMode.pause);
-      //   }
-      // } else if (roundedVelocityX === 0) {
-      //   this.changeFrameSet(this.stop, AnimatorMode.pause)
-      // } else if (this.mob.directionX < 0) {
-      //   if (this.mob.velocityX < -0.1) {
-      //     this.changeFrameSet(this.moveLeft, AnimatorMode.loop, 5);
-      //   } else {
-      //     this.changeFrameSet(this.left, AnimatorMode.pause);
-      //   }
-      // } else if (this.mob.directionX > 0) {
-      //   if (this.mob.velocityX > 0.1) {
-      //     this.changeFrameSet(this.moveRight, AnimatorMode.loop, 5);
-      //   } else {
-      //     this.changeFrameSet(this.right, AnimatorMode.pause);
-      //   }
-      // }
+      if (this.isInterrupted()) {
+        this.resetAnimation()
+      }
+
+      if (this.longAnimation) {
+        this.position()
+        this.handleAnimate()
+
+        return
+      }
+
+      if (this.interpreter.isAttacking()) {
+        this.changeFrameSet(this.attack, AnimatorMode.loop, this.delays.attack)
+      } else if (this.interpreter.isBlocking()) {
+        this.changeFrameSet(this.block, AnimatorMode.loop, this.delays.block)
+      } else if (this.interpreter.isDead()) {
+        this.changeFrameSet(this.dead, AnimatorMode.loop, this.delays.dead)
+      } else if (this.interpreter.isIdling()) {
+        this.changeFrameSet(this.idle, AnimatorMode.loop, this.delays.idle)
+      } else if (this.interpreter.isMoving()) {
+        this.changeFrameSet(this.move, AnimatorMode.loop, this.delays.move)
+      } else if (this.interpreter.isTakeHit()) {
+        this.changeFrameSet(this.takeHit, AnimatorMode.loop, this.delays.takeHit)
+      }
 
       this.position()
-      this.animate()
+      this.handleAnimate()
     }
   }
 }

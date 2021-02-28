@@ -11,6 +11,10 @@ export class TilesetSpriteSheet extends SpriteSheet {
       .find(({ name }) => name === key)?.data
       .filter(index => index > 0) ?? []
 
+    if (indexes.length === 0) {
+      return null
+    }
+
     return this.getAnimationFramesWithKey(key, indexes)
   }
 }

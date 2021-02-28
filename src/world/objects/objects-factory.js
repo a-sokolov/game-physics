@@ -76,14 +76,53 @@ export class ObjectsFactory {
   }
 
   static createSkeleton(x, y) {
+    const skeleton = new Enemy({
+      x,
+      y,
+      width: 16,
+      height: 16,
+      jumpPower: 0,
+      speed: 0.8,
+      hitBox: { width: 32, height: 48 }
+    })
+
+    skeleton.isCanBlocking = true
+    return skeleton
+  }
+
+  static createFlyingEye(x, y) {
     return new Enemy({
       x,
       y,
       width: 16,
       height: 16,
-      jumpPower: 20,
-      speed: 0.8,
-      hitBox: { width: 32, height: 48 }
+      jumpPower: 0,
+      speed: 1.2,
+      hitBox: { width: 32, height: 32 }
+    })
+  }
+
+  static createGoblin(x, y) {
+    return new Enemy({
+      x,
+      y,
+      width: 16,
+      height: 16,
+      jumpPower: 0,
+      speed: 1.65,
+      hitBox: { width: 16, height: 32 }
+    })
+  }
+
+  static createMushroom(x, y) {
+    return new Enemy({
+      x,
+      y,
+      width: 16,
+      height: 16,
+      jumpPower: 0,
+      speed: 0.7,
+      hitBox: { width: 16, height: 32 }
     })
   }
 }

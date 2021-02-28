@@ -5,6 +5,7 @@ export class Enemy extends Mob {
   constructor(props) {
     super(props)
 
+    this.isCanBlocking = false
     this.attackAction = new MobAction('attack')
   }
 

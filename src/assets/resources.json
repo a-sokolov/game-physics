@@ -79,6 +79,30 @@
         "height": 900,
         "spriteWidth": 150,
         "spriteHeight": 150
+      },
+      {
+        "name": "flying-eye-tiles",
+        "src": "./assets/enemies/flying-eye-tiles.png",
+        "width": 1500,
+        "height": 900,
+        "spriteWidth": 150,
+        "spriteHeight": 150
+      },
+      {
+        "name": "goblin-tiles",
+        "src": "./assets/enemies/goblin-tiles.png",
+        "width": 1500,
+        "height": 900,
+        "spriteWidth": 150,
+        "spriteHeight": 150
+      },
+      {
+        "name": "mushroom-tiles",
+        "src": "./assets/enemies/mushroom-tiles.png",
+        "width": 1500,
+        "height": 900,
+        "spriteWidth": 150,
+        "spriteHeight": 150
       }
     ],
   "images": [
