@@ -42,7 +42,7 @@
       },
       {
         "name": "coin-tiles",
-        "src": "./assets/coin-tiles.png",
+        "src": "./assets/objects/coin-tiles.png",
         "width": 512,
         "height": 256,
         "spriteWidth": 128,
