@@ -23,7 +23,12 @@ export const ObjectType = {
       frames: new SpriteSheet(Resources.getSprite('red-fire-ball-tiles'))
                       .getAnimationFrames(7, 8, 9, 10, 11, 12),
       delay: 2
-    }
+    },
+    getPosition: (player) => ({
+        x: player.directionX === -1 ? player.getRight() - 42 : player.getLeft() + 10,
+        y: (player.getBottom() - player.hitBox.height) + (player.hitBox.height / 2) - 6
+      })
+
   },
   arrow: {
     props: {
@@ -36,7 +41,11 @@ export const ObjectType = {
       frames: new SpriteSheet(Resources.getSprite('arrow'))
                       .getAnimationFrames(1),
       delay: 2
-    }
+    },
+    getPosition: (player) => ({
+      x: player.directionX === -1 ? player.getRight() - 28 : player.getLeft() + 10,
+      y: (player.getBottom() - player.hitBox.height) + (player.hitBox.height / 2) - 2
+    })
   }
 }
 

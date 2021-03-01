@@ -29,7 +29,7 @@ export class ObjectsFactory {
                 ? player.getRight() - fireballProps.width - 10
                 : player.getLeft() + 10
 
-    const y = player.y + player.height - player.hitBox.height
+    const y = player.getBottom() - player.hitBox.height
 
     return {
       object: new HMovingObject({
@@ -56,7 +56,7 @@ export class ObjectsFactory {
       ? player.getRight() - arrowProps.width - 10
       : player.getLeft() + 10
 
-    const y = player.y + player.height - player.hitBox.height
+    const y = player.getBottom() - player.hitBox.height
 
     return {
       object: new HMovingObject({
