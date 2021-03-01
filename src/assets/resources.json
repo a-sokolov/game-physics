@@ -2,7 +2,7 @@
   "sprites": [
       {
         "name": "ninja-tiles",
-        "src": "./assets/ninja-tiles.png",
+        "src": "./assets/player/ninja-tiles.png",
         "width": 350,
         "height": 592,
         "spriteWidth": 50,
@@ -10,7 +10,7 @@
       },
       {
         "name": "ninja-bow-tiles",
-        "src": "./assets/ninja-bow-tiles.png",
+        "src": "./assets/player/ninja-bow-tiles.png",
         "width": 200,
         "height": 148,
         "spriteWidth": 50,
@@ -18,7 +18,7 @@
       },
       {
         "name": "ninja-sword-run-tiles",
-        "src": "./assets/ninja-sword-run-tiles.png",
+        "src": "./assets/player/ninja-sword-run-tiles.png",
         "width": 300,
         "height": 37,
         "spriteWidth": 50,
@@ -26,7 +26,7 @@
       },
       {
         "name": "red-fire-ball-tiles",
-        "src": "./assets/red-fireball-tiles.png",
+        "src": "./assets/objects/red-fireball-tiles.png",
         "width": 3072,
         "height": 394,
         "spriteWidth": 512,
@@ -34,7 +34,7 @@
       },
       {
         "name": "arrow",
-        "src": "./assets/arrow.png",
+        "src": "./assets/other/arrow.png",
         "width": 18,
         "height": 3,
         "spriteWidth": 18,
@@ -66,7 +66,7 @@
       },
       {
         "name": "arrow-down",
-        "src": "./assets/arrow-down.png",
+        "src": "./assets/other/arrow-down.png",
         "width": 448,
         "height": 153,
         "spriteWidth": 112,

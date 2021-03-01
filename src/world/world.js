@@ -12,13 +12,8 @@ import { CheckCoins } from './checks/check-coins'
 import { CheckHMovingObjects } from './checks/check-hmoving-objects'
 
 import { Environment } from './environment'
-import { TilesetSpriteSheet } from '../graphic/tileset-sprite-sheet'
-import { Resources } from '../resources'
 import { checkRectCollision } from '../utils'
-
-const NINJA_TILES = Resources.getSprite('ninja-tiles')
-const NINJA_BOW_TILES = Resources.getSprite('ninja-bow-tiles')
-const NINJA_SWORD_RUN_TILES = Resources.getSprite('ninja-sword-run-tiles')
+import { PlayerType } from './constants'
 
 export class World {
   constructor({ friction = 0.85, gravity = 2, createLevel }) {
@@ -31,11 +26,7 @@ export class World {
     // Противники
     this.enemies = new Enemies(this.env)
     // Анимация игрока
-    this.playerAnimation = new NinjaAnimation({
-      main: new TilesetSpriteSheet(NINJA_TILES, require('../assets/ninja.json')),
-      bow: new TilesetSpriteSheet(NINJA_BOW_TILES, require('../assets/ninja-bow.json')),
-      sword: new TilesetSpriteSheet(NINJA_SWORD_RUN_TILES, require('../assets/ninja-sword.json'))
-    })
+    this.playerAnimation = new NinjaAnimation(PlayerType.tiles)
   }
 
   setLevel(level) {
@@ -54,7 +45,8 @@ export class World {
   }
 
   initLevel() {
-    this.player = ObjectsFactory.createPlayer(this.level.playerPosition.x, this.level.playerPosition.y)
+    const { x, y } = this.level.playerPosition
+    this.player = ObjectsFactory.createPlayer(x, y, PlayerType.props)
     this.collider.setLevel(this.level)
 
     this.env.init(this.level.limitRect)

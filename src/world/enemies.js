@@ -13,7 +13,7 @@ export class Enemies {
 
       const enemyType = EnemyType[type]
       const animation  = new EnemyAnimation(enemyType)
-      const mob = enemyType.create(x, y)
+      const mob = ObjectsFactory.createEnemy(x, y, enemyType.props)
 
       mob.directionX = -1
       animation.watch(mob)
