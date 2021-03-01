@@ -4,7 +4,7 @@ import { LEVELS } from './constants'
 
 window.onload = () => {
   const query = String(window.location).split("?")[1];
-  const [filter, value] = query.split('=')
+  const [filter, value] = query?.split('=') ?? ''
 
   let level
   if (filter === 'level') {
