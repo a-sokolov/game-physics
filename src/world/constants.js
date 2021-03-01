@@ -14,16 +14,16 @@ const NINJA_SWORD_RUN_TILES = Resources.getSprite('ninja-sword-run-tiles')
 export const ObjectType = {
   fireBall: {
     props: {
+      key: 'fire-ball',
       width: 32,
       height: 12,
-      speed: 10.5,
-      key: 'fire-ball'
+      speed: 10.5
     },
-    tiles: {
+    tiles: () => ({
       frames: new SpriteSheet(Resources.getSprite('red-fire-ball-tiles'))
                       .getAnimationFrames(7, 8, 9, 10, 11, 12),
       delay: 2
-    },
+    }),
     getPosition: (player) => ({
         x: player.directionX === -1 ? player.getRight() - 42 : player.getLeft() + 10,
         y: (player.getBottom() - player.hitBox.height) + (player.hitBox.height / 2) - 6
@@ -32,16 +32,16 @@ export const ObjectType = {
   },
   arrow: {
     props: {
+      key: 'arrow',
       width: 18,
       height: 3,
-      speed: 18,
-      key: 'arrow'
+      speed: 18
     },
-    tiles: {
+    tiles: () => ({
       frames: new SpriteSheet(Resources.getSprite('arrow'))
                       .getAnimationFrames(1),
       delay: 2
-    },
+    }),
     getPosition: (player) => ({
       x: player.directionX === -1 ? player.getRight() - 28 : player.getLeft() + 10,
       y: (player.getBottom() - player.hitBox.height) + (player.hitBox.height / 2) - 2
@@ -50,11 +50,11 @@ export const ObjectType = {
 }
 
 export const PlayerType = {
-  tiles: {
+  tiles: () => ({
     main: new TilesetSpriteSheet(NINJA_TILES, require('../assets/animation-maps/ninja.json')),
     bow: new TilesetSpriteSheet(NINJA_BOW_TILES, require('../assets/animation-maps/ninja-bow.json')),
     sword: new TilesetSpriteSheet(NINJA_SWORD_RUN_TILES, require('../assets/animation-maps/ninja-sword.json'))
-  },
+  }),
   props: {
     width: 16,
     height: 16,
@@ -67,7 +67,7 @@ export const PlayerType = {
 export const EnemyType = {
   skeleton: {
     key: 'skeleton',
-    tiles: new TilesetSpriteSheet(SKELETON_TILES, require('../assets/animation-maps/skeleton.json')),
+    tiles: () => new TilesetSpriteSheet(SKELETON_TILES, require('../assets/animation-maps/skeleton.json')),
     delays: {
       idle: 5,
       attack: 2,
@@ -87,7 +87,7 @@ export const EnemyType = {
   },
   flyingEye: {
     key: 'flying-eye',
-    tiles: new TilesetSpriteSheet(FLYING_EYE_TILES, require('../assets/animation-maps/flying-eye.json')),
+    tiles: () => new TilesetSpriteSheet(FLYING_EYE_TILES, require('../assets/animation-maps/flying-eye.json')),
     delays: {
       idle: 3,
       attack: 2,
@@ -106,7 +106,7 @@ export const EnemyType = {
   },
   goblin: {
     key: 'goblin',
-    tiles: new TilesetSpriteSheet(GOBLIN_TILES, require('../assets/animation-maps/goblin.json')),
+    tiles: () => new TilesetSpriteSheet(GOBLIN_TILES, require('../assets/animation-maps/goblin.json')),
     delays: {
       idle: 5,
       attack: 2,
@@ -126,7 +126,7 @@ export const EnemyType = {
   },
   mushroom: {
     key: 'mushroom',
-    tiles: new TilesetSpriteSheet(MUSHROOM_TILES, require('../assets/animation-maps/mushroom.json')),
+    tiles: () => new TilesetSpriteSheet(MUSHROOM_TILES, require('../assets/animation-maps/mushroom.json')),
     delays: {
       idle: 5,
       attack: 2,

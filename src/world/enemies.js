@@ -11,9 +11,9 @@ export class Enemies {
     this.enemyAnimations = list.map(enemy => {
       const { x, y, type } = enemy
 
-      const enemyType = EnemyType[type]
-      const animation  = new EnemyAnimation(enemyType)
-      const mob = ObjectsFactory.createEnemy(x, y, enemyType.props)
+      const { tiles, props, ...rest } = EnemyType[type]
+      const animation  = new EnemyAnimation({ ...rest, tiles: tiles() })
+      const mob = ObjectsFactory.createEnemy(x, y, props)
 
       mob.directionX = -1
       animation.watch(mob)

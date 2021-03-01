@@ -13,7 +13,7 @@ import { CheckHMovingObjects } from './checks/check-hmoving-objects'
 
 import { Environment } from './environment'
 import { checkRectCollision } from '../utils'
-import { PlayerType } from './constants'
+import { ObjectType, PlayerType } from './constants'
 
 export class World {
   constructor({ friction = 0.85, gravity = 2, createLevel }) {
@@ -26,7 +26,7 @@ export class World {
     // Противники
     this.enemies = new Enemies(this.env)
     // Анимация игрока
-    this.playerAnimation = new NinjaAnimation(PlayerType.tiles)
+    this.playerAnimation = new NinjaAnimation(PlayerType.tiles())
   }
 
   setLevel(level) {
@@ -58,13 +58,13 @@ export class World {
     this.checkFireballs = new CheckHMovingObjects({
       player: this.player,
       limitRect: this.level.limitRect,
-      callback: ObjectsFactory.createFireBall
+      createObjectCallback: ObjectsFactory.createMovingObject(ObjectType.fireBall)
     })
 
     this.checkArrows = new CheckHMovingObjects({
       player: this.player,
       limitRect: this.level.limitRect,
-      callback: ObjectsFactory.createArrow
+      createObjectCallback: ObjectsFactory.createMovingObject(ObjectType.arrow)
     })
 
     this.player.castAction.callback = this.checkFireballs.fire.bind(this.checkFireballs)

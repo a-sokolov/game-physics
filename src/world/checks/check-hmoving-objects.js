@@ -18,16 +18,16 @@ const proxyHandler = {
 }
 
 export class CheckHMovingObjects {
-  constructor({ player, limitRect, callback }) {
+  constructor({ player, limitRect, createObjectCallback }) {
     this.player = player
     this.limitRect = limitRect
-    this.callback = callback
+    this.createObjectCallback = createObjectCallback
 
     this.objects = []
   }
 
   fire() {
-    const { object, frames, delay } = this.callback(this.player)
+    const { object, frames, delay } = this.createObjectCallback(this.player)
     frames.flipped = object.directionX < 0
 
     const animator = new Animator(frames, delay, AnimatorMode.loop)
