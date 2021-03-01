@@ -12,7 +12,7 @@ const SKY_IMAGE = Resources.getImg('level01-sky')
 const CLOUDS_IMAGE = Resources.getImg('level01-clouds')
 const FAR_GROUNDS_IMAGE  = Resources.getImg('level01-far-grounds')
 
-const levelMap = require('../../assets/level01/level01.json')
+const levelMap = require('../../assets/level-maps/level01.json')
 
 export class Level01 extends Level {
   constructor() {

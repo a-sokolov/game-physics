@@ -50,7 +50,7 @@
       },
       {
         "name": "level01-tileset",
-        "src": "./assets/level01/tileset.png",
+        "src": "./assets/levels/level01/tileset.png",
         "width": 928,
         "height": 320,
         "spriteWidth": 16,
@@ -58,7 +58,7 @@
       },
       {
         "name": "level02-tileset",
-        "src": "./assets/level02/tileset.png",
+        "src": "./assets/levels/level02/tileset.png",
         "width": 368,
         "height": 224,
         "spriteWidth": 16,
@@ -108,25 +108,25 @@
   "images": [
     {
       "name": "level01-sky",
-      "src": "./assets/level01/sky.png",
+      "src": "./assets/levels/level01/sky.png",
       "width": 112,
       "height": 304
     },
     {
       "name": "level01-sea",
-      "src": "./assets/level01/sea.png",
+      "src": "./assets/levels/level01/sea.png",
       "width": 112,
       "height": 96
     },
     {
       "name": "level01-clouds",
-      "src": "./assets/level01/clouds.png",
+      "src": "./assets/levels/level01/clouds.png",
       "width": 544,
       "height": 236
     },
     {
       "name": "level01-far-grounds",
-      "src": "./assets/level01/far-grounds.png",
+      "src": "./assets/levels/level01/far-grounds.png",
       "width": 616,
       "height": 110
     }
